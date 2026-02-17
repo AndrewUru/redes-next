@@ -144,6 +144,8 @@ export function OnboardingWizard({
   const watched = form.watch();
 
   useEffect(() => {
+    if (status === "submitted") return;
+
     const timeout = setTimeout(async () => {
       const section = inflateStep(currentStep, watched);
       const nextDraft = { ...draft, [currentStep]: section };
@@ -162,7 +164,7 @@ export function OnboardingWizard({
       setSaving(false);
     }, 700);
     return () => clearTimeout(timeout);
-  }, [watched, currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [watched, currentStep, status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function goNext() {
     const section = inflateStep(currentStep, form.getValues());
