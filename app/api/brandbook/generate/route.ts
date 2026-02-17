@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createElement } from "react";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
@@ -69,7 +68,7 @@ export async function POST(request: Request) {
   const version = (latest?.version ?? 0) + 1;
   const path = `${client.id}/v${version}.pdf`;
   const pdfBuffer = await renderToBuffer(
-    createElement(BrandbookDocument, {
+    BrandbookDocument({
       clientName: client.display_name,
       data: parsedIntake.data
     })
