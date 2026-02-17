@@ -57,13 +57,13 @@ export function AssetsManager({ clientId }: { clientId: string }) {
             {assets.map((asset) => (
               <li
                 key={asset.id}
-                className="flex items-center justify-between rounded-md border border-border p-2"
+                className="flex flex-col gap-2 rounded-md border border-border p-2 sm:flex-row sm:items-center sm:justify-between"
               >
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-medium">{asset.type}</p>
-                  <p className="text-xs text-muted-foreground">{asset.storage_path}</p>
+                  <p className="break-all text-xs text-muted-foreground">{asset.storage_path}</p>
                 </div>
-                <Button variant="outline" onClick={() => void removeAsset(asset.id)}>
+                <Button variant="outline" onClick={() => void removeAsset(asset.id)} className="w-full sm:w-auto">
                   Quitar asset
                 </Button>
               </li>

@@ -139,13 +139,13 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen">
-      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
           <div className="neo-box space-y-4 bg-white/85">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Noelia | Branding, contenido y conversion
             </p>
-            <h1 className="text-5xl sm:text-6xl">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl">
               Creemos una marca con voz propia que atraiga, conecte y convierta.
             </h1>
             <p className="text-base leading-relaxed text-muted-foreground">
@@ -257,7 +257,7 @@ export default function HomePage() {
         </div>
 
         <div className="mt-10 space-y-4">
-          <h2 className="text-4xl">
+          <h2 className="text-3xl sm:text-4xl">
             Marco de trabajo: de identidad a conversión
           </h2>
           <p className="text-sm font-medium text-muted-foreground">

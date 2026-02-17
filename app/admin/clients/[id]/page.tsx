@@ -31,7 +31,7 @@ export default async function AdminClientDetailPage({
           {summary.client.notes ??
             "Sin notas aun. Usa este espacio para narrativa, posicionamiento y objeciones clave."}
         </CardDescription>
-        <div className="mt-4 flex items-center gap-3">
+        <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <Badge>{summary.client.status}</Badge>
           <GenerateBrandbookButton clientId={id} />
         </div>
@@ -61,7 +61,7 @@ export default async function AdminClientDetailPage({
             {summary.latestBrandbook ? `v${summary.latestBrandbook.version}` : "sin version"}
           </CardTitle>
           {brandbookUrl ? (
-            <div className="mt-3 flex gap-2 text-xs font-semibold">
+            <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
               <a href={brandbookUrl} target="_blank" rel="noreferrer" className="underline">
                 Ver PDF
               </a>

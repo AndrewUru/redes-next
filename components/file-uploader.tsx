@@ -47,13 +47,13 @@ export function FileUploader({
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <Input
         type="file"
         disabled={loading}
         onChange={(e) => void handleUpload(e.target.files?.[0])}
       />
-      <Button variant="outline" disabled={loading}>
+      <Button variant="outline" disabled={loading} className="w-full sm:w-auto">
         <Upload className="mr-2 h-4 w-4" />
         {loading ? "Subiendo..." : "Subir asset"}
       </Button>

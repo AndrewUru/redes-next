@@ -425,23 +425,25 @@ export function OnboardingWizard({
       >
         <form className="space-y-4">
           {renderFields()}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <Button
               type="button"
               variant="outline"
               disabled={stepIndex === 0}
               onClick={() => setStepIndex((v) => Math.max(0, v - 1))}
+              className="w-full sm:w-auto"
             >
               Atras
             </Button>
-            <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={goNext}>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+              <Button type="button" variant="outline" onClick={goNext} className="w-full sm:w-auto">
                 Siguiente bloque
               </Button>
               <Button
                 type="button"
                 onClick={submitFinal}
                 disabled={status === "submitted"}
+                className="w-full sm:w-auto"
               >
                 {status === "submitted" ? "Enviado" : "Enviar onboarding"}
               </Button>

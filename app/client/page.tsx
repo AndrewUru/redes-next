@@ -32,14 +32,14 @@ export default async function ClientHomePage() {
         />
       </div>
       {brandbookUrl ? (
-        <section className="neo-box flex flex-wrap items-center justify-between gap-3 bg-white/90">
+        <section className="neo-box flex flex-col gap-3 bg-white/90 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold">Tu brandbook PDF ya esta disponible.</p>
             <p className="text-xs text-muted-foreground">
               Abre la version actual o descargala para compartir con tu equipo.
             </p>
           </div>
-          <div className="flex gap-3 text-sm font-semibold">
+          <div className="flex flex-wrap gap-3 text-sm font-semibold">
             <a href={brandbookUrl} target="_blank" rel="noreferrer" className="underline">
               Ver PDF
             </a>

@@ -40,7 +40,7 @@ export default async function AdminClientsPage({
           </p>
         ) : (
           <div className="overflow-x-auto rounded-xl border-2 border-border bg-white/70 p-2">
-            <table className="w-full text-left text-sm">
+            <table className="min-w-[640px] w-full text-left text-sm">
               <thead className="text-muted-foreground">
                 <tr>
                   <th className="px-2 py-2">Cliente</th>

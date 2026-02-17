@@ -16,7 +16,7 @@ export function StepLayout({
   children: ReactNode;
 }) {
   return (
-    <section className="space-y-4 rounded-xl border border-border bg-background p-6">
+    <section className="space-y-4 rounded-xl border border-border bg-background p-4 sm:p-6">
       <div className="space-y-2">
         <p className="text-sm text-muted-foreground">
           Bloque estrategico {step} de {total}

@@ -140,8 +140,12 @@ export function SocialAccountsManager() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button onClick={connect} disabled={saving || form.accountName.trim().length === 0}>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <Button
+            onClick={connect}
+            disabled={saving || form.accountName.trim().length === 0}
+            className="w-full sm:w-auto"
+          >
             {saving ? "Conectando..." : "Conectar cuenta"}
           </Button>
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
@@ -161,17 +165,17 @@ export function SocialAccountsManager() {
             {accounts.map((account) => (
               <li
                 key={account.id}
-                className="flex items-center justify-between rounded-md border border-border p-3"
+                className="flex flex-col gap-2 rounded-md border border-border p-3 sm:flex-row sm:items-center sm:justify-between"
               >
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-medium">
                     {platformLabel(account.platform)}: {account.account_name}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="break-all text-xs text-muted-foreground">
                     {account.account_handle || "sin handle"} | {account.status}
                   </p>
                 </div>
-                <Button variant="outline" onClick={() => void disconnect(account.id)}>
+                <Button variant="outline" onClick={() => void disconnect(account.id)} className="w-full sm:w-auto">
                   Desconectar cuenta
                 </Button>
               </li>
