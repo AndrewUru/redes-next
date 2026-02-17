@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@700;800;900&family=Public+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  --background: 271 43% 74%;
+  --foreground: 220 15% 9%;
+  --primary: 331 69% 73%;
+  --primary-foreground: 220 15% 9%;
+  --muted: 46 80% 80%;
+  --muted-foreground: 220 12% 28%;
+  --border: 220 15% 9%;
+}
+
+* {
+  box-sizing: border-box;
+  border-color: hsl(var(--border));
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+  font-family: "Public Sans", sans-serif;
+  background:
+    radial-gradient(circle at 85% 10%, rgba(242, 208, 72, 0.35) 0%, rgba(242, 208, 72, 0) 40%),
+    linear-gradient(180deg, hsl(271 43% 74%) 0%, hsl(288 42% 80%) 100%);
+  color: hsl(var(--foreground));
+}
+
+h1 {
+  font-family: "Darker Grotesque", sans-serif;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Darker Grotesque", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+a {
+  color: inherit;
+}
+
+table tr th {
+  font-family: "Darker Grotesque", sans-serif;
+  font-size: 1.15rem;
+  text-align: left;
+  font-weight: 800;
+}
+
+table tr td,
+table tr th {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+table tr td {
+  border: 2px solid #000;
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 1px rgba(0, 0, 0, 1);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+table tr td:first-child {
+  background: #000;
+  color: #fff;
+  box-shadow: 2px 2px 0 1px rgba(0, 0, 0, 0.45);
+}
+
+button,
+[role="button"] {
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+button:hover,
+[role="button"]:hover {
+  transform: translateY(1px);
+}
+
+.neo-box {
+  border: 2px solid #000;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 7px 10px 0 3px rgba(0, 0, 0, 1);
+  padding: 1.25rem;
+}
+
+.number {
+  font-family: "Darker Grotesque", sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+}
+
+.subtitle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+  text-align: center;
+}
+
+.subtitle h2 {
+  width: 100%;
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
+}
+
+.sun {
+  position: absolute;
+  width: min(20vw, 240px);
+  right: 4vw;
+  top: 250px;
+  transform: translateY(0);
+  animation: float 6s ease-in-out infinite;
+}
+
+.marquee {
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem;
+  background: #f08cb6;
+  border-top: 2px solid #000;
+  z-index: 40;
+}
+
+.marquee > span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 20s linear infinite;
+}
+
+.marquee span span {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.progress-container {
+  background-color: rgba(237, 208, 97, 0.18);
+  box-shadow: 7px 10px 0 3px rgba(0, 0, 0, 1);
+  border: 2px solid #000;
+  border-radius: 999px;
+  height: 30px;
+  width: min(80%, 760px);
+  margin: 0.5rem auto 3rem;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background-color: #f2d048;
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+  height: 100%;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+@media (max-width: 1130px) {
+  .sun {
+    position: static;
+    width: min(70vw, 320px);
+    margin: 0 auto;
+    display: block;
+  }
+
+  .subtitle {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  table {
+    width: 100%;
+  }
+}
