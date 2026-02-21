@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
@@ -10,94 +10,94 @@ import { Textarea } from "@/components/ui/textarea";
 
 const conceptBlocks = [
   {
-    title: "1. Branding y posicionamiento",
+    title: "1. Marca: qué dices y cómo te recuerdan",
     points: [
-      "Brand voice: voz de marca con tono consistente en cada post, reel y DM.",
-      "Brand archetype: arquetipo para decidir si la marca actua como guia, experta o rebelde.",
-      "Brand narrative: historia que conecta proposito, oferta y diferenciacion.",
-      "Personal brand: marca personal basada en experiencia y valores.",
-      "Brand presence + authority: presencia constante con autoridad real en tu nicho.",
-      "Brand consistency + recall: coherencia para que te recuerden sin estar gritando.",
-      "Signature style + visual identity: estilo distintivo en diseno, copy y formato."
+      "Voz de marca: la forma en que hablas para que se note que eres tú (en posts, vídeos y mensajes).",
+      "Personalidad de marca: si comunicas como guía, como experta/o o como alguien más rompedor (según tu estilo).",
+      "Historia de marca: cómo cuentas quién eres, qué haces y por qué es diferente, sin sonar a publicidad.",
+      "Marca personal: lo que te hace confiable por tu experiencia, valores y forma de trabajar.",
+      "Presencia + autoridad: aparecer con constancia y con ideas claras, no por hacer ruido.",
+      "Coherencia: que la gente te reconozca rápido aunque vea solo una publicación.",
+      "Estilo propio: un look y una forma de escribir que te diferencie (diseño + textos + formatos)."
     ]
   },
   {
-    title: "2. Contenido y formatos",
+    title: "2. Contenido: qué publicamos y en qué formato",
     points: [
-      "Short-form content + snackable content para captar atencion en segundos.",
-      "Long-form value para profundidad: contexto, metodo y educacion.",
-      "Evergreen content para construir biblioteca de valor atemporal.",
-      "Hero content y pillar content para ordenar el ecosistema de contenidos.",
-      "Storytelling y edutainment para educar sin sonar academico.",
-      "Behind the scenes, raw content y unfiltered para mostrar proceso real."
+      "Contenido corto: piezas rápidas que captan atención en segundos.",
+      "Contenido profundo: explicaciones con más contexto cuando hace falta (para que entiendan tu valor).",
+      "Contenido que no caduca: publicaciones que sirven hoy y dentro de meses.",
+      "Piezas base del perfil: contenidos principales que sostienen tu temática y ordenan tu cuenta.",
+      "Contar historias + enseñar sin aburrir: que se entienda, pero se sienta humano.",
+      "Mostrar el proceso: detrás de cámaras, trabajo real, avances, ensayo/error (sin postureo)."
     ]
   },
   {
-    title: "3. Engagement y comunidad",
+    title: "3. Comunidad: cómo hacemos que la gente participe",
     points: [
-      "Engagement rate y audience retention para medir calidad real, no solo likes.",
-      "Community-driven y conversation starter para activar comentarios utiles.",
-      "Relatable, share-worthy y save-worthy para contenido que conecta y se guarda.",
-      "DM trigger para mover audiencia a conversaciones privadas.",
-      "Social proof y trust signals para reducir friccion y aumentar confianza."
+      "Calidad de interacción: medir si la gente se queda, entiende y reacciona (no solo likes).",
+      "Publicaciones que abren conversación: contenido que invita a responder de verdad.",
+      "Contenido que conecta: cosas que la gente comparte, guarda o envía porque le sirve.",
+      "Llevar gente a mensajes privados: crear momentos que hacen que te escriban.",
+      "Pruebas de confianza: reseñas, ejemplos, resultados, y señales que bajan la desconfianza."
     ]
   },
   {
-    title: "4. Estrategia y crecimiento",
+    title: "4. Estrategia: cómo crecemos sin improvisar",
     points: [
-      "Growth strategy + organic growth para crecer sin depender solo de ads.",
-      "Data-driven para decidir con metricas, no con intuicion aislada.",
-      "High-intent audience para atraer publico con probabilidad de comprar.",
-      "Content ecosystem + funnel: desde visibilidad hasta conversion.",
-      "Top / Mid / Bottom of funnel para ordenar mensajes por etapa.",
-      "Distribution strategy + repurposing para escalar sin duplicar esfuerzo.",
-      "Scalable para que el sistema crezca sin quemar al equipo."
+      "Crecimiento sin anuncios: avanzar con contenido y sistema, no solo pagando.",
+      "Decidir con datos: usar números básicos para ajustar, en vez de hacerlo a ojo.",
+      "Atraer a la gente correcta: no más seguidores, sino gente con interés real.",
+      "Camino completo: de que te descubran -> a que confíen -> a que te contacten -> a que compren/reserven.",
+      "Mensajes por etapa: qué decir a quien recién te conoce vs. a quien ya está por decidir.",
+      "Reutilizar contenido: sacar más piezas de lo mismo sin duplicar trabajo.",
+      "Sistema sostenible: que el plan se pueda mantener sin quemarte."
     ]
   },
   {
-    title: "5. Tendencias y cultura digital",
+    title: "5. Contexto digital: estar al día sin perder identidad",
     points: [
-      "Trend-aligned y culture-first para estar en contexto sin perder identidad.",
-      "Algorithm-friendly para mejorar alcance y retencion.",
-      "Native content y platform-specific para adaptar mensaje por red.",
-      "Creator economy y attention economy para competir con criterio.",
-      "Digital footprint para cuidar la huella digital de la marca."
+      "Tendencias con criterio: usar lo que funciona sin convertirte en otra persona.",
+      "Mejorar alcance: crear publicaciones que la plataforma muestre más (por cómo están hechas).",
+      "Adaptar por red: no es lo mismo Instagram que TikTok o LinkedIn.",
+      "Competir por atención: entender que hoy compites contra mucho contenido y hay que ser claro.",
+      "Cuidar tu imagen: lo que publicas deja huella y construye (o destruye) confianza."
     ]
   },
   {
-    title: "6. Conversion y ventas",
+    title: "6. Ventas: cómo lo convertimos en clientes/reservas",
     points: [
-      "CTA claros y low-friction para que el siguiente paso sea obvio.",
-      "Lead magnet y conversion-focused para captar demanda con valor.",
-      "High-ticket / low-ticket y offer positioning segun objetivo comercial.",
-      "Value proposition centrada en pain points reales.",
-      "Objection handling y trust-based selling para vender sin presion."
+      "Siguiente paso claro: que la gente sepa qué hacer después (sin pensar demasiado).",
+      "Regalo útil / recurso: ofrecer algo de valor para que te conozcan y confien.",
+      "Ofertas y precios: cómo presentar servicios/productos para que se entiendan y se sientan coherentes.",
+      "Propuesta de valor: explicar el beneficio real conectado a un problema real.",
+      "Resolver dudas típicas: anticipar miedos y objeciones sin presionar."
     ]
   },
   {
-    title: "7. Tono moderno",
+    title: "7. Tono: moderno, humano y directo",
     points: [
-      "Intentional, aligned y authentic: coherencia sin postureo.",
-      "Bold y clear: mensaje directo, simple y accionable.",
-      "Purpose-driven y human-centered: estrategia con enfoque humano.",
-      "Impactful, meaningful y focused: menos ruido, mas resultado."
+      "Intencional y auténtico: que se note real, sin frases vacías.",
+      "Claro y directo: menos vueltas, más entendible y accionable.",
+      "Con propósito humano: estrategia, sí; pero sin volverte una cuenta fría.",
+      "Menos ruido, más resultados: publicar con intención, no por obligación."
     ]
   },
   {
-    title: "8. Expresiones 2026",
+    title: "8. Ideas clave (2026) en lenguaje normal",
     points: [
-      "Signal > Noise y depth over reach para priorizar relevancia.",
-      "Quality audience antes que volumen vacio.",
-      "Built in public y creator-led para mostrar proceso real.",
-      "Slow growth + sustainable visibility para crecer sin burnout.",
-      "Real over polished, presence-based y value-first como norte."
+      "Menos ruido, más señal: mejor poco y bueno que mucho y olvidable.",
+      "Audiencia de calidad: mejor 200 personas interesadas que 5.000 mirando sin intención.",
+      "Mostrar proceso: lo real engancha más que lo perfecto.",
+      "Crecimiento sostenible: constancia sin agotamiento.",
+      "Presencia y valor primero: lo bonito ayuda, pero lo que retiene es el mensaje."
     ]
   },
   {
-    title: "9. Verbos de accion",
+    title: "9. Acciones que vamos a ejecutar",
     points: [
-      "Build, scale, connect, convert, engage.",
-      "Attract, position, amplify, nurture, monetize."
+      "Construir, ordenar, simplificar, mejorar, medir.",
+      "Atraer, posicionar, conectar, nutrir, convertir."
     ]
   }
 ] as const;
@@ -158,15 +158,15 @@ export default function HomePage() {
                 Signal {">"} Noise: menos ruido, mas contenido con impacto.
               </li>
               <li>
-                Depth over reach: calidad de audiencia por encima de números
-                vacíos.
+                Depth over reach: calidad de audiencia por encima de nÃºmeros
+                vacÃ­os.
               </li>
-              <li>Value-first: primero valor, luego conversión.</li>
+              <li>Value-first: primero valor, luego conversiÃ³n.</li>
             </ul>
             <div className="pt-2">
-              <Link href="/signup" className="inline-block w-full sm:w-auto">
+              <Link href="/login" className="inline-block w-full sm:w-auto">
                 <Button variant="outline" className="w-full sm:w-auto">
-                  Soy de acción: vamos al grano con el onboarding.
+                  Soy de acciÃ³n: vamos al grano con el onboarding.
                 </Button>
               </Link>
               <p className="mt-2 text-xs font-medium text-muted-foreground">
@@ -258,7 +258,7 @@ export default function HomePage() {
 
         <div className="mt-10 space-y-4">
           <h2 className="text-3xl sm:text-4xl">
-            Marco de trabajo: de identidad a conversión
+            Marco de trabajo: de identidad a conversiÃ³n
           </h2>
           <p className="text-sm font-medium text-muted-foreground">
             Este es el lenguaje que usamos en estrategia, onboarding y reportes
@@ -283,3 +283,4 @@ export default function HomePage() {
     </main>
   );
 }
+
