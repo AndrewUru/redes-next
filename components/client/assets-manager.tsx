@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ type Asset = {
   type: string;
   storage_path: string;
   created_at: string;
+  preview_url?: string | null;
 };
 
 const assetTypes = ["logo", "typography", "photo", "reference"] as const;
@@ -59,9 +61,21 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                 key={asset.id}
                 className="flex flex-col gap-2 rounded-md border border-border p-2 sm:flex-row sm:items-center sm:justify-between"
               >
-                <div className="min-w-0">
+                <div className="flex min-w-0 gap-3">
+                  {asset.preview_url ? (
+                    <Image
+                      src={asset.preview_url}
+                      alt={`Asset ${asset.type}`}
+                      width={120}
+                      height={120}
+                      unoptimized
+                      className="h-16 w-16 shrink-0 rounded-md border border-border object-cover"
+                    />
+                  ) : null}
+                  <div className="min-w-0">
                   <p className="text-sm font-medium">{asset.type}</p>
                   <p className="break-all text-xs text-muted-foreground">{asset.storage_path}</p>
+                </div>
                 </div>
                 <Button variant="outline" onClick={() => void removeAsset(asset.id)} className="w-full sm:w-auto">
                   Quitar asset

@@ -34,7 +34,21 @@ export async function GET() {
     .eq("client_id", ctx.clientId)
     .order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
-  return NextResponse.json({ assets: data ?? [] });
+
+  const assetsWithPreview = await Promise.all(
+    (data ?? []).map(async (asset) => {
+      const { data: signed } = await ctx.supabase.storage
+        .from("brand-assets")
+        .createSignedUrl(asset.storage_path, 60 * 60);
+
+      return {
+        ...asset,
+        preview_url: signed?.signedUrl ?? null
+      };
+    })
+  );
+
+  return NextResponse.json({ assets: assetsWithPreview });
 }
 
 export async function POST(request: Request) {

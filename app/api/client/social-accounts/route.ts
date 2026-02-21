@@ -27,6 +27,24 @@ async function getClientContext() {
   return { supabase, clientId: link.client_id };
 }
 
+function sanitizeMetadata(metadata: Record<string, unknown> | null | undefined) {
+  if (!metadata || typeof metadata !== "object") return {};
+  const safe: Record<string, unknown> = { ...metadata };
+  if ("oauth" in safe && safe.oauth && typeof safe.oauth === "object") {
+    const oauth = { ...(safe.oauth as Record<string, unknown>) };
+    delete oauth.access_token;
+    delete oauth.refresh_token;
+    delete oauth.token;
+    delete oauth.token_ciphertext;
+    delete oauth.token_iv;
+    delete oauth.token_tag;
+    delete oauth.user_token;
+    delete oauth.page_token;
+    safe.oauth = oauth;
+  }
+  return safe;
+}
+
 export async function GET() {
   const ctx = await getClientContext();
   if ("error" in ctx) return ctx.error;
@@ -38,7 +56,12 @@ export async function GET() {
     .order("connected_at", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-  return NextResponse.json({ accounts: (data ?? []) as SocialAccountRow[] });
+  const safeAccounts = ((data ?? []) as SocialAccountRow[]).map((account) => ({
+    ...account,
+    metadata: sanitizeMetadata(account.metadata)
+  }));
+
+  return NextResponse.json({ accounts: safeAccounts });
 }
 
 export async function POST(request: Request) {

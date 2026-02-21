@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ function platformLabel(platform: SocialPlatform) {
 }
 
 export function SocialAccountsManager() {
+  const searchParams = useSearchParams();
   const [accounts, setAccounts] = useState<SocialAccountRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -82,6 +84,9 @@ export function SocialAccountsManager() {
     void load();
   }, []);
 
+  const oauthState = searchParams.get("oauth");
+  const oauthReason = searchParams.get("reason");
+
   return (
     <main className="space-y-4">
       <Card className="space-y-3">
@@ -89,6 +94,29 @@ export function SocialAccountsManager() {
         <CardDescription>
           Integra Instagram y Facebook para analisis platform-specific, retencion y conversion.
         </CardDescription>
+        <div className="rounded-md border border-border bg-muted/20 p-3">
+          <p className="mb-2 text-sm font-medium">Instagram OAuth (Meta)</p>
+          <p className="mb-3 text-xs text-muted-foreground">
+            Este flujo autoriza tu cuenta real y valida lectura de perfil/media.
+          </p>
+          <Button
+            type="button"
+            onClick={() => {
+              window.location.href = "/api/client/social-accounts/instagram/start";
+            }}
+            className="w-full sm:w-auto"
+          >
+            Conectar con Instagram (OAuth)
+          </Button>
+        </div>
+        {oauthState === "success" ? (
+          <p className="text-sm text-green-700">Instagram conectada y verificada correctamente.</p>
+        ) : null}
+        {oauthState === "error" ? (
+          <p className="text-sm text-red-600">
+            Fallo OAuth de Instagram{oauthReason ? ` (${oauthReason})` : ""}.
+          </p>
+        ) : null}
         <div className="grid gap-3 md:grid-cols-2">
           <div className="space-y-1">
             <Label htmlFor="platform">Plataforma</Label>
@@ -146,7 +174,7 @@ export function SocialAccountsManager() {
             disabled={saving || form.accountName.trim().length === 0}
             className="w-full sm:w-auto"
           >
-            {saving ? "Conectando..." : "Conectar cuenta"}
+            {saving ? "Guardando..." : "Guardar cuenta manual"}
           </Button>
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
         </div>
