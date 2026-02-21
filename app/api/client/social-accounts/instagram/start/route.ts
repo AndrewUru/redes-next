@@ -25,10 +25,14 @@ export async function GET() {
   if ("error" in ctx) return ctx.error;
 
   const clientId = process.env.META_APP_ID ?? process.env.INSTAGRAM_APP_ID;
-  const redirectUri = process.env.INSTAGRAM_REDIRECT_URI;
+  const redirectUri =
+    process.env.META_BUSINESS_REDIRECT_URI ?? process.env.INSTAGRAM_REDIRECT_URI;
   if (!clientId || !redirectUri) {
     return NextResponse.json(
-      { error: "Missing META_APP_ID/INSTAGRAM_APP_ID or INSTAGRAM_REDIRECT_URI" },
+      {
+        error:
+          "Missing META_APP_ID/INSTAGRAM_APP_ID or META_BUSINESS_REDIRECT_URI/INSTAGRAM_REDIRECT_URI"
+      },
       { status: 500 }
     );
   }
@@ -36,11 +40,16 @@ export async function GET() {
   const state = `${ctx.clientId}:${randomUUID()}`;
   const scopes =
     process.env.META_OAUTH_SCOPES ??
-    "instagram_business_basic,pages_show_list,pages_read_engagement,business_management";
+    "instagram_basic,pages_show_list,pages_read_engagement,business_management";
   const authorizeUrl = new URL("https://www.facebook.com/v22.0/dialog/oauth");
   authorizeUrl.searchParams.set("client_id", clientId);
+  authorizeUrl.searchParams.set("display", "page");
+  authorizeUrl.searchParams.set(
+    "extras",
+    JSON.stringify({ setup: { channel: "IG_API_ONBOARDING" } })
+  );
   authorizeUrl.searchParams.set("redirect_uri", redirectUri);
-  authorizeUrl.searchParams.set("response_type", "code");
+  authorizeUrl.searchParams.set("response_type", "token");
   authorizeUrl.searchParams.set("scope", scopes);
   authorizeUrl.searchParams.set("state", state);
 
