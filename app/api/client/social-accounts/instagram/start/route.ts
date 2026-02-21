@@ -27,6 +27,7 @@ export async function GET() {
   const clientId = process.env.META_APP_ID ?? process.env.INSTAGRAM_APP_ID;
   const redirectUri =
     process.env.META_BUSINESS_REDIRECT_URI ?? process.env.INSTAGRAM_REDIRECT_URI;
+  const configId = process.env.META_BUSINESS_CONFIG_ID ?? "3088902101297110";
   if (!clientId || !redirectUri) {
     return NextResponse.json(
       {
@@ -52,6 +53,7 @@ export async function GET() {
   authorizeUrl.searchParams.set("response_type", "token");
   authorizeUrl.searchParams.set("scope", scopes);
   authorizeUrl.searchParams.set("state", state);
+  authorizeUrl.searchParams.set("config_id", configId);
 
   const response = NextResponse.redirect(authorizeUrl);
   response.cookies.set(OAUTH_STATE_COOKIE, state, {

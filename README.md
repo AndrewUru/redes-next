@@ -69,6 +69,7 @@ cp .env.example .env.local
 - `SUPABASE_JWT_SECRET` (opcional para utilidades avanzadas)
 - `META_APP_ID` (recomendado para app Business con Facebook Login)
 - `META_APP_SECRET` (recomendado para app Business con Facebook Login)
+- `META_BUSINESS_CONFIG_ID` (Business Login Configuration ID de Meta)
 - `META_OAUTH_SCOPES` (por defecto: `instagram_basic,pages_show_list,pages_read_engagement,business_management`)
 - `META_BUSINESS_REDIRECT_URI` (ej: `http://localhost:3000/client/accounts/instagram/callback`)
 - `INSTAGRAM_APP_ID` (fallback legacy)
@@ -78,6 +79,7 @@ cp .env.example .env.local
 
 Para app Business:
 - En `Facebook Login for Business -> Settings`, agrega `META_BUSINESS_REDIRECT_URI` en `Valid OAuth Redirect URIs`.
+- En el flujo OAuth, envia `config_id` usando `META_BUSINESS_CONFIG_ID`.
 - Solicita permisos segun tus endpoints. Base recomendada: `instagram_basic,pages_show_list,pages_read_engagement,business_management`.
 
 4. Ejecutar migración en Supabase SQL Editor o CLI con `supabase/migrations/202602160001_init.sql`.
