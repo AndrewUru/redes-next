@@ -145,7 +145,7 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               Noelia | Branding, contenido y conversion
             </p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl">
               Creemos una marca con voz propia que atraiga, conecte y convierta.
             </h1>
             <p className="text-base leading-relaxed text-muted-foreground">
