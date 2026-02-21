@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SummaryCard } from "@/components/summary-card";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { getClientIdForCurrentUser } from "@/lib/auth";
+import type { ClientStatus } from "@/lib/db/types";
 import { getClientSummary } from "@/lib/db/server";
 import { createClient } from "@/lib/supabase/server";
 
@@ -21,13 +22,14 @@ export default async function ClientHomePage() {
   const onboardingPct = summary.intake?.completion_pct ?? 0;
   const onboardingDone = onboardingPct >= 100;
   const assetsCount = summary.assetsCount;
-  const stageLabel =
-    {
-      lead: "Lead",
-      onboarding: "Onboarding",
-      activo: "Activo",
-      pausado: "Pausado"
-    }[summary.client.status] ?? summary.client.status;
+  const stageLabels: Record<ClientStatus, string> = {
+    lead: "Lead",
+    onboarding: "Onboarding",
+    activo: "Activo",
+    pausado: "Pausado"
+  };
+  const clientStatus = summary.client.status as ClientStatus;
+  const stageLabel = stageLabels[clientStatus] ?? String(summary.client.status);
 
   return (
     <main className="space-y-5">
