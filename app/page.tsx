@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const conceptBlocks = [
   {
-    title: "1. Marca: qué dices y cómo te recuerdan",
+    title: "1. Marca: ¿qué dices y cómo te recuerdan?",
     points: [
       "Voz de marca: la forma en que hablas para que se note que eres tú (en posts, vídeos y mensajes).",
       "Personalidad de marca: si comunicas como guía, como experta/o o como alguien más rompedor (según tu estilo).",
@@ -22,7 +22,7 @@ const conceptBlocks = [
     ]
   },
   {
-    title: "2. Contenido: qué publicamos y en qué formato",
+    title: "2. Contenido: ¿qué publicamos y en qué formato?",
     points: [
       "Contenido corto: piezas rápidas que captan atención en segundos.",
       "Contenido profundo: explicaciones con más contexto cuando hace falta (para que entiendan tu valor).",
@@ -33,7 +33,7 @@ const conceptBlocks = [
     ]
   },
   {
-    title: "3. Comunidad: cómo hacemos que la gente participe",
+    title: "3. Comunidad: ¿cómo hacemos que la gente participe?",
     points: [
       "Calidad de interacción: medir si la gente se queda, entiende y reacciona (no solo likes).",
       "Publicaciones que abren conversación: contenido que invita a responder de verdad.",
@@ -43,7 +43,7 @@ const conceptBlocks = [
     ]
   },
   {
-    title: "4. Estrategia: cómo crecemos sin improvisar",
+    title: "4. Estrategia: ¿cómo crecemos sin improvisar?",
     points: [
       "Crecimiento sin anuncios: avanzar con contenido y sistema, no solo pagando.",
       "Decidir con datos: usar números básicos para ajustar, en vez de hacerlo a ojo.",
@@ -143,34 +143,38 @@ export default function HomePage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
           <div className="neo-box space-y-4 bg-white/85">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Noelia | Branding, contenido y conversion
+              Noelia | Branding, contenido y conversión
             </p>
+
             <h1 className="text-3xl sm:text-4xl lg:text-5xl">
-              Creemos una marca con voz propia que atraiga, conecte y convierta.
+              Construimos una marca con voz propia para atraer, conectar y
+              convertir.
             </h1>
+
             <p className="text-base leading-relaxed text-muted-foreground">
-              Este framework une brand positioning, content ecosystem y growth
-              strategy para pasar de publicar por intuicion a publicar con
-              sistema.
+              Este framework integra posicionamiento de marca, ecosistema de
+              contenidos y estrategia de crecimiento para pasar de publicar por
+              intuición a operar con un sistema.
             </p>
+
             <ul className="space-y-2 text-sm font-medium text-foreground">
               <li>
-                Signal {">"} Noise: menos ruido, mas contenido con impacto.
+                Signal &gt; Noise: menos ruido, más contenido con impacto.
               </li>
               <li>
-                Depth over reach: calidad de audiencia por encima de nÃºmeros
-                vacÃ­os.
+                Depth over reach: calidad de audiencia por encima de métricas
+                vacías.
               </li>
-              <li>Value-first: primero valor, luego conversiÃ³n.</li>
+              <li>Value-first: primero valor, después conversión.</li>
             </ul>
             <div className="pt-2">
               <Link href="/login" className="inline-block w-full sm:w-auto">
                 <Button variant="outline" className="w-full sm:w-auto">
-                  Soy de acciÃ³n: vamos al grano con el onboarding.
+                  Iniciar onboarding (rápido)
                 </Button>
               </Link>
               <p className="mt-2 text-xs font-medium text-muted-foreground">
-                Si te va el caos controlado, entras y empezamos hoy mismo.
+                Completa tus datos y activamos el siguiente paso.
               </p>
             </div>
           </div>
@@ -258,7 +262,7 @@ export default function HomePage() {
 
         <div className="mt-10 space-y-4">
           <h2 className="text-3xl sm:text-4xl">
-            Marco de trabajo: de identidad a conversiÃ³n
+            Marco de trabajo: de identidad a conversión
           </h2>
           <p className="text-sm font-medium text-muted-foreground">
             Este es el lenguaje que usamos en estrategia, onboarding y reportes
@@ -283,4 +287,3 @@ export default function HomePage() {
     </main>
   );
 }
-

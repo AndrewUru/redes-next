@@ -2,7 +2,9 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { CreateAdminForm } from "@/components/admin/create-admin-form";
 import { CreateClientForm } from "@/components/admin/create-client-form";
+import { DeleteClientButton } from "@/components/admin/delete-client-button";
 import { getAdminClients } from "@/lib/db/server";
 
 export default async function AdminClientsPage({
@@ -15,6 +17,7 @@ export default async function AdminClientsPage({
 
   return (
     <main className="space-y-4">
+      <CreateAdminForm />
       <CreateClientForm />
       <Card>
         <div className="mb-4 space-y-1">
@@ -47,6 +50,7 @@ export default async function AdminClientsPage({
                   <th className="px-2 py-2">Fase</th>
                   <th className="px-2 py-2">Creado</th>
                   <th className="px-2 py-2">Strategy view</th>
+                  <th className="px-2 py-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -69,6 +73,9 @@ export default async function AdminClientsPage({
                       >
                         Ver detalle
                       </Link>
+                    </td>
+                    <td className="px-2 py-3">
+                      <DeleteClientButton clientId={client.id} clientName={client.display_name} />
                     </td>
                   </tr>
                 ))}

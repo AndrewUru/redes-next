@@ -2,13 +2,17 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SummaryCard } from "@/components/summary-card";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import { getClientIdForCurrentUser } from "@/lib/auth";
+import { getClientIdForCurrentUser, getProfile, getSessionUser } from "@/lib/auth";
 import type { ClientStatus } from "@/lib/db/types";
 import { getClientSummary } from "@/lib/db/server";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function ClientHomePage() {
-  const clientId = await getClientIdForCurrentUser();
+  const [clientId, profile, user] = await Promise.all([
+    getClientIdForCurrentUser(),
+    getProfile(),
+    getSessionUser()
+  ]);
   if (!clientId) notFound();
 
   const summary = await getClientSummary(clientId);
@@ -30,6 +34,9 @@ export default async function ClientHomePage() {
   };
   const clientStatus = summary.client.status as ClientStatus;
   const stageLabel = stageLabels[clientStatus] ?? String(summary.client.status);
+  const cleanName = profile?.full_name?.trim();
+  const emailName = user?.email?.split("@")[0]?.trim();
+  const userDisplayName = cleanName || emailName || "Cliente";
 
   return (
     <main className="space-y-5">
@@ -38,6 +45,7 @@ export default async function ClientHomePage() {
           <div>
             <CardDescription className="uppercase tracking-[0.14em]">Panel del cliente</CardDescription>
             <CardTitle className="mt-1">Tu sistema de marca y crecimiento</CardTitle>
+            <p className="mt-1 text-sm font-semibold">Usuario: {userDisplayName}</p>
             <p className="mt-2 text-sm text-muted-foreground">
               Prioriza lo siguiente: completar onboarding, subir assets y consolidar tu brandbook.
             </p>
