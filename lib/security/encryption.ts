@@ -1,4 +1,4 @@
-import { createCipheriv, createHash, randomBytes } from "crypto";
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
 
 type EncryptedSecret = {
   token_ciphertext: string;
@@ -28,4 +28,19 @@ export function encryptSecret(secret: string): EncryptedSecret {
     token_iv: iv.toString("base64"),
     token_tag: tag.toString("base64")
   };
+}
+
+export function decryptSecret(payload: EncryptedSecret): string {
+  const key = getKeyFromEnv();
+  const decipher = createDecipheriv(
+    "aes-256-gcm",
+    key,
+    Buffer.from(payload.token_iv, "base64")
+  );
+  decipher.setAuthTag(Buffer.from(payload.token_tag, "base64"));
+  const decrypted = Buffer.concat([
+    decipher.update(Buffer.from(payload.token_ciphertext, "base64")),
+    decipher.final()
+  ]);
+  return decrypted.toString("utf8");
 }
