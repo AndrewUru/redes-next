@@ -169,6 +169,53 @@ button:hover,
   height: 100%;
 }
 
+.progress-fill {
+  position: relative;
+  background:
+    linear-gradient(90deg, rgba(240, 140, 182, 0.88) 0%, rgba(242, 208, 72, 0.95) 50%, rgba(255, 241, 166, 0.98) 100%),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.16) 0px,
+      rgba(255, 255, 255, 0.16) 8px,
+      rgba(255, 255, 255, 0) 8px,
+      rgba(255, 255, 255, 0) 16px
+    );
+  background-size:
+    100% 100%,
+    28px 100%;
+  animation: progress-glide 1.3s linear infinite;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 15%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 85%);
+  transform: translateX(-120%);
+  animation: progress-sheen 1.9s ease-in-out infinite;
+}
+
+.onboarding-reveal,
+.onboarding-reveal-delay-1,
+.onboarding-reveal-delay-2,
+.onboarding-reveal-delay-3 {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: reveal-up 520ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.onboarding-reveal-delay-1 {
+  animation-delay: 90ms;
+}
+
+.onboarding-reveal-delay-2 {
+  animation-delay: 180ms;
+}
+
+.onboarding-reveal-delay-3 {
+  animation-delay: 260ms;
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -200,6 +247,42 @@ button:hover,
 
   100% {
     transform: translate(-100%, 0);
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes progress-glide {
+  from {
+    background-position:
+      0 0,
+      0 0;
+  }
+
+  to {
+    background-position:
+      0 0,
+      28px 0;
+  }
+}
+
+@keyframes progress-sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(120%);
   }
 }
 
