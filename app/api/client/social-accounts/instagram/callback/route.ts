@@ -101,7 +101,8 @@ export async function GET(request: Request) {
   const appId = process.env.INSTAGRAM_APP_ID;
   const appSecret = process.env.META_APP_SECRET ?? process.env.INSTAGRAM_APP_SECRET;
   const effectiveAppId = process.env.META_APP_ID ?? appId;
-  const redirectUri = process.env.INSTAGRAM_REDIRECT_URI;
+  const redirectUri =
+    process.env.META_BUSINESS_REDIRECT_URI ?? process.env.INSTAGRAM_REDIRECT_URI;
   if (!effectiveAppId || !appSecret || !redirectUri) {
     return redirectToAccounts(request, "missing_env");
   }
