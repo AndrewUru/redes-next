@@ -47,6 +47,10 @@ type SnapshotInsert = {
   engagement_rate: number | null;
 };
 
+type BuildSnapshotResult =
+  | { ok: false; error: string }
+  | { ok: true; snapshot: SnapshotInsert };
+
 function asRecord(value: unknown) {
   return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
 }
@@ -88,20 +92,23 @@ function isAuthorized(request: Request) {
   return bearer === secret || headerSecret === secret;
 }
 
-async function buildSnapshot(account: SocialAccountLite, snapshotDate: string) {
+async function buildSnapshot(
+  account: SocialAccountLite,
+  snapshotDate: string
+): Promise<BuildSnapshotResult> {
   const metadata = asRecord(account.metadata);
   const oauth = asRecord(metadata.oauth);
   const encryptedPageToken = asEncryptedSecret(oauth.page_token);
 
   if (!encryptedPageToken || !account.external_account_id) {
-    return { error: "missing_oauth_data" as const };
+    return { ok: false, error: "missing_oauth_data" };
   }
 
   let pageToken = "";
   try {
     pageToken = decryptSecret(encryptedPageToken);
   } catch {
-    return { error: "decrypt_failed" as const };
+    return { ok: false, error: "decrypt_failed" };
   }
 
   const igAccountId = account.external_account_id;
@@ -121,7 +128,7 @@ async function buildSnapshot(account: SocialAccountLite, snapshotDate: string) {
   ]);
 
   if (!profileRes.ok || !postsRes.ok) {
-    return { error: "graph_read_failed" as const };
+    return { ok: false, error: "graph_read_failed" };
   }
 
   const profile = (await profileRes.json()) as { followers_count?: number };
@@ -158,7 +165,7 @@ async function buildSnapshot(account: SocialAccountLite, snapshotDate: string) {
     engagement_rate: engagementRate
   };
 
-  return { snapshot };
+  return { ok: true, snapshot };
 }
 
 export async function GET(request: Request) {
@@ -187,7 +194,7 @@ export async function GET(request: Request) {
 
   for (const account of rows) {
     const result = await buildSnapshot(account, snapshotDate);
-    if ("error" in result) {
+    if (!result.ok) {
       failures.push({ accountId: account.id, reason: result.error });
       continue;
     }
