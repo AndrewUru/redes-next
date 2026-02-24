@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { encryptSecret } from "@/lib/security/encryption";
 
@@ -82,13 +83,8 @@ export async function GET(request: Request) {
   const state = requestUrl.searchParams.get("state");
   const code = requestUrl.searchParams.get("code");
 
-  const cookieStateRaw = request.headers
-    .get("cookie")
-    ?.split(";")
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${OAUTH_STATE_COOKIE}=`))
-    ?.split("=")[1];
-  const cookieState = cookieStateRaw ? decodeURIComponent(cookieStateRaw) : null;
+  const cookieStore = await cookies();
+  const cookieState = cookieStore.get(OAUTH_STATE_COOKIE)?.value ?? null;
 
   if (!state || !code || !cookieState || state !== cookieState) {
     return redirectToAccounts(request, "invalid_state");

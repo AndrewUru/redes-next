@@ -39,9 +39,18 @@ export async function GET() {
   }
 
   const state = `${ctx.clientId}:${randomUUID()}`;
-  const scopes =
-    process.env.META_OAUTH_SCOPES ??
-    "instagram_basic,pages_show_list,pages_read_engagement,business_management";
+  const defaultScopes = [
+    "instagram_basic",
+    "pages_show_list",
+    "pages_read_engagement",
+    "business_management"
+  ];
+  const allowedScopes = new Set(defaultScopes);
+  const scopesFromEnv =
+    process.env.META_OAUTH_SCOPES?.split(",").map((scope) => scope.trim()).filter(Boolean) ?? [];
+  const scopes = (scopesFromEnv.length > 0 ? scopesFromEnv : defaultScopes)
+    .filter((scope) => allowedScopes.has(scope))
+    .join(",");
   const authorizeUrl = new URL("https://www.facebook.com/v22.0/dialog/oauth");
   authorizeUrl.searchParams.set("client_id", clientId);
   authorizeUrl.searchParams.set("display", "page");
@@ -50,7 +59,7 @@ export async function GET() {
     JSON.stringify({ setup: { channel: "IG_API_ONBOARDING" } })
   );
   authorizeUrl.searchParams.set("redirect_uri", redirectUri);
-  authorizeUrl.searchParams.set("response_type", "token");
+  authorizeUrl.searchParams.set("response_type", "code");
   authorizeUrl.searchParams.set("scope", scopes);
   authorizeUrl.searchParams.set("state", state);
   authorizeUrl.searchParams.set("config_id", configId);
