@@ -76,6 +76,7 @@ cp .env.example .env.local
 - `INSTAGRAM_APP_SECRET` (fallback legacy)
 - `INSTAGRAM_REDIRECT_URI` (fallback; usa la misma URL del callback cliente)
 - `INSTAGRAM_TOKEN_ENCRYPTION_KEY` (secreto largo para cifrar tokens)
+- `CRON_SECRET` (secreto para proteger endpoints de cron)
 
 Para app Business:
 - En `Facebook Login for Business -> Settings`, agrega `META_BUSINESS_REDIRECT_URI` en `Valid OAuth Redirect URIs`.
@@ -102,6 +103,12 @@ npm run dev
 - Cliente entra a `/client/onboarding`, completa wizard y autosave guarda draft en `intake_responses`.
 - Cliente sube archivos en `/client/assets`, se registran en tabla `assets` y bucket `brand-assets`.
 - Admin (o cliente con intake enviado) dispara `POST /api/brandbook/generate` para generar PDF y versionarlo en `brandbooks`.
+
+## Snapshots diarios de RRSS
+- Endpoint: `GET /api/cron/social-snapshots`
+- Proteccion: header `Authorization: Bearer <CRON_SECRET>` o `x-cron-secret: <CRON_SECRET>`.
+- En Vercel, `vercel.json` ejecuta este endpoint diariamente a las `06:00 UTC`.
+- El endpoint guarda/actualiza snapshots en `social_account_daily_snapshots` por `social_account_id + snapshot_date`.
 
 ## Seguridad (RLS + Storage)
 - RLS activada en todas las tablas de dominio.

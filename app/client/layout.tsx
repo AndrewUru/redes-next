@@ -7,7 +7,10 @@ export default async function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [profile, user] = await Promise.all([requireRole("client"), getSessionUser()]);
+  const [profile, user] = await Promise.all([
+    requireRole("client"),
+    getSessionUser()
+  ]);
   const cleanName = profile.full_name?.trim();
   const emailName = user?.email?.split("@")[0]?.trim();
   const userDisplayName = cleanName || emailName || "Cliente";
@@ -20,8 +23,10 @@ export default async function ClientLayout({
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
               Area cliente
             </p>
-            <h1 className="mt-1 text-2xl sm:text-3xl">Ecosistema Cliente</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Hola, {userDisplayName}</p>
+            <h1 className="mt-1 text-2xl sm:text-3xl">Ecosistema Usuario</h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Hola, {userDisplayName}
+            </p>
           </div>
 
           <nav className="mt-4 grid gap-2 text-sm font-semibold">
@@ -53,7 +58,10 @@ export default async function ClientLayout({
 
           <div className="mt-5 space-y-3 border-t-2 border-border pt-4">
             <div className="inline-flex items-center gap-2 rounded-full border-2 border-emerald-700 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-600" aria-hidden />
+              <span
+                className="inline-block h-2 w-2 rounded-full bg-emerald-600"
+                aria-hidden
+              />
               Sesion iniciada
             </div>
             <div className="w-full">
@@ -83,7 +91,10 @@ export default async function ClientLayout({
             </div>
             <div className="flex flex-wrap items-center gap-2 border-t-2 border-border pt-3">
               <div className="inline-flex items-center gap-2 rounded-full border-2 border-emerald-700 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
-                <span className="inline-block h-2 w-2 rounded-full bg-emerald-600" aria-hidden />
+                <span
+                  className="inline-block h-2 w-2 rounded-full bg-emerald-600"
+                  aria-hidden
+                />
                 Sesion iniciada
               </div>
               <LogoutButton />

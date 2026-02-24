@@ -16,7 +16,7 @@ export default async function AdminLayout({
           <h1 className="text-3xl sm:text-4xl">Growth Control Room</h1>
           <nav className="mt-1 text-sm font-semibold text-muted-foreground">
             <Link href="/admin/clients" className="underline">
-              Clientes y posicionamiento
+              Usuarios y posicionamiento
             </Link>
           </nav>
         </div>

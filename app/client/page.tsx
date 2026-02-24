@@ -2,7 +2,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SummaryCard } from "@/components/summary-card";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
-import { getClientIdForCurrentUser, getProfile, getSessionUser } from "@/lib/auth";
+import {
+  getClientIdForCurrentUser,
+  getProfile,
+  getSessionUser
+} from "@/lib/auth";
 import type { ClientStatus } from "@/lib/db/types";
 import { getClientSummary } from "@/lib/db/server";
 import { createClient } from "@/lib/supabase/server";
@@ -20,7 +24,9 @@ export default async function ClientHomePage() {
   const supabase = await createClient();
   const pdfPath = summary.latestBrandbook?.pdf_path ?? null;
   const { data: signed } = pdfPath
-    ? await supabase.storage.from("brandbooks").createSignedUrl(pdfPath, 60 * 60)
+    ? await supabase.storage
+        .from("brandbooks")
+        .createSignedUrl(pdfPath, 60 * 60)
     : { data: null };
   const brandbookUrl = signed?.signedUrl ?? null;
   const onboardingPct = summary.intake?.completion_pct ?? 0;
@@ -43,11 +49,18 @@ export default async function ClientHomePage() {
       <Card className="space-y-4 bg-white/90">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <CardDescription className="uppercase tracking-[0.14em]">Panel del cliente</CardDescription>
-            <CardTitle className="mt-1">Tu sistema de marca y crecimiento</CardTitle>
-            <p className="mt-1 text-sm font-semibold">Usuario: {userDisplayName}</p>
+            <CardDescription className="uppercase tracking-[0.14em]">
+              Panel de usuario
+            </CardDescription>
+            <CardTitle className="mt-1">
+              Tu sistema de marca y crecimiento
+            </CardTitle>
+            <p className="mt-1 text-sm font-semibold">
+              Usuario: {userDisplayName}
+            </p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Prioriza lo siguiente: completar onboarding, subir assets y consolidar tu brandbook.
+              Prioriza lo siguiente: completar onboarding, subir assets y
+              consolidar tu brandbook.
             </p>
           </div>
           <div className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold">
@@ -75,16 +88,28 @@ export default async function ClientHomePage() {
         <SummaryCard
           title="Onboarding estratégico completado"
           value={`${onboardingPct}%`}
-          subtitle={onboardingDone ? "Listo para ejecución." : "Aún hay campos pendientes."}
+          subtitle={
+            onboardingDone
+              ? "Listo para ejecución."
+              : "Aún hay campos pendientes."
+          }
         />
         <SummaryCard
           title="Visual assets listos"
           value={String(assetsCount)}
-          subtitle={assetsCount > 0 ? "Biblioteca en construcción." : "Aún no hay archivos cargados."}
+          subtitle={
+            assetsCount > 0
+              ? "Biblioteca en construcción."
+              : "Aún no hay archivos cargados."
+          }
         />
         <SummaryCard
           title="Brandbook activo"
-          value={summary.latestBrandbook ? `v${summary.latestBrandbook.version}` : "Sin version"}
+          value={
+            summary.latestBrandbook
+              ? `v${summary.latestBrandbook.version}`
+              : "Sin version"
+          }
         />
       </div>
 
@@ -93,7 +118,9 @@ export default async function ClientHomePage() {
           <CardTitle>Próximos pasos recomendados</CardTitle>
           <ul className="space-y-2 text-sm font-medium text-foreground">
             <li>
-              {onboardingDone ? "Onboarding finalizado. Buen trabajo." : "Completa el onboarding estratégico."}
+              {onboardingDone
+                ? "Onboarding finalizado. Buen trabajo."
+                : "Completa el onboarding estratégico."}
             </li>
             <li>
               {assetsCount > 0
@@ -131,10 +158,18 @@ export default async function ClientHomePage() {
         <Card className="space-y-3 bg-white/90">
           <CardTitle>Estado rápido</CardTitle>
           <div className="space-y-2 text-sm">
-            <p className="font-semibold">Onboarding: {onboardingDone ? "Completo" : "En progreso"}</p>
-            <p className="font-semibold">Assets: {assetsCount > 0 ? `${assetsCount} cargados` : "Sin archivos"}</p>
             <p className="font-semibold">
-              Brandbook: {summary.latestBrandbook ? `v${summary.latestBrandbook.version}` : "No generado"}
+              Onboarding: {onboardingDone ? "Completo" : "En progreso"}
+            </p>
+            <p className="font-semibold">
+              Assets:{" "}
+              {assetsCount > 0 ? `${assetsCount} cargados` : "Sin archivos"}
+            </p>
+            <p className="font-semibold">
+              Brandbook:{" "}
+              {summary.latestBrandbook
+                ? `v${summary.latestBrandbook.version}`
+                : "No generado"}
             </p>
           </div>
         </Card>
@@ -143,13 +178,20 @@ export default async function ClientHomePage() {
       {brandbookUrl ? (
         <section className="neo-box flex flex-col gap-3 bg-white/90 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold">Tu brandbook PDF ya está disponible.</p>
+            <p className="text-sm font-semibold">
+              Tu brandbook PDF ya está disponible.
+            </p>
             <p className="text-xs text-muted-foreground">
               Abre la versión actual o descárgala para compartir con tu equipo.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-sm font-semibold">
-            <a href={brandbookUrl} target="_blank" rel="noreferrer" className="underline">
+            <a
+              href={brandbookUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="underline"
+            >
               Ver PDF
             </a>
             <a href={brandbookUrl} download className="underline">
