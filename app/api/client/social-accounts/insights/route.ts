@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import type { SocialAccountRow } from "@/lib/db/types";
 import { decryptSecret } from "@/lib/security/encryption";
@@ -40,6 +40,25 @@ type InstagramMediaItem = {
   comments_count?: number;
 };
 
+type GraphErrorPayload = {
+  error?: {
+    message?: string;
+    code?: number;
+    error_subcode?: number;
+    type?: string;
+  };
+};
+
+type HistoryPoint = {
+  date: string;
+  followers: number | null;
+  reach7d: number | null;
+  impressions7d: number | null;
+  profileViews7d: number | null;
+  interactionsRecentPosts: number | null;
+  engagementRate: number | null;
+};
+
 type AccountInsights = {
   accountId: string;
   accountName: string;
@@ -53,6 +72,8 @@ type AccountInsights = {
   profileViews7d: number | null;
   interactionsRecentPosts: number;
   engagementRate: number | null;
+  insightsStatus: "ok" | "limited" | "unavailable";
+  insightsMessage?: string;
   posts: Array<{
     id: string;
     caption: string;
@@ -64,7 +85,20 @@ type AccountInsights = {
     interactions: number;
     previewUrl: string | null;
   }>;
+  history: HistoryPoint[];
   error?: string;
+};
+
+type SnapshotRow = {
+  client_id: string;
+  social_account_id: string;
+  snapshot_date: string;
+  followers: number | null;
+  reach_7d: number | null;
+  impressions_7d: number | null;
+  profile_views_7d: number | null;
+  interactions_recent_posts: number;
+  engagement_rate: number | null;
 };
 
 function asRecord(value: unknown) {
@@ -97,6 +131,25 @@ function sumLatest7(values: InstagramInsightValue[] | undefined) {
   return normalized.reduce((acc, item) => acc + (item.value ?? 0), 0);
 }
 
+function inferInsightsMessage(payload: GraphErrorPayload | null) {
+  const code = payload?.error?.code;
+  const subcode = payload?.error?.error_subcode;
+  const message = payload?.error?.message?.toLowerCase() ?? "";
+  const permissionCodes = new Set([10, 200, 190]);
+
+  if (
+    permissionCodes.has(code ?? -1) ||
+    message.includes("permission") ||
+    message.includes("advanced access") ||
+    message.includes("not approved") ||
+    subcode === 33
+  ) {
+    return "Meta no devolvio insights para esta cuenta. Suele requerir acceso avanzado/revision de permisos en la app y cuenta Business/Creator vinculada.";
+  }
+
+  return "Meta no devolvio insights para esta cuenta en este momento. Puedes seguir viendo posts y engagement mientras se habilitan metricas avanzadas.";
+}
+
 async function getClientContext() {
   const supabase = await createClient();
   const {
@@ -114,6 +167,24 @@ async function getClientContext() {
 }
 
 async function fetchInstagramInsights(account: SocialAccountRow): Promise<AccountInsights> {
+  const base: AccountInsights = {
+    accountId: account.id,
+    accountName: account.account_name,
+    accountHandle: account.account_handle,
+    platform: "instagram",
+    followers: null,
+    following: null,
+    mediaCount: null,
+    reach7d: null,
+    impressions7d: null,
+    profileViews7d: null,
+    interactionsRecentPosts: 0,
+    engagementRate: null,
+    insightsStatus: "unavailable",
+    posts: [],
+    history: []
+  };
+
   const metadata = asRecord(account.metadata);
   const oauth = asRecord(metadata.oauth);
   const encryptedPageToken = asEncryptedSecret(oauth.page_token);
@@ -121,20 +192,8 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
 
   if (!encryptedPageToken || !igAccountId) {
     return {
-      accountId: account.id,
-      accountName: account.account_name,
-      accountHandle: account.account_handle,
-      platform: "instagram",
-      followers: null,
-      following: null,
-      mediaCount: null,
-      reach7d: null,
-      impressions7d: null,
-      profileViews7d: null,
-      interactionsRecentPosts: 0,
-      engagementRate: null,
-      posts: [],
-      error: "Cuenta sin token OAuth válido o sin ID de Instagram."
+      ...base,
+      error: "Cuenta sin token OAuth valido o sin ID de Instagram."
     };
   }
 
@@ -143,19 +202,7 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
     pageToken = decryptSecret(encryptedPageToken);
   } catch {
     return {
-      accountId: account.id,
-      accountName: account.account_name,
-      accountHandle: account.account_handle,
-      platform: "instagram",
-      followers: null,
-      following: null,
-      mediaCount: null,
-      reach7d: null,
-      impressions7d: null,
-      profileViews7d: null,
-      interactionsRecentPosts: 0,
-      engagementRate: null,
-      posts: [],
+      ...base,
       error: "No se pudo descifrar el token de la cuenta."
     };
   }
@@ -177,32 +224,23 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
 
   if (!profileRes.ok || !postsRes.ok) {
     return {
-      accountId: account.id,
-      accountName: account.account_name,
-      accountHandle: account.account_handle,
-      platform: "instagram",
-      followers: null,
-      following: null,
-      mediaCount: null,
-      reach7d: null,
-      impressions7d: null,
-      profileViews7d: null,
-      interactionsRecentPosts: 0,
-      engagementRate: null,
-      posts: [],
-      error: "Meta Graph API rechazó la lectura de perfil o publicaciones."
+      ...base,
+      error: "Meta Graph API rechazo la lectura de perfil o publicaciones."
     };
   }
 
   const profile = (await profileRes.json()) as InstagramProfile;
-  const insights = insightsRes.ok
-    ? ((await insightsRes.json()) as { data?: InstagramInsightMetric[] })
-    : { data: [] as InstagramInsightMetric[] };
   const postsJson = (await postsRes.json()) as { data?: InstagramMediaItem[] };
 
-  const reach7d = sumLatest7(insights.data?.find((item) => item.name === "reach")?.values);
-  const impressions7d = sumLatest7(insights.data?.find((item) => item.name === "impressions")?.values);
-  const profileViews7d = sumLatest7(insights.data?.find((item) => item.name === "profile_views")?.values);
+  const insightsPayload = insightsRes.ok
+    ? ((await insightsRes.json()) as { data?: InstagramInsightMetric[] })
+    : ((await insightsRes.json()) as GraphErrorPayload);
+
+  const insightsData = "data" in insightsPayload ? insightsPayload.data ?? [] : [];
+
+  const reach7d = sumLatest7(insightsData.find((item) => item.name === "reach")?.values);
+  const impressions7d = sumLatest7(insightsData.find((item) => item.name === "impressions")?.values);
+  const profileViews7d = sumLatest7(insightsData.find((item) => item.name === "profile_views")?.values);
 
   const posts = (postsJson.data ?? []).map((post) => {
     const likes = typeof post.like_count === "number" ? post.like_count : 0;
@@ -226,11 +264,10 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
       ? Number(((interactionsRecentPosts / profile.followers_count) * 100).toFixed(2))
       : null;
 
+  const hasInsights = reach7d !== null || impressions7d !== null || profileViews7d !== null;
+
   return {
-    accountId: account.id,
-    accountName: account.account_name,
-    accountHandle: account.account_handle,
-    platform: "instagram",
+    ...base,
     followers: profile.followers_count ?? null,
     following: profile.follows_count ?? null,
     mediaCount: profile.media_count ?? null,
@@ -239,6 +276,12 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
     profileViews7d,
     interactionsRecentPosts,
     engagementRate,
+    insightsStatus: hasInsights ? "ok" : insightsRes.ok ? "limited" : "unavailable",
+    insightsMessage: hasInsights
+      ? undefined
+      : insightsRes.ok
+        ? "Meta no devolvio metricas de insights para esta cuenta. Esto suele requerir acceso avanzado/revision o una cuenta Instagram Business/Creator bien vinculada."
+        : inferInsightsMessage(insightsPayload as GraphErrorPayload),
     posts
   };
 }
@@ -260,5 +303,73 @@ export async function GET() {
   if (accounts.length === 0) return NextResponse.json({ insights: [] as AccountInsights[] });
 
   const insights = await Promise.all(accounts.map((account) => fetchInstagramInsights(account)));
-  return NextResponse.json({ insights });
+
+  const today = new Date().toISOString().slice(0, 10);
+  const snapshotRows: SnapshotRow[] = insights
+    .filter((item) => !item.error)
+    .map((item) => ({
+      client_id: ctx.clientId,
+      social_account_id: item.accountId,
+      snapshot_date: today,
+      followers: item.followers,
+      reach_7d: item.reach7d,
+      impressions_7d: item.impressions7d,
+      profile_views_7d: item.profileViews7d,
+      interactions_recent_posts: item.interactionsRecentPosts,
+      engagement_rate: item.engagementRate
+    }));
+
+  if (snapshotRows.length > 0) {
+    const { error: snapshotUpsertError } = await ctx.supabase
+      .from("social_account_daily_snapshots")
+      .upsert(snapshotRows, { onConflict: "social_account_id,snapshot_date" });
+
+    if (snapshotUpsertError) {
+      return NextResponse.json({ error: snapshotUpsertError.message }, { status: 400 });
+    }
+  }
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const fromDate = thirtyDaysAgo.toISOString().slice(0, 10);
+
+  const accountIds = accounts.map((account) => account.id);
+  const { data: historyRows, error: historyError } = await ctx.supabase
+    .from("social_account_daily_snapshots")
+    .select(
+      "social_account_id,snapshot_date,followers,reach_7d,impressions_7d,profile_views_7d,interactions_recent_posts,engagement_rate"
+    )
+    .eq("client_id", ctx.clientId)
+    .in("social_account_id", accountIds)
+    .gte("snapshot_date", fromDate)
+    .order("snapshot_date", { ascending: true });
+
+  if (historyError) {
+    return NextResponse.json({ error: historyError.message }, { status: 400 });
+  }
+
+  const historyByAccount = new Map<string, HistoryPoint[]>();
+  for (const row of historyRows ?? []) {
+    const accountId = String((row as Record<string, unknown>).social_account_id ?? "");
+    if (!accountId) continue;
+    const list = historyByAccount.get(accountId) ?? [];
+    list.push({
+      date: String((row as Record<string, unknown>).snapshot_date ?? ""),
+      followers: ((row as Record<string, unknown>).followers as number | null) ?? null,
+      reach7d: ((row as Record<string, unknown>).reach_7d as number | null) ?? null,
+      impressions7d: ((row as Record<string, unknown>).impressions_7d as number | null) ?? null,
+      profileViews7d: ((row as Record<string, unknown>).profile_views_7d as number | null) ?? null,
+      interactionsRecentPosts:
+        ((row as Record<string, unknown>).interactions_recent_posts as number | null) ?? null,
+      engagementRate: ((row as Record<string, unknown>).engagement_rate as number | null) ?? null
+    });
+    historyByAccount.set(accountId, list);
+  }
+
+  const enriched = insights.map((item) => ({
+    ...item,
+    history: historyByAccount.get(item.accountId) ?? []
+  }));
+
+  return NextResponse.json({ insights: enriched });
 }
