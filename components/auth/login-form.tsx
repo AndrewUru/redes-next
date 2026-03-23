@@ -38,9 +38,11 @@ export function LoginForm() {
   return (
     <Card className="w-full space-y-5 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.92))]">
       <div>
-        <CardTitle>Entrar al sistema</CardTitle>
+        <CardTitle> Cuéntame tu proyecto</CardTitle>
         <CardDescription>
-          Accede a tu ecosistema de contenido: posicionamiento, onboarding y crecimiento.
+          Si quieres trabajar conmigo tu estrategia de contenido, este es + el
+          primer paso. Reviso tu caso y te respondo con una propuesta + de
+          enfoque.
         </CardDescription>
       </div>
       <form action={onSubmit} className="space-y-3">
@@ -55,22 +57,31 @@ export function LoginForm() {
             required
             aria-describedby="login-email-help"
           />
-          <p id="login-email-help" className="text-xs font-medium text-muted-foreground">
-            Usa el correo con el que entraste al onboarding o al panel de cliente.
+          <p
+            id="login-email-help"
+            className="text-xs font-medium text-muted-foreground"
+          >
+            Usa el correo con el que recibiste acceso a tu espacio privado.
           </p>
         </div>
         <div className="space-y-1">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="password">Contrasena</Label>
+            <Label htmlFor="password">Contraseña</Label>
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
               className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-controls="password"
               aria-pressed={showPassword}
-              aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+              aria-label={
+                showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+              }
             >
-              {showPassword ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" aria-hidden />
+              ) : (
+                <Eye className="h-4 w-4" aria-hidden />
+              )}
               {showPassword ? "Ocultar" : "Mostrar"}
             </button>
           </div>
@@ -90,13 +101,23 @@ export function LoginForm() {
               className="absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center justify-center rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-controls="password"
               aria-pressed={showPassword}
-              aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+              aria-label={
+                showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+              }
             >
-              {showPassword ? <EyeOff className="h-4 w-4" aria-hidden /> : <Eye className="h-4 w-4" aria-hidden />}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" aria-hidden />
+              ) : (
+                <Eye className="h-4 w-4" aria-hidden />
+              )}
             </button>
           </div>
-          <p id="login-password-help" className="text-xs font-medium text-muted-foreground">
-            Puedes mostrar la contrasena para revisar lo que escribes antes de entrar.
+          <p
+            id="login-password-help"
+            className="text-xs font-medium text-muted-foreground"
+          >
+            Puedes mostrar la contraseña para revisar lo que escribes antes de
+            entrar.
           </p>
         </div>
         {error ? (
@@ -109,13 +130,14 @@ export function LoginForm() {
           </p>
         ) : null}
         <Button className="w-full" disabled={loading}>
-          {loading ? "Entrando..." : "Entrar y posicionar mi marca"}
+          {loading ? "Entrando..." : "Entrar"}
         </Button>
       </form>
       <p className="text-sm text-muted-foreground">
-        Aun sin cuenta:{" "}
+        ¿Todavía no tienes acceso? Completa el formulario inicial y te
+        responderé con los siguientes pasos.{" "}
         <Link href="/signup" className="underline">
-          crear cuenta y empezar onboarding
+          Solicitar acceso
         </Link>
       </p>
     </Card>
