@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { StepLayout } from "@/components/step-layout";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -142,6 +143,14 @@ export function OnboardingWizard({
   }, [form, defaultValues]);
 
   const watched = form.watch();
+  const liveDraft = useMemo(
+    () => ({
+      ...draft,
+      [currentStep]: inflateStep(currentStep, watched)
+    }),
+    [draft, currentStep, watched]
+  );
+  const completionPct = useMemo(() => calculateCompletionPct(liveDraft), [liveDraft]);
 
   useEffect(() => {
     if (status === "submitted") return;
@@ -417,6 +426,38 @@ export function OnboardingWizard({
 
   return (
     <div className="space-y-4">
+      <div className="grid gap-3 md:grid-cols-3">
+        <Card className="space-y-2 bg-white/90">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            Progreso
+          </p>
+          <p className="text-3xl font-black text-foreground">{completionPct}%</p>
+          <p className="text-xs font-medium text-muted-foreground">
+            Se actualiza automáticamente mientras completas cada bloque.
+          </p>
+        </Card>
+        <Card className="space-y-2 bg-white/90">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            Bloque actual
+          </p>
+          <p className="text-lg font-black text-foreground">{stepMeta[currentStep].title}</p>
+          <p className="text-xs font-medium text-muted-foreground">
+            Paso {stepIndex + 1} de {intakeStepOrder.length}
+          </p>
+        </Card>
+        <Card className="space-y-2 bg-white/90">
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            Estado
+          </p>
+          <p className="text-lg font-black text-foreground">
+            {saving ? "Guardando..." : status === "submitted" ? "Enviado" : "Borrador activo"}
+          </p>
+          <p className="text-xs font-medium text-muted-foreground">
+            Puedes salir y volver sin perder el avance.
+          </p>
+        </Card>
+      </div>
+
       <StepLayout
         title={stepMeta[currentStep].title}
         description={stepMeta[currentStep].description}
@@ -453,7 +494,7 @@ export function OnboardingWizard({
       </StepLayout>
 
       <p className="text-sm text-muted-foreground">
-        {saving ? "Guardando..." : "Guardado automatico activo"} | Estado:{" "}
+        {saving ? "Guardando..." : "Guardado automatico activo"} | Progreso: {completionPct}% | Estado:{" "}
         {status === "draft" ? "Borrador" : "Enviado"}
       </p>
       {message ? <p className="text-sm text-amber-700">{message}</p> : null}

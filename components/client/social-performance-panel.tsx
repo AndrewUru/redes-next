@@ -104,6 +104,14 @@ function getSeries(history: HistoryPoint[], key: MetricKey) {
   }));
 }
 
+function averageMetric(values: Array<number | null>) {
+  const validValues = values.filter((value): value is number => typeof value === "number");
+  if (validValues.length === 0) return null;
+  return Number(
+    (validValues.reduce((total, value) => total + value, 0) / validValues.length).toFixed(2)
+  );
+}
+
 function buildLinePath(values: number[], width: number, height: number) {
   if (values.length === 0) return "";
   const max = Math.max(...values);
@@ -410,6 +418,25 @@ export function SocialPerformancePanel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const overview = useMemo(() => {
+    const connectedAccounts = insights.length;
+    const totalFollowers = insights.reduce((total, account) => total + (account.followers ?? 0), 0);
+    const totalInteractions = insights.reduce(
+      (total, account) => total + account.interactionsRecentPosts,
+      0
+    );
+    const averageEngagement = averageMetric(insights.map((account) => account.engagementRate));
+    const accountsWithHistory = insights.filter((account) => account.history.length > 1).length;
+
+    return {
+      connectedAccounts,
+      totalFollowers,
+      totalInteractions,
+      averageEngagement,
+      accountsWithHistory
+    };
+  }, [insights]);
+
   async function loadInsights() {
     setLoading(true);
     setError(null);
@@ -461,6 +488,39 @@ export function SocialPerformancePanel() {
         <p className="text-sm text-muted-foreground">
           No hay cuentas de Instagram conectadas con OAuth para mostrar análisis.
         </p>
+      ) : null}
+
+      {insights.length > 0 ? (
+        <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <MetricCard
+            label="Cuentas conectadas"
+            value={formatMetric(overview.connectedAccounts)}
+            helper={
+              overview.accountsWithHistory > 0
+                ? `${formatMetric(overview.accountsWithHistory)} con histórico útil`
+                : "El histórico todavía se está formando"
+            }
+            accent="bg-[#eef2ff]"
+          />
+          <MetricCard
+            label="Seguidores totales"
+            value={formatMetric(overview.totalFollowers)}
+            helper="Suma actual de audiencia conectada"
+            accent="bg-[#ecfeff]"
+          />
+          <MetricCard
+            label="Interacciones recientes"
+            value={formatMetric(overview.totalInteractions)}
+            helper="Likes y comentarios agregados"
+            accent="bg-[#f0fdf4]"
+          />
+          <MetricCard
+            label="Engagement medio"
+            value={formatPercent(overview.averageEngagement)}
+            helper="Referencia rápida entre cuentas"
+            accent="bg-[#fef3c7]"
+          />
+        </section>
       ) : null}
 
       <div className="space-y-6">
