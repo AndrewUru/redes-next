@@ -136,6 +136,10 @@ function inferInsightsMessage(payload: GraphErrorPayload | null) {
   const subcode = payload?.error?.error_subcode;
   const message = payload?.error?.message?.toLowerCase() ?? "";
   const permissionCodes = new Set([10, 200, 190]);
+  const debugSuffix =
+    code || subcode
+      ? ` (Meta code: ${code ?? "?"}${subcode ? `, subcode: ${subcode}` : ""})`
+      : "";
 
   if (
     permissionCodes.has(code ?? -1) ||
@@ -144,10 +148,10 @@ function inferInsightsMessage(payload: GraphErrorPayload | null) {
     message.includes("not approved") ||
     subcode === 33
   ) {
-    return "Meta no devolvio insights para esta cuenta. Suele requerir acceso avanzado/revision de permisos en la app y cuenta Business/Creator vinculada.";
+    return `Meta no devolvio insights para esta cuenta. Suele requerir que la cuenta sea Business/Creator, este bien vinculada a una pagina de Facebook y que el token tenga permisos de insights. Prueba a reconectar la cuenta para concederlos de nuevo.${debugSuffix}`;
   }
 
-  return "Meta no devolvio insights para esta cuenta en este momento. Puedes seguir viendo posts y engagement mientras se habilitan metricas avanzadas.";
+  return `Meta no devolvio insights para esta cuenta en este momento. Puedes seguir viendo posts y engagement mientras se habilitan metricas avanzadas.${debugSuffix}`;
 }
 
 async function getClientContext() {
@@ -280,7 +284,7 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
     insightsMessage: hasInsights
       ? undefined
       : insightsRes.ok
-        ? "Meta no devolvio metricas de insights para esta cuenta. Esto suele requerir acceso avanzado/revision o una cuenta Instagram Business/Creator bien vinculada."
+        ? "Meta no devolvio metricas de insights para esta cuenta. Revisa que sea una cuenta Instagram Business/Creator vinculada a una pagina de Facebook y reconectala para regenerar permisos de insights."
         : inferInsightsMessage(insightsPayload as GraphErrorPayload),
     posts
   };

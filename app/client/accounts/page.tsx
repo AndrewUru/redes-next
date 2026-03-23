@@ -9,9 +9,16 @@ export default async function ClientAccountsPage() {
   if (!clientId) notFound();
 
   return (
-    <main className="space-y-4">
+    <main className="space-y-6">
       <Card className="space-y-2 bg-white/90">
-        <CardTitle>Aviso sobre vinculación con Meta</CardTitle>
+        <CardTitle>Centro de cuentas y analitica</CardTitle>
+        <CardDescription>
+          Desde aqui puedes conectar perfiles y revisar un analisis visual de la evolucion de
+          seguidores, likes, interacciones y senales de rendimiento.
+        </CardDescription>
+      </Card>
+      <Card className="space-y-2 bg-white/90">
+        <CardTitle>Aviso sobre vinculacion con Meta</CardTitle>
         <CardDescription>
           Actualmente Meta todavía no nos ha aprobado la vinculación automática de cuentas para esta
           app. Por seguridad, este proceso se está realizando manualmente con cada cliente que nos

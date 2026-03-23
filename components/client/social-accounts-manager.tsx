@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -86,10 +87,89 @@ export function SocialAccountsManager() {
 
   const oauthState = searchParams.get("oauth");
   const oauthReason = searchParams.get("reason");
+  const hasAccounts = accounts.length > 0;
 
   return (
     <main className="space-y-4">
-      <Card className="space-y-3">
+      <Card id="conectar-redes" className="space-y-4 overflow-hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(254,249,195,0.92))]">
+        <div className="grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="space-y-3">
+            <CardTitle>Conectar social accounts</CardTitle>
+            <CardDescription>
+              Integra Instagram y Facebook para analisis platform-specific, retencion y conversion.
+            </CardDescription>
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                  Paso 1
+                </p>
+                <p className="mt-1 text-sm font-black">Conecta la cuenta</p>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  Autoriza Instagram para leer perfil, posts y señales clave.
+                </p>
+              </div>
+              <div className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                  Paso 2
+                </p>
+                <p className="mt-1 text-sm font-black">Capturamos snapshots</p>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  Seguidores, alcance, engagement e interacciones quedan guardados.
+                </p>
+              </div>
+              <div className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                  Paso 3
+                </p>
+                <p className="mt-1 text-sm font-black">Lees la evolucion</p>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  Entra al dashboard para ver tendencia y top publicaciones.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border-2 border-border bg-[#eff6ff] p-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+            <p className="text-sm font-black">Preview del panel de metricas</p>
+            <p className="mt-1 text-xs font-medium text-muted-foreground">
+              {hasAccounts
+                ? "Ya puedes entrar al analisis visual de evolucion."
+                : "Conecta al menos una cuenta para desbloquear el analisis completo."}
+            </p>
+            <div className="mt-4 space-y-3">
+              <div className="rounded-xl border border-border bg-white/90 p-3">
+                <div className="flex items-end gap-2">
+                  {[28, 34, 47, 53, 61, 74].map((bar, index) => (
+                    <div
+                      key={`preview-followers-${index}`}
+                      className="h-20 flex-1 rounded-t-md bg-[linear-gradient(180deg,#0ea5e9,#22c55e)]"
+                      style={{ height: `${bar}%` }}
+                    />
+                  ))}
+                </div>
+                <p className="mt-2 text-xs font-bold text-foreground">Seguidores y alcance</p>
+              </div>
+              <div className="rounded-xl border border-border bg-white/90 p-3">
+                <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
+                  <span>Engagement</span>
+                  <span>Top posts</span>
+                </div>
+                <div className="mt-2 grid gap-2">
+                  <div className="h-3 rounded-full border border-border bg-white">
+                    <div className="h-full w-[68%] rounded-full bg-[#f97316]" />
+                  </div>
+                  <div className="h-3 rounded-full border border-border bg-white">
+                    <div className="h-full w-[84%] rounded-full bg-[#8b5cf6]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <Link href="/client/accounts#insights" className="mt-4 inline-block text-sm font-black underline">
+              Ir al dashboard de evolucion
+            </Link>
+          </div>
+        </div>
+
         <CardTitle>Conectar social accounts</CardTitle>
         <CardDescription>
           Integra Instagram y Facebook para analisis platform-specific, retencion y conversion.
@@ -180,8 +260,21 @@ export function SocialAccountsManager() {
         </div>
       </Card>
 
-      <Card>
-        <CardTitle className="mb-4">Cuentas conectadas</CardTitle>
+      <Card id="insights">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <CardTitle>Cuentas conectadas</CardTitle>
+            <CardDescription className="mt-1">
+              Desde aqui validas si ya hay base suficiente para revisar la evolucion completa.
+            </CardDescription>
+          </div>
+          <Link
+            href="/client/accounts"
+            className="inline-flex h-10 items-center justify-center rounded-xl border-2 border-border bg-[#fde68a] px-4 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
+          >
+            Ver metricas completas
+          </Link>
+        </div>
         {loading ? (
           <p className="text-sm text-muted-foreground">Cargando...</p>
         ) : accounts.length === 0 ? (

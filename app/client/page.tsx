@@ -43,9 +43,26 @@ export default async function ClientHomePage() {
   const cleanName = profile?.full_name?.trim();
   const emailName = user?.email?.split("@")[0]?.trim();
   const userDisplayName = cleanName || emailName || "Cliente";
+  const metricsPreview = [
+    {
+      title: "Evolucion de seguidores",
+      helper: "Detecta si la comunidad crece o se estanca.",
+      bars: [34, 48, 44, 62, 76, 82]
+    },
+    {
+      title: "Engagement y respuesta",
+      helper: "Comprueba si el contenido genera interaccion real.",
+      bars: [22, 28, 36, 31, 46, 54]
+    },
+    {
+      title: "Top publicaciones",
+      helper: "Encuentra los formatos que mas tiran del perfil.",
+      bars: [40, 72, 58, 81, 49, 67]
+    }
+  ] as const;
 
   return (
-    <main className="space-y-5">
+    <main className="space-y-6">
       <Card className="space-y-4 bg-white/90">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -82,6 +99,83 @@ export default async function ClientHomePage() {
           </div>
         </div>
       </Card>
+
+      <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+        <Card className="space-y-4 overflow-hidden bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(239,246,255,0.94))]">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <CardDescription className="uppercase tracking-[0.14em]">
+                Nuevo foco
+              </CardDescription>
+              <CardTitle className="mt-1">Metricas de evolucion listas para revisar</CardTitle>
+              <p className="mt-2 max-w-2xl text-sm font-medium text-muted-foreground">
+                Entra al panel de metricas para revisar seguidores, engagement, alcance,
+                impresiones y las publicaciones que mejor estan funcionando.
+              </p>
+            </div>
+            <Link
+              href="/client/accounts"
+              className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-border bg-[#fde68a] px-4 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
+            >
+              Ver metricas completas
+            </Link>
+          </div>
+
+          <div className="grid gap-3 lg:grid-cols-3">
+            {metricsPreview.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              >
+                <p className="text-sm font-black">{item.title}</p>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">{item.helper}</p>
+                <div className="mt-4 flex h-20 items-end gap-2 rounded-xl border border-border bg-[#f8fafc] p-2">
+                  {item.bars.map((bar, index) => (
+                    <div
+                      key={`${item.title}-${index}`}
+                      className="flex-1 rounded-t-md bg-[linear-gradient(180deg,#f97316,#fb7185)]"
+                      style={{ height: `${bar}%` }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="space-y-3 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(254,243,199,0.92))]">
+          <CardTitle>Accesos rapidos</CardTitle>
+          <div className="grid gap-3">
+            <Link
+              href="/client/accounts"
+              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+            >
+              <p className="text-sm font-black">Abrir evolucion de redes</p>
+              <p className="mt-1 text-xs font-medium text-muted-foreground">
+                Seguidores, likes, engagement y comparativas historicas.
+              </p>
+            </Link>
+            <Link
+              href="/client/accounts#conectar-redes"
+              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+            >
+              <p className="text-sm font-black">Conectar o revisar cuentas</p>
+              <p className="mt-1 text-xs font-medium text-muted-foreground">
+                Gestiona Instagram y prepara la base de datos para el analisis.
+              </p>
+            </Link>
+            <Link
+              href="/client/accounts#insights"
+              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+            >
+              <p className="text-sm font-black">Ir al dashboard visual</p>
+              <p className="mt-1 text-xs font-medium text-muted-foreground">
+                Entra directo a la lectura de tendencias y top publicaciones.
+              </p>
+            </Link>
+          </div>
+        </Card>
+      </section>
 
       <div className="grid gap-4 md:grid-cols-2">
         <SummaryCard title="Fase de crecimiento" value={stageLabel} />
@@ -150,7 +244,7 @@ export default async function ClientHomePage() {
               href="/client/accounts"
               className="inline-flex h-10 items-center rounded-xl border-2 border-border bg-background px-4 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
             >
-              Conectar redes
+              Abrir metricas y redes
             </Link>
           </div>
         </Card>

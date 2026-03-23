@@ -41,6 +41,7 @@ export async function GET() {
   const state = `${ctx.clientId}:${randomUUID()}`;
   const defaultScopes = [
     "instagram_basic",
+    "instagram_manage_insights",
     "pages_show_list",
     "pages_read_engagement",
     "business_management"
