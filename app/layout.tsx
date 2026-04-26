@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { AppHeader } from "@/components/app-header";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,28 +23,7 @@ export default function RootLayout({
           Saltar al contenido
         </a>
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-          <header className="flex items-center justify-between border-b-2 border-black py-4">
-            <Link
-              className="font-black uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              href="/"
-            >
-              ElSaltoWeb
-            </Link>
-            <nav className="flex items-center gap-4 text-sm font-semibold">
-              <Link
-                href="/privacy"
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                Privacidad
-              </Link>
-              <Link
-                href="/terms"
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                Términos
-              </Link>
-            </nav>
-          </header>
+          <AppHeader />
 
           <main id="main-content" className="flex-1 py-6">
             {children}
