@@ -29,7 +29,7 @@ export function GenerateBrandbookButton({ clientId }: { clientId: string }) {
   return (
     <div className="space-y-2">
       <Button onClick={generate} disabled={loading}>
-        {loading ? "Generando..." : "Generar brandbook PDF"}
+        {loading ? "Generando…" : "Generar brandbook PDF"}
       </Button>
       {message ? <p className="text-xs text-muted-foreground">{message}</p> : null}
       {pdfUrl ? (

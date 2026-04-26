@@ -121,7 +121,7 @@ export function SocialAccountsManager() {
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
                   Paso 3
                 </p>
-                <p className="mt-1 text-sm font-black">Lees la evolucion</p>
+                <p className="mt-1 text-sm font-black">Lees la evolución</p>
                 <p className="mt-1 text-xs font-medium text-muted-foreground">
                   Entra al dashboard para ver tendencia y top publicaciones.
                 </p>
@@ -130,11 +130,11 @@ export function SocialAccountsManager() {
           </div>
 
           <div className="rounded-2xl border-2 border-border bg-[#eff6ff] p-4 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-            <p className="text-sm font-black">Preview del panel de metricas</p>
+            <p className="text-sm font-black">Preview del panel de métricas</p>
             <p className="mt-1 text-xs font-medium text-muted-foreground">
               {hasAccounts
-                ? "Ya puedes entrar al analisis visual de evolucion."
-                : "Conecta al menos una cuenta para desbloquear el analisis completo."}
+                ? "Ya puedes entrar al análisis visual de evolución."
+                : "Conecta al menos una cuenta para desbloquear el análisis completo."}
             </p>
             <div className="mt-4 space-y-3">
               <div className="rounded-xl border border-border bg-white/90 p-3">
@@ -165,7 +165,7 @@ export function SocialAccountsManager() {
               </div>
             </div>
             <Link href="/client/accounts#insights" className="mt-4 inline-block text-sm font-black underline">
-              Ir al dashboard de evolucion
+              Ir al dashboard de evolución
             </Link>
           </div>
         </div>
@@ -254,7 +254,7 @@ export function SocialAccountsManager() {
             disabled={saving || form.accountName.trim().length === 0}
             className="w-full sm:w-auto"
           >
-            {saving ? "Guardando..." : "Guardar cuenta manual"}
+            {saving ? "Guardando…" : "Guardar cuenta manual"}
           </Button>
           {error ? <p className="text-sm text-red-600">{error}</p> : null}
         </div>
@@ -265,21 +265,21 @@ export function SocialAccountsManager() {
           <div>
             <CardTitle>Cuentas conectadas</CardTitle>
             <CardDescription className="mt-1">
-              Desde aqui validas si ya hay base suficiente para revisar la evolucion completa.
+              Desde aquí validas si ya hay base suficiente para revisar la evolución completa.
             </CardDescription>
           </div>
           <Link
             href="/client/accounts"
-            className="inline-flex h-10 items-center justify-center rounded-xl border-2 border-border bg-[#fde68a] px-4 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
+            className="inline-flex h-10 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a] px-4 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            Ver metricas completas
+            Ver métricas completas
           </Link>
         </div>
         {loading ? (
-          <p className="text-sm text-muted-foreground">Cargando...</p>
+          <p className="text-sm text-muted-foreground">Cargando…</p>
         ) : accounts.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Aun no hay cuentas conectadas. Sin esto no hay metricas platform-specific.
+            Aún no hay cuentas conectadas. Sin esto no hay métricas platform-specific.
           </p>
         ) : (
           <ul className="space-y-2">

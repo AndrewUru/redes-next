@@ -6,7 +6,7 @@ import { intakeSchema } from "@/lib/intake/schema";
 
 const saveSchema = z.object({
   status: z.enum(["draft", "submitted"]),
-  data: z.record(z.any()),
+  data: z.record(z.string(), z.any()),
   completionPct: z.number().int().min(0).max(100).optional()
 });
 

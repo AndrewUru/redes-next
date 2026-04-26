@@ -8,7 +8,7 @@ const createSocialAccountSchema = z.object({
   accountName: z.string().min(1).max(120),
   accountHandle: z.string().trim().max(120).optional().or(z.literal("")),
   externalAccountId: z.string().trim().max(120).optional().or(z.literal("")),
-  metadata: z.record(z.unknown()).optional()
+  metadata: z.record(z.string(), z.unknown()).optional()
 });
 
 async function getClientContext() {

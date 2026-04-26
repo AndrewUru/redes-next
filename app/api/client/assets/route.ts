@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 const createAssetSchema = z.object({
   type: z.enum(["logo", "typography", "photo", "reference"]),
   storagePath: z.string().min(3),
-  metadata: z.record(z.any()).optional()
+  metadata: z.record(z.string(), z.any()).optional()
 });
 
 async function getClientContext() {

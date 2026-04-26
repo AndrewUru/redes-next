@@ -14,9 +14,20 @@
   --border: 220 15% 9%;
 }
 
+html {
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 * {
   box-sizing: border-box;
   border-color: hsl(var(--border));
+}
+
+::selection {
+  background: #f2d048;
+  color: #111;
 }
 
 body {
@@ -29,6 +40,7 @@ body {
     radial-gradient(circle at 85% 10%, rgba(242, 208, 72, 0.35) 0%, rgba(242, 208, 72, 0) 40%),
     linear-gradient(180deg, hsl(271 43% 74%) 0%, hsl(288 42% 80%) 100%);
   color: hsl(var(--foreground));
+  -webkit-tap-highlight-color: rgba(240, 140, 182, 0.35);
 }
 
 h1 {
@@ -36,6 +48,7 @@ h1 {
   font-weight: 900;
   line-height: 0.95;
   letter-spacing: 0.02em;
+  text-wrap: balance;
 }
 
 h2,
@@ -46,10 +59,18 @@ h6 {
   font-family: "Darker Grotesque", sans-serif;
   font-weight: 800;
   letter-spacing: 0.01em;
+  text-wrap: balance;
 }
 
 a {
   color: inherit;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
 }
 
 table tr th {
@@ -81,7 +102,12 @@ table tr td:first-child {
 
 button,
 [role="button"] {
-  transition: transform 120ms ease, box-shadow 120ms ease;
+  touch-action: manipulation;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
 }
 
 button:hover,
@@ -101,6 +127,7 @@ button:hover,
   font-family: "Darker Grotesque", sans-serif;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 900;
+  font-variant-numeric: tabular-nums;
 }
 
 .subtitle {
@@ -308,5 +335,21 @@ button:hover,
   .neo-box {
     padding: 0.9rem;
     box-shadow: 5px 7px 0 2px rgba(0, 0, 0, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  button:hover,
+  [role="button"]:hover {
+    transform: none;
   }
 }

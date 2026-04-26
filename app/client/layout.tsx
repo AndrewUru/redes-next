@@ -1,13 +1,46 @@
 import Link from "next/link";
 import { headers } from "next/headers";
+import {
+  BarChart3,
+  Clapperboard,
+  FolderOpen,
+  LayoutDashboard,
+  ListChecks
+} from "lucide-react";
 import { requireRole, getSessionUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/auth/logout-button";
 
 const navItems = [
-  { href: "/client", label: "Dashboard", helper: "Resumen general" },
-  { href: "/client/accounts", label: "Metricas", helper: "Evolucion y redes" },
-  { href: "/client/onboarding", label: "Onboarding", helper: "Estrategia y brief" },
-  { href: "/client/assets", label: "Assets", helper: "Biblioteca visual" }
+  {
+    href: "/client",
+    label: "Panel",
+    helper: "Resumen general",
+    icon: LayoutDashboard
+  },
+  {
+    href: "/client/accounts",
+    label: "Métricas",
+    helper: "Evolución y redes",
+    icon: BarChart3
+  },
+  {
+    href: "/client/video",
+    label: "Vídeo",
+    helper: "Snapshot de marca",
+    icon: Clapperboard
+  },
+  {
+    href: "/client/onboarding",
+    label: "Onboarding",
+    helper: "Estrategia y brief",
+    icon: ListChecks
+  },
+  {
+    href: "/client/assets",
+    label: "Assets",
+    helper: "Biblioteca visual",
+    icon: FolderOpen
+  }
 ] as const;
 
 export default async function ClientLayout({
@@ -42,19 +75,26 @@ export default async function ClientLayout({
             {navItems.map((item) => {
               const isActive =
                 pathname === item.href || (item.href !== "/client" && pathname.startsWith(item.href));
+              const Icon = item.icon;
 
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`rounded-xl border-2 px-3 py-3 transition-colors ${
+                  aria-current={isActive ? "page" : undefined}
+                  className={`group flex items-center gap-3 rounded-[8px] border-2 px-3 py-3 transition-[background-color,transform,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     isActive
-                      ? "border-black bg-[#fde68a]"
-                      : "border-border bg-background hover:bg-muted"
+                      ? "border-black bg-[#fde68a] shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
+                      : "border-border bg-background hover:-translate-y-0.5 hover:bg-muted hover:shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
                   }`}
                 >
-                  <p className="text-sm font-black">{item.label}</p>
-                  <p className="text-xs font-medium text-muted-foreground">{item.helper}</p>
+                  <Icon className="h-5 w-5 shrink-0" aria-hidden />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-black">{item.label}</span>
+                    <span className="block truncate text-xs font-medium text-muted-foreground">
+                      {item.helper}
+                    </span>
+                  </span>
                 </Link>
               );
             })}
@@ -64,12 +104,12 @@ export default async function ClientLayout({
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
               Foco recomendado
             </p>
-            <p className="mt-2 text-sm font-bold text-foreground">Revisa tus metricas de evolucion</p>
+            <p className="mt-2 text-sm font-bold text-foreground">Revisa tus métricas de evolución</p>
             <p className="mt-1 text-xs font-medium text-muted-foreground">
               Entra en Metricas para ver seguidores, alcance, engagement y top publicaciones.
             </p>
             <Link href="/client/accounts" className="mt-3 inline-block text-sm font-bold underline">
-              Abrir panel de metricas
+              Abrir panel de métricas
             </Link>
           </div>
 
@@ -96,19 +136,26 @@ export default async function ClientLayout({
               {navItems.map((item) => {
                 const isActive =
                   pathname === item.href || (item.href !== "/client" && pathname.startsWith(item.href));
+                const Icon = item.icon;
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`rounded-xl border-2 px-3 py-3 ${
+                    aria-current={isActive ? "page" : undefined}
+                    className={`flex items-center gap-3 rounded-[8px] border-2 px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       isActive
-                        ? "border-black bg-[#fde68a]"
+                        ? "border-black bg-[#fde68a] shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
                         : "border-border bg-background"
                     }`}
                   >
-                    <p className="text-sm font-black">{item.label}</p>
-                    <p className="text-xs font-medium text-muted-foreground">{item.helper}</p>
+                    <Icon className="h-5 w-5 shrink-0" aria-hidden />
+                    <span className="min-w-0">
+                      <span className="block text-sm font-black">{item.label}</span>
+                      <span className="block truncate text-xs font-medium text-muted-foreground">
+                        {item.helper}
+                      </span>
+                    </span>
                   </Link>
                 );
               })}

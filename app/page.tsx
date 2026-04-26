@@ -201,7 +201,7 @@ export default function HomePage() {
               />
 
               <Button disabled={loading} className="w-full">
-                {loading ? "Enviando..." : "Enviar solicitud"}
+                {loading ? "Enviando…" : "Enviar solicitud"}
               </Button>
 
               {result?.ok === true ? (

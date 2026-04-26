@@ -46,7 +46,7 @@ export function DeleteClientButton({
         disabled={loading}
         className="w-full border-red-700 text-red-700 hover:bg-red-50 sm:w-auto"
       >
-        {loading ? "Eliminando..." : "Eliminar"}
+        {loading ? "Eliminando…" : "Eliminar"}
       </Button>
       {error ? <p className="text-xs text-red-700">{error}</p> : null}
     </div>

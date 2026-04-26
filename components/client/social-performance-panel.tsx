@@ -467,14 +467,14 @@ export function SocialPerformancePanel() {
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-2">
           <Badge className="w-fit bg-[#fde68a] text-slate-900">Instagram analytics</Badge>
-          <CardTitle>Analisis completo de evolucion y rendimiento</CardTitle>
+          <CardTitle>Análisis completo de evolución y rendimiento</CardTitle>
           <CardDescription>
             Seguimos la evolución de seguidores, alcance, impresiones, visitas al perfil y engagement
             para convertir métricas sueltas en decisiones más claras.
           </CardDescription>
         </div>
         <Button variant="outline" onClick={() => void loadInsights()} disabled={loading}>
-          {loading ? "Actualizando..." : "Actualizar métricas"}
+          {loading ? "Actualizando…" : "Actualizar métricas"}
         </Button>
       </div>
 

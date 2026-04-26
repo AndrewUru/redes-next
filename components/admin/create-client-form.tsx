@@ -60,7 +60,7 @@ export function CreateClientForm() {
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {done ? <p className="text-sm text-green-700">{done}</p> : null}
       <Button disabled={loading}>
-        {loading ? "Creando..." : "Crear cuenta + activar onboarding"}
+        {loading ? "Creando…" : "Crear cuenta + activar onboarding"}
       </Button>
     </form>
   );

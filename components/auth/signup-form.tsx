@@ -107,7 +107,7 @@ export function SignupForm() {
           </p>
         ) : null}
         <Button className="w-full" disabled={loading}>
-          {loading ? "Creando..." : "Crear acceso"}
+          {loading ? "Creando…" : "Crear acceso"}
         </Button>
       </form>
       <p className="text-sm text-muted-foreground">

@@ -121,7 +121,7 @@ export function FileUploader({
         }`}
       >
         <p className="text-sm font-medium">
-          {isDragging ? "Suelta la imagen aqui" : "Arrastra una imagen aqui o haz click para elegir"}
+          {isDragging ? "Suelta la imagen aquí" : "Arrastra una imagen aquí o haz click para elegir"}
         </p>
       </div>
       <Input
@@ -161,7 +161,7 @@ export function FileUploader({
           className="w-full sm:w-auto"
         >
           <Upload className="mr-2 h-4 w-4" />
-          {loading ? "Subiendo..." : "Subir asset"}
+          {loading ? "Subiendo…" : "Subir asset"}
         </Button>
         {selectedFile ? (
           <Button

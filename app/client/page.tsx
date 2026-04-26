@@ -11,6 +11,11 @@ import type { ClientStatus } from "@/lib/db/types";
 import { getClientSummary } from "@/lib/db/server";
 import { createClient } from "@/lib/supabase/server";
 
+const actionLinkClass =
+  "inline-flex h-10 items-center justify-center rounded-[8px] border-2 border-border bg-background px-4 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
+const primaryActionLinkClass =
+  "inline-flex h-11 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a] px-4 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
+
 export default async function ClientHomePage() {
   const [clientId, profile, user] = await Promise.all([
     getClientIdForCurrentUser(),
@@ -45,13 +50,13 @@ export default async function ClientHomePage() {
   const userDisplayName = cleanName || emailName || "Cliente";
   const metricsPreview = [
     {
-      title: "Evolucion de seguidores",
+      title: "Evolución de seguidores",
       helper: "Detecta si la comunidad crece o se estanca.",
       bars: [34, 48, 44, 62, 76, 82]
     },
     {
       title: "Engagement y respuesta",
-      helper: "Comprueba si el contenido genera interaccion real.",
+      helper: "Comprueba si el contenido genera interacción real.",
       bars: [22, 28, 36, 31, 46, 54]
     },
     {
@@ -90,9 +95,9 @@ export default async function ClientHomePage() {
             <p>Progreso de onboarding</p>
             <p>{onboardingPct}%</p>
           </div>
-          <div className="h-3 overflow-hidden rounded-full border border-border bg-background">
+            <div className="h-3 overflow-hidden rounded-full border border-border bg-background">
             <div
-              className="h-full bg-primary transition-all"
+              className="h-full bg-primary transition-[width]"
               style={{ width: `${Math.min(100, Math.max(0, onboardingPct))}%` }}
               aria-hidden
             />
@@ -107,17 +112,17 @@ export default async function ClientHomePage() {
               <CardDescription className="uppercase tracking-[0.14em]">
                 Nuevo foco
               </CardDescription>
-              <CardTitle className="mt-1">Metricas de evolucion listas para revisar</CardTitle>
+              <CardTitle className="mt-1">Métricas de evolución listas para revisar</CardTitle>
               <p className="mt-2 max-w-2xl text-sm font-medium text-muted-foreground">
-                Entra al panel de metricas para revisar seguidores, engagement, alcance,
+                Entra al panel de métricas para revisar seguidores, engagement, alcance,
                 impresiones y las publicaciones que mejor estan funcionando.
               </p>
             </div>
             <Link
               href="/client/accounts"
-              className="inline-flex h-11 items-center justify-center rounded-xl border-2 border-border bg-[#fde68a] px-4 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
+              className={primaryActionLinkClass}
             >
-              Ver metricas completas
+              Ver métricas completas
             </Link>
           </div>
 
@@ -150,7 +155,7 @@ export default async function ClientHomePage() {
               href="/client/accounts"
               className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
             >
-              <p className="text-sm font-black">Abrir evolucion de redes</p>
+              <p className="text-sm font-black">Abrir evolución de redes</p>
               <p className="mt-1 text-xs font-medium text-muted-foreground">
                 Seguidores, likes, engagement y comparativas historicas.
               </p>
@@ -171,6 +176,15 @@ export default async function ClientHomePage() {
               <p className="text-sm font-black">Ir al dashboard visual</p>
               <p className="mt-1 text-xs font-medium text-muted-foreground">
                 Entra directo a la lectura de tendencias y top publicaciones.
+              </p>
+            </Link>
+            <Link
+              href="/client/video"
+              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+            >
+              <p className="text-sm font-black">Previsualizar video de marca</p>
+              <p className="mt-1 text-xs font-medium text-muted-foreground">
+                Revisa un snapshot vertical con onboarding, assets y brandbook.
               </p>
             </Link>
           </div>
@@ -230,21 +244,24 @@ export default async function ClientHomePage() {
           <div className="flex flex-wrap gap-2">
             <Link
               href="/client/onboarding"
-              className="inline-flex h-10 items-center rounded-xl border-2 border-border bg-background px-4 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
+              className={actionLinkClass}
             >
               Abrir onboarding
             </Link>
             <Link
               href="/client/assets"
-              className="inline-flex h-10 items-center rounded-xl border-2 border-border bg-background px-4 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
+              className={actionLinkClass}
             >
               Gestionar assets
             </Link>
             <Link
               href="/client/accounts"
-              className="inline-flex h-10 items-center rounded-xl border-2 border-border bg-background px-4 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-all hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)]"
+              className={actionLinkClass}
             >
-              Abrir metricas y redes
+              Abrir métricas y redes
+            </Link>
+            <Link href="/client/video" className={actionLinkClass}>
+              Abrir video snapshot
             </Link>
           </div>
         </Card>

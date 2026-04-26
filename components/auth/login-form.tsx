@@ -130,7 +130,7 @@ export function LoginForm() {
           </p>
         ) : null}
         <Button className="w-full" disabled={loading}>
-          {loading ? "Entrando..." : "Entrar"}
+          {loading ? "Entrando…" : "Entrar"}
         </Button>
       </form>
       <p className="text-sm text-muted-foreground">

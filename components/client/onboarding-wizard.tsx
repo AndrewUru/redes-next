@@ -450,7 +450,7 @@ export function OnboardingWizard({
             Estado
           </p>
           <p className="text-lg font-black text-foreground">
-            {saving ? "Guardando..." : status === "submitted" ? "Enviado" : "Borrador activo"}
+            {saving ? "Guardando…" : status === "submitted" ? "Enviado" : "Borrador activo"}
           </p>
           <p className="text-xs font-medium text-muted-foreground">
             Puedes salir y volver sin perder el avance.
@@ -494,7 +494,7 @@ export function OnboardingWizard({
       </StepLayout>
 
       <p className="text-sm text-muted-foreground">
-        {saving ? "Guardando..." : "Guardado automatico activo"} | Progreso: {completionPct}% | Estado:{" "}
+        {saving ? "Guardando…" : "Guardado automatico activo"} | Progreso: {completionPct}% | Estado:{" "}
         {status === "draft" ? "Borrador" : "Enviado"}
       </p>
       {message ? <p className="text-sm text-amber-700">{message}</p> : null}

@@ -54,7 +54,7 @@ export function CreateAdminForm() {
       </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {done ? <p className="text-sm text-green-700">{done}</p> : null}
-      <Button disabled={loading}>{loading ? "Creando..." : "Crear administrador"}</Button>
+      <Button disabled={loading}>{loading ? "Creando…" : "Crear administrador"}</Button>
     </form>
   );
 }

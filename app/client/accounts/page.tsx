@@ -11,10 +11,10 @@ export default async function ClientAccountsPage() {
   return (
     <main className="space-y-6">
       <Card className="space-y-2 bg-white/90">
-        <CardTitle>Centro de cuentas y analitica</CardTitle>
+        <CardTitle>Centro de cuentas y analítica</CardTitle>
         <CardDescription>
-          Desde aqui puedes conectar perfiles y revisar un analisis visual de la
-          evolucion de seguidores, likes, interacciones y senales de
+          Desde aquí puedes conectar perfiles y revisar un análisis visual de la
+          evolución de seguidores, likes, interacciones y señales de
           rendimiento.
         </CardDescription>
       </Card>
