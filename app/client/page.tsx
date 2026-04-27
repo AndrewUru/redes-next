@@ -178,15 +178,6 @@ export default async function ClientHomePage() {
                 Entra directo a la lectura de tendencias y top publicaciones.
               </p>
             </Link>
-            <Link
-              href="/client/video"
-              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
-            >
-              <p className="text-sm font-black">Previsualizar video de marca</p>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                Revisa un snapshot vertical con onboarding, assets y brandbook.
-              </p>
-            </Link>
           </div>
         </Card>
       </section>
@@ -259,9 +250,6 @@ export default async function ClientHomePage() {
               className={actionLinkClass}
             >
               Abrir métricas y redes
-            </Link>
-            <Link href="/client/video" className={actionLinkClass}>
-              Abrir video snapshot
             </Link>
           </div>
         </Card>

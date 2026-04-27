@@ -116,13 +116,6 @@ export default function HomePage() {
               Además, tendrás un espacio privado donde compartir información,
               subir material y ver el avance del trabajo.
             </p>
-
-            <ul className="space-y-2 text-sm font-medium text-foreground">
-              <li>Ordenamos tu mensaje y tu enfoque de contenido.</li>
-              <li>Centralizamos materiales, referencias y datos clave.</li>
-              <li>Sigues el proceso con más claridad y menos improvisación.</li>
-            </ul>
-
             <div className="pt-2">
               <Link href="/login" className="inline-block w-full sm:w-auto">
                 <Button variant="outline" className="w-full sm:w-auto">

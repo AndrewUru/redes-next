@@ -2,7 +2,6 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import {
   BarChart3,
-  Clapperboard,
   FolderOpen,
   LayoutDashboard,
   ListChecks
@@ -22,12 +21,6 @@ const navItems = [
     label: "Métricas",
     helper: "Evolución y redes",
     icon: BarChart3
-  },
-  {
-    href: "/client/video",
-    label: "Vídeo",
-    helper: "Snapshot de marca",
-    icon: Clapperboard
   },
   {
     href: "/client/onboarding",
