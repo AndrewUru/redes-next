@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth";
 import {
   fetchInstagramInsights,
-  AccountInsights
+  AccountInsights,
+  HistoryPoint
 } from "@/lib/instagram/insights";
 import type { SocialAccountRow } from "@/lib/db/types";
 
@@ -92,7 +93,7 @@ export async function GET(
     return NextResponse.json({ error: historyError.message }, { status: 400 });
   }
 
-  const historyByAccount = new Map<string, any[]>();
+  const historyByAccount = new Map<string, HistoryPoint[]>();
   for (const row of historyRows ?? []) {
     const record = row as Record<string, unknown>;
     const accountId = String(record.social_account_id ?? "");

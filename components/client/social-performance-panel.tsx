@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -538,7 +538,7 @@ export function SocialPerformancePanel({
     };
   }, [insights]);
 
-  async function loadInsights() {
+  const loadInsights = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -562,11 +562,11 @@ export function SocialPerformancePanel({
     } finally {
       setLoading(false);
     }
-  }
+  }, [apiPath]);
 
   useEffect(() => {
     void loadInsights();
-  }, []);
+  }, [loadInsights]);
 
   return (
     <Card className="space-y-6 overflow-hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.94))]">
