@@ -381,7 +381,7 @@ export function SocialAccountsManager() {
             className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-[#fde68a] px-4 py-2 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-[#f2d048] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <ExternalLink className="h-4 w-4" aria-hidden />
-            Ver métricas completas
+            Métricas completas
           </Link>
         </div>
         {loading ? (

@@ -119,7 +119,7 @@ export default async function ClientHomePage() {
             </div>
             <Link href="/client/accounts" className={primaryActionLinkClass}>
               <BarChart3 className="h-4 w-4" aria-hidden />
-              Ver métricas completas
+              Métricas completas
             </Link>
           </div>
 
