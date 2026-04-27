@@ -9,7 +9,7 @@ export default async function ClientAccountsPage() {
   if (!clientId) notFound();
 
   return (
-    <main className="space-y-6">
+    <div className="space-y-6">
       <Card className="space-y-2 bg-white/90">
         <CardTitle>Centro de cuentas y analítica</CardTitle>
         <CardDescription>
@@ -20,6 +20,6 @@ export default async function ClientAccountsPage() {
       </Card>
       <SocialAccountsManager />
       <SocialPerformancePanel />
-    </main>
+    </div>
   );
 }

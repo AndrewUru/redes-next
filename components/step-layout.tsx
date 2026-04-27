@@ -16,16 +16,18 @@ export function StepLayout({
   children: ReactNode;
 }) {
   return (
-    <section className="space-y-4 rounded-xl border border-border bg-background p-4 sm:p-6">
+    <section className="space-y-4 rounded-[8px] border-2 border-border bg-background p-4 shadow-[5px_6px_0_0_rgba(0,0,0,1)] sm:p-6">
       <div className="space-y-2">
-        <p className="text-sm text-muted-foreground">
-          Bloque estrategico {step} de {total}
+        <p className="text-sm font-semibold text-muted-foreground">
+          Bloque estratégico {step} de {total}
         </p>
         <Progress value={(step / total) * 100} />
       </div>
       <header>
-        <h2 className="text-xl font-semibold">{title}</h2>
-        <p className={cn("text-sm text-muted-foreground")}>{description}</p>
+        <h2 className="text-2xl font-black leading-tight">{title}</h2>
+        <p className={cn("mt-1 text-sm leading-relaxed text-muted-foreground")}>
+          {description}
+        </p>
       </header>
       {children}
     </section>

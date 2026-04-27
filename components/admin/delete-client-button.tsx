@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function DeleteClientButton({
@@ -17,24 +18,28 @@ export function DeleteClientButton({
 
   async function removeClient() {
     const confirmed = window.confirm(
-      `Esto eliminara el cliente "${clientName}" y su usuario de acceso. Esta accion no se puede deshacer.`
+      `Esto eliminará el cliente "${clientName}" y su usuario de acceso. Esta acción no se puede deshacer.`
     );
     if (!confirmed) return;
 
     setLoading(true);
     setError(null);
 
-    const res = await fetch(`/api/admin/client/${clientId}`, { method: "DELETE" });
-    const json = (await res.json().catch(() => ({}))) as { error?: string };
+    try {
+      const res = await fetch(`/api/admin/client/${clientId}`, {
+        method: "DELETE"
+      });
+      const json = (await res.json().catch(() => ({}))) as { error?: string };
 
-    setLoading(false);
+      if (!res.ok) {
+        setError(json.error ?? "No se pudo eliminar este usuario.");
+        return;
+      }
 
-    if (!res.ok) {
-      setError(json.error ?? "No se pudo eliminar este usuario.");
-      return;
+      router.refresh();
+    } finally {
+      setLoading(false);
     }
-
-    router.refresh();
   }
 
   return (
@@ -46,9 +51,14 @@ export function DeleteClientButton({
         disabled={loading}
         className="w-full border-red-700 text-red-700 hover:bg-red-50 sm:w-auto"
       >
+        <Trash2 className="h-4 w-4" aria-hidden />
         {loading ? "Eliminando…" : "Eliminar"}
       </Button>
-      {error ? <p className="text-xs text-red-700">{error}</p> : null}
+      <div aria-live="polite">
+        {error ? (
+          <p className="text-xs font-medium text-red-700">{error}</p>
+        ) : null}
+      </div>
     </div>
   );
 }

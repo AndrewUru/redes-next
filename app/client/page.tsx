@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { ArrowRight, BarChart3, FolderOpen, ListChecks } from "lucide-react";
 import { SummaryCard } from "@/components/summary-card";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import {
   getClientIdForCurrentUser,
   getProfile,
@@ -12,9 +14,9 @@ import { getClientSummary } from "@/lib/db/server";
 import { createClient } from "@/lib/supabase/server";
 
 const actionLinkClass =
-  "inline-flex h-10 items-center justify-center rounded-[8px] border-2 border-border bg-background px-4 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
+  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-background px-4 py-2 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-muted hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 const primaryActionLinkClass =
-  "inline-flex h-11 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a] px-4 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-[#fde68a] px-4 py-2 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-[#f2d048] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
 export default async function ClientHomePage() {
   const [clientId, profile, user] = await Promise.all([
@@ -67,11 +69,11 @@ export default async function ClientHomePage() {
   ] as const;
 
   return (
-    <main className="space-y-6">
+    <div className="space-y-6">
       <Card className="space-y-4 bg-white/90">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <CardDescription className="uppercase tracking-[0.14em]">
+            <CardDescription className="uppercase">
               Panel de usuario
             </CardDescription>
             <CardTitle className="mt-1">
@@ -93,15 +95,9 @@ export default async function ClientHomePage() {
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm font-semibold">
             <p>Progreso de onboarding</p>
-            <p>{onboardingPct}%</p>
+            <p className="tabular-nums">{onboardingPct}%</p>
           </div>
-            <div className="h-3 overflow-hidden rounded-full border border-border bg-background">
-            <div
-              className="h-full bg-primary transition-[width]"
-              style={{ width: `${Math.min(100, Math.max(0, onboardingPct))}%` }}
-              aria-hidden
-            />
-          </div>
+          <Progress value={onboardingPct} />
         </div>
       </Card>
 
@@ -109,19 +105,20 @@ export default async function ClientHomePage() {
         <Card className="space-y-4 overflow-hidden bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(239,246,255,0.94))]">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <CardDescription className="uppercase tracking-[0.14em]">
+              <CardDescription className="uppercase">
                 Nuevo foco
               </CardDescription>
-              <CardTitle className="mt-1">Métricas de evolución listas para revisar</CardTitle>
+              <CardTitle className="mt-1">
+                Métricas de evolución listas para revisar
+              </CardTitle>
               <p className="mt-2 max-w-2xl text-sm font-medium text-muted-foreground">
-                Entra al panel de métricas para revisar seguidores, engagement, alcance,
-                impresiones y las publicaciones que mejor estan funcionando.
+                Entra al panel de métricas para revisar seguidores, engagement,
+                alcance, impresiones y las publicaciones que mejor estan
+                funcionando.
               </p>
             </div>
-            <Link
-              href="/client/accounts"
-              className={primaryActionLinkClass}
-            >
+            <Link href="/client/accounts" className={primaryActionLinkClass}>
+              <BarChart3 className="h-4 w-4" aria-hidden />
               Ver métricas completas
             </Link>
           </div>
@@ -130,11 +127,13 @@ export default async function ClientHomePage() {
             {metricsPreview.map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+                className="rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
               >
                 <p className="text-sm font-black">{item.title}</p>
-                <p className="mt-1 text-xs font-medium text-muted-foreground">{item.helper}</p>
-                <div className="mt-4 flex h-20 items-end gap-2 rounded-xl border border-border bg-[#f8fafc] p-2">
+                <p className="mt-1 text-xs font-medium text-muted-foreground">
+                  {item.helper}
+                </p>
+                <div className="mt-4 flex h-20 items-end gap-2 rounded-[8px] border border-border bg-[#f8fafc] p-2">
                   {item.bars.map((bar, index) => (
                     <div
                       key={`${item.title}-${index}`}
@@ -149,31 +148,49 @@ export default async function ClientHomePage() {
         </Card>
 
         <Card className="space-y-3 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(254,243,199,0.92))]">
-          <CardTitle>Accesos rapidos</CardTitle>
+          <CardTitle>Accesos rápidos</CardTitle>
           <div className="grid gap-3">
             <Link
               href="/client/accounts"
-              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              className="group rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-[#ecfeff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <p className="text-sm font-black">Abrir evolución de redes</p>
+              <p className="flex items-center justify-between gap-2 text-sm font-black">
+                Abrir evolución de redes
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  aria-hidden
+                />
+              </p>
               <p className="mt-1 text-xs font-medium text-muted-foreground">
                 Seguidores, likes, engagement y comparativas historicas.
               </p>
             </Link>
             <Link
               href="/client/accounts#conectar-redes"
-              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              className="group rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-[#f0fdf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <p className="text-sm font-black">Conectar o revisar cuentas</p>
+              <p className="flex items-center justify-between gap-2 text-sm font-black">
+                Conectar o revisar cuentas
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  aria-hidden
+                />
+              </p>
               <p className="mt-1 text-xs font-medium text-muted-foreground">
                 Gestiona Instagram y prepara la base de datos para el analisis.
               </p>
             </Link>
             <Link
               href="/client/accounts#insights"
-              className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              className="group rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-[#fff7ed] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <p className="text-sm font-black">Ir al dashboard visual</p>
+              <p className="flex items-center justify-between gap-2 text-sm font-black">
+                Ir al dashboard visual
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                  aria-hidden
+                />
+              </p>
               <p className="mt-1 text-xs font-medium text-muted-foreground">
                 Entra directo a la lectura de tendencias y top publicaciones.
               </p>
@@ -233,22 +250,16 @@ export default async function ClientHomePage() {
             </li>
           </ul>
           <div className="flex flex-wrap gap-2">
-            <Link
-              href="/client/onboarding"
-              className={actionLinkClass}
-            >
+            <Link href="/client/onboarding" className={actionLinkClass}>
+              <ListChecks className="h-4 w-4" aria-hidden />
               Abrir onboarding
             </Link>
-            <Link
-              href="/client/assets"
-              className={actionLinkClass}
-            >
+            <Link href="/client/assets" className={actionLinkClass}>
+              <FolderOpen className="h-4 w-4" aria-hidden />
               Gestionar assets
             </Link>
-            <Link
-              href="/client/accounts"
-              className={actionLinkClass}
-            >
+            <Link href="/client/accounts" className={actionLinkClass}>
+              <BarChart3 className="h-4 w-4" aria-hidden />
               Abrir métricas y redes
             </Link>
           </div>
@@ -299,6 +310,6 @@ export default async function ClientHomePage() {
           </div>
         </section>
       ) : null}
-    </main>
+    </div>
   );
 }

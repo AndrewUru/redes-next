@@ -18,9 +18,14 @@ export function AppHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAuthPage = pathname === "/login" || pathname === "/signup";
-  const isWorkspace = pathname.startsWith("/client") || pathname.startsWith("/admin");
+  const isWorkspace =
+    pathname.startsWith("/client") || pathname.startsWith("/admin");
   const ctaHref = isWorkspace ? "/dashboard" : "/login";
-  const ctaLabel = isWorkspace ? "Dashboard" : isAuthPage ? "Volver al acceso" : "Acceder";
+  const ctaLabel = isWorkspace
+    ? "Dashboard"
+    : isAuthPage
+      ? "Volver al acceso"
+      : "Acceder";
   const CtaIcon = isWorkspace ? LayoutDashboard : LogIn;
 
   useEffect(() => {
@@ -28,16 +33,19 @@ export function AppHeader() {
   }, [pathname]);
 
   return (
-    <header className="border-b-2 border-black py-4">
+    <header className="sticky top-0 z-30 -mx-4 border-b-2 border-black bg-background/85 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="flex items-center justify-between gap-4">
         <Link
-          className="rounded-[8px] font-black uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="rounded-[8px] font-black uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           href="/"
         >
           ElSaltoWeb
         </Link>
 
-        <nav className="hidden items-center gap-2 text-sm font-semibold sm:flex" aria-label="Principal">
+        <nav
+          className="hidden items-center gap-2 text-sm font-semibold sm:flex"
+          aria-label="Principal"
+        >
           {publicLinks.map((item) => {
             const isActive = isCurrentPath(pathname, item.href);
 
@@ -66,9 +74,12 @@ export function AppHeader() {
         <div className="relative sm:hidden">
           <button
             type="button"
+            aria-label={
+              mobileMenuOpen ? "Cerrar navegación" : "Abrir navegación"
+            }
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-main-nav"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[8px] border-2 border-border bg-background shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-[8px] border-2 border-border bg-white/90 shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={() => setMobileMenuOpen((open) => !open)}
           >
             {mobileMenuOpen ? (
@@ -83,7 +94,7 @@ export function AppHeader() {
 
           <nav
             id="mobile-main-nav"
-            className={`absolute right-0 top-12 z-40 w-[min(82vw,18rem)] rounded-[8px] border-2 border-border bg-background p-3 text-sm font-semibold shadow-[6px_8px_0_0_rgba(0,0,0,1)] ${
+            className={`absolute right-0 top-12 z-40 w-[min(86vw,19rem)] rounded-[8px] border-2 border-border bg-white p-3 text-sm font-semibold shadow-[6px_8px_0_0_rgba(0,0,0,1)] ${
               mobileMenuOpen ? "grid gap-2" : "hidden"
             }`}
             aria-label="Principal móvil"
@@ -96,8 +107,8 @@ export function AppHeader() {
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`rounded-[8px] border-2 border-border px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                    isActive ? "bg-muted" : "bg-white/70"
+                  className={`rounded-[8px] border-2 border-border px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                    isActive ? "bg-muted" : "bg-white/70 hover:bg-muted/70"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >

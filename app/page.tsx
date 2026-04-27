@@ -2,11 +2,12 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 const serviceBlocks = [
   {
@@ -70,41 +71,53 @@ export default function HomePage() {
     setLoading(true);
     setResult(null);
 
-    const form = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(form.entries());
+    try {
+      const form = new FormData(event.currentTarget);
+      const payload = Object.fromEntries(form.entries());
 
-    const response = await fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
 
-    const json = (await response.json()) as { id?: string; error?: string };
-    setLoading(false);
+      const json = (await response.json()) as { id?: string; error?: string };
 
-    if (!response.ok || !json.id) {
+      if (!response.ok || !json.id) {
+        setResult({
+          ok: false,
+          error:
+            json.error ??
+            "No se pudo enviar el formulario. Revisa los campos e inténtalo de nuevo."
+        });
+        return;
+      }
+
+      setResult({ ok: true, id: json.id });
+      event.currentTarget.reset();
+    } catch {
       setResult({
         ok: false,
-        error: json.error ?? "Error enviando el formulario"
+        error:
+          "No se pudo enviar el formulario. Comprueba tu conexión e inténtalo de nuevo."
       });
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    setResult({ ok: true, id: json.id });
-    event.currentTarget.reset();
   }
 
   return (
-    <main className="min-h-screen">
+    <div className="min-h-screen">
       <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
           <div className="neo-box space-y-4 bg-white/85">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <p className="text-sm font-semibold uppercase text-muted-foreground">
               Estrategia de contenido y seguimiento
             </p>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl">
-              Estrategia, contenido y seguimiento real para creadores que quieren crecer con orden
+              Estrategia, contenido y seguimiento real para creadores que
+              quieren crecer con orden
             </h1>
 
             <p className="text-base leading-relaxed text-muted-foreground">
@@ -117,10 +130,14 @@ export default function HomePage() {
               subir material y ver el avance del trabajo.
             </p>
             <div className="pt-2">
-              <Link href="/login" className="inline-block w-full sm:w-auto">
-                <Button variant="outline" className="w-full sm:w-auto">
-                  Quiero empezar
-                </Button>
+              <Link
+                href="/login"
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "w-full sm:w-auto"
+                )}
+              >
+                Quiero Empezar
               </Link>
               <p className="mt-2 text-xs font-medium text-muted-foreground">
                 Completa tus datos y te indicaré cómo podríamos trabajar juntos.
@@ -139,51 +156,63 @@ export default function HomePage() {
             </div>
             <form onSubmit={onSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="space-y-1">
+                <div className="space-y-1">
                   <Label htmlFor="full_name">Nombre *</Label>
                   <Input
                     id="full_name"
                     name="full_name"
+                    autoComplete="name"
                     required
-                    placeholder="Tu nombre completo"
+                    placeholder="Ej. Ana García…"
                   />
-                </label>
-                <label className="space-y-1">
+                </div>
+                <div className="space-y-1">
                   <Label htmlFor="email">Email *</Label>
                   <Input
                     id="email"
                     name="email"
                     type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    spellCheck={false}
                     required
-                    placeholder="tu@email.com"
+                    placeholder="Ej. ana@proyecto.com…"
                   />
-                </label>
+                </div>
               </div>
 
-              <label className="space-y-1">
+              <div className="space-y-1">
                 <Label htmlFor="company">Empresa / proyecto</Label>
                 <Input
                   id="company"
                   name="company"
-                  placeholder="Nombre de tu proyecto o perfil"
+                  autoComplete="organization"
+                  placeholder="Ej. Estudio Norte…"
                 />
-              </label>
+              </div>
 
-              <label className="space-y-1">
+              <div className="space-y-1">
                 <Label htmlFor="phone">Teléfono</Label>
-                <Input id="phone" name="phone" placeholder="+34 600 000 000" />
-              </label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="Ej. +34 600 000 000…"
+                />
+              </div>
 
-              <label className="space-y-1">
+              <div className="space-y-1">
                 <Label htmlFor="message">¿Qué necesitas exactamente? *</Label>
                 <Textarea
                   id="message"
                   name="message"
                   required
                   rows={5}
-                  placeholder="Cuéntame qué haces, qué publicas ahora, qué te está costando y qué te gustaría mejorar."
+                  placeholder="Ej. qué haces, qué publicas ahora, qué te está costando y qué te gustaría mejorar…"
                 />
-              </label>
+              </div>
 
               <input
                 name="website"
@@ -197,14 +226,19 @@ export default function HomePage() {
                 {loading ? "Enviando…" : "Enviar solicitud"}
               </Button>
 
-              {result?.ok === true ? (
-                <p className="text-sm font-medium text-muted-foreground">
-                  He recibido tu solicitud. Te escribiré pronto con los siguientes pasos. (ref: {result.id})
-                </p>
-              ) : null}
-              {result?.ok === false ? (
-                <p className="text-sm text-red-700">{result.error}</p>
-              ) : null}
+              <div aria-live="polite">
+                {result?.ok === true ? (
+                  <p className="rounded-[8px] border-2 border-emerald-700 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
+                    He recibido tu solicitud. Te escribiré pronto con los
+                    siguientes pasos. (ref: {result.id})
+                  </p>
+                ) : null}
+                {result?.ok === false ? (
+                  <p className="rounded-[8px] border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
+                    {result.error}
+                  </p>
+                ) : null}
+              </div>
             </form>
           </Card>
         </div>
@@ -212,7 +246,8 @@ export default function HomePage() {
         <div className="mt-10 space-y-4">
           <h2 className="text-3xl sm:text-4xl">Qué podemos trabajar juntos</h2>
           <p className="text-sm font-medium text-muted-foreground">
-            Una base clara para que tu contenido tenga dirección, coherencia y seguimiento.
+            Una base clara para que tu contenido tenga dirección, coherencia y
+            seguimiento.
           </p>
           <div className="grid gap-4 md:grid-cols-2">
             {serviceBlocks.map((block) => (
@@ -230,6 +265,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

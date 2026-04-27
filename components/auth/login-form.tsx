@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -38,11 +38,10 @@ export function LoginForm() {
   return (
     <Card className="w-full space-y-5 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.92))]">
       <div>
-        <CardTitle> Cuéntame tu proyecto</CardTitle>
+        <CardTitle>Entra a tu espacio privado</CardTitle>
         <CardDescription>
-          Si quieres trabajar conmigo tu estrategia de contenido, este es + el
-          primer paso. Reviso tu caso y te respondo con una propuesta + de
-          enfoque.
+          Accede al panel para completar tu onboarding, subir materiales y ver
+          el avance de tu sistema de marca.
         </CardDescription>
       </div>
       <form action={onSubmit} className="space-y-3">
@@ -54,8 +53,10 @@ export function LoginForm() {
             type="email"
             autoComplete="email"
             inputMode="email"
+            spellCheck={false}
             required
             aria-describedby="login-email-help"
+            placeholder="Ej. ana@proyecto.com…"
           />
           <p
             id="login-email-help"
@@ -65,26 +66,7 @@ export function LoginForm() {
           </p>
         </div>
         <div className="space-y-1">
-          <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="password">Contraseña</Label>
-            <button
-              type="button"
-              onClick={() => setShowPassword((current) => !current)}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-controls="password"
-              aria-pressed={showPassword}
-              aria-label={
-                showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-              }
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" aria-hidden />
-              ) : (
-                <Eye className="h-4 w-4" aria-hidden />
-              )}
-              {showPassword ? "Ocultar" : "Mostrar"}
-            </button>
-          </div>
+          <Label htmlFor="password">Contraseña</Label>
           <div className="relative">
             <Input
               id="password"
@@ -93,6 +75,7 @@ export function LoginForm() {
               autoComplete="current-password"
               required
               aria-describedby="login-password-help"
+              placeholder="Tu contraseña…"
               className="pr-12"
             />
             <button
@@ -120,16 +103,18 @@ export function LoginForm() {
             entrar.
           </p>
         </div>
-        {error ? (
-          <p
-            className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700"
-            role="alert"
-            aria-live="polite"
-          >
-            {error}
-          </p>
-        ) : null}
+        <div aria-live="polite">
+          {error ? (
+            <p
+              className="rounded-[8px] border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-800"
+              role="alert"
+            >
+              {error}
+            </p>
+          ) : null}
+        </div>
         <Button className="w-full" disabled={loading}>
+          <LogIn className="h-4 w-4" aria-hidden />
           {loading ? "Entrando…" : "Entrar"}
         </Button>
       </form>

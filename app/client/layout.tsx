@@ -53,10 +53,10 @@ export default async function ClientLayout({
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
       <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
-        <aside className="neo-box hidden bg-background lg:block">
+        <aside className="neo-box hidden bg-background lg:sticky lg:top-24 lg:block lg:self-start">
           <div className="border-b-2 border-border pb-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Area cliente
+            <p className="text-xs font-semibold uppercase text-muted-foreground">
+              Área cliente
             </p>
             <h1 className="mt-1 text-2xl sm:text-3xl">Ecosistema Usuario</h1>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -67,7 +67,8 @@ export default async function ClientLayout({
           <nav className="mt-4 grid gap-2">
             {navItems.map((item) => {
               const isActive =
-                pathname === item.href || (item.href !== "/client" && pathname.startsWith(item.href));
+                pathname === item.href ||
+                (item.href !== "/client" && pathname.startsWith(item.href));
               const Icon = item.icon;
 
               return (
@@ -83,7 +84,9 @@ export default async function ClientLayout({
                 >
                   <Icon className="h-5 w-5 shrink-0" aria-hidden />
                   <span className="min-w-0">
-                    <span className="block text-sm font-black">{item.label}</span>
+                    <span className="block text-sm font-black">
+                      {item.label}
+                    </span>
                     <span className="block truncate text-xs font-medium text-muted-foreground">
                       {item.helper}
                     </span>
@@ -93,15 +96,21 @@ export default async function ClientLayout({
             })}
           </nav>
 
-          <div className="mt-5 rounded-2xl border-2 border-border bg-[#eff6ff] p-3">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+          <div className="mt-5 rounded-[8px] border-2 border-border bg-[#eff6ff] p-3">
+            <p className="text-xs font-bold uppercase text-muted-foreground">
               Foco recomendado
             </p>
-            <p className="mt-2 text-sm font-bold text-foreground">Revisa tus métricas de evolución</p>
-            <p className="mt-1 text-xs font-medium text-muted-foreground">
-              Entra en Metricas para ver seguidores, alcance, engagement y top publicaciones.
+            <p className="mt-2 text-sm font-bold text-foreground">
+              Revisa tus métricas de evolución
             </p>
-            <Link href="/client/accounts" className="mt-3 inline-block text-sm font-bold underline">
+            <p className="mt-1 text-xs font-medium text-muted-foreground">
+              Entra en Métricas para ver seguidores, alcance, engagement y top
+              publicaciones.
+            </p>
+            <Link
+              href="/client/accounts"
+              className="mt-3 inline-block text-sm font-bold underline"
+            >
               Abrir panel de métricas
             </Link>
           </div>
@@ -122,13 +131,14 @@ export default async function ClientLayout({
 
         <section className="space-y-4">
           <header className="neo-box space-y-3 bg-background lg:hidden">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Navegacion
+            <p className="text-xs font-semibold uppercase text-muted-foreground">
+              Navegación
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               {navItems.map((item) => {
                 const isActive =
-                  pathname === item.href || (item.href !== "/client" && pathname.startsWith(item.href));
+                  pathname === item.href ||
+                  (item.href !== "/client" && pathname.startsWith(item.href));
                 const Icon = item.icon;
 
                 return (
@@ -139,12 +149,14 @@ export default async function ClientLayout({
                     className={`flex items-center gap-3 rounded-[8px] border-2 px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       isActive
                         ? "border-black bg-[#fde68a] shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
-                        : "border-border bg-background"
+                        : "border-border bg-white/80 hover:bg-muted/80"
                     }`}
                   >
                     <Icon className="h-5 w-5 shrink-0" aria-hidden />
                     <span className="min-w-0">
-                      <span className="block text-sm font-black">{item.label}</span>
+                      <span className="block text-sm font-black">
+                        {item.label}
+                      </span>
                       <span className="block truncate text-xs font-medium text-muted-foreground">
                         {item.helper}
                       </span>

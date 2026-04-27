@@ -19,12 +19,14 @@ export default async function AdminClientDetailPage({
   const supabase = await createClient();
   const pdfPath = summary.latestBrandbook?.pdf_path ?? null;
   const { data: signed } = pdfPath
-    ? await supabase.storage.from("brandbooks").createSignedUrl(pdfPath, 60 * 60)
+    ? await supabase.storage
+        .from("brandbooks")
+        .createSignedUrl(pdfPath, 60 * 60)
     : { data: null };
   const brandbookUrl = signed?.signedUrl ?? null;
 
   return (
-    <main className="space-y-4">
+    <div className="space-y-4">
       <Card>
         <CardTitle>{summary.client.display_name}</CardTitle>
         <CardDescription className="mt-2">
@@ -48,7 +50,8 @@ export default async function AdminClientDetailPage({
         <Card>
           <CardDescription>Brand strategy intake</CardDescription>
           <CardTitle className="mt-2">
-            {summary.intake?.status ?? "sin draft"} ({summary.intake?.completion_pct ?? 0}%)
+            {summary.intake?.status ?? "sin draft"} (
+            {summary.intake?.completion_pct ?? 0}%)
           </CardTitle>
         </Card>
         <Card>
@@ -58,11 +61,18 @@ export default async function AdminClientDetailPage({
         <Card>
           <CardDescription>Brandbook narrativo</CardDescription>
           <CardTitle className="mt-2">
-            {summary.latestBrandbook ? `v${summary.latestBrandbook.version}` : "sin version"}
+            {summary.latestBrandbook
+              ? `v${summary.latestBrandbook.version}`
+              : "sin version"}
           </CardTitle>
           {brandbookUrl ? (
             <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
-              <a href={brandbookUrl} target="_blank" rel="noreferrer" className="underline">
+              <a
+                href={brandbookUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
                 Ver PDF
               </a>
               <a href={brandbookUrl} download className="underline">
@@ -72,6 +82,6 @@ export default async function AdminClientDetailPage({
           ) : null}
         </Card>
       </div>
-    </main>
+    </div>
   );
 }

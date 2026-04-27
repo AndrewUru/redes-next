@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Trash2 } from "lucide-react";
 import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 type Asset = {
   id: string;
@@ -15,19 +16,52 @@ type Asset = {
 };
 
 const assetTypes = ["logo", "typography", "photo", "reference"] as const;
+const assetTypeLabels: Record<(typeof assetTypes)[number], string> = {
+  logo: "Logo",
+  typography: "Tipografía",
+  photo: "Fotos",
+  reference: "Referencias"
+};
+
+function formatDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Fecha no disponible";
+  return new Intl.DateTimeFormat("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  }).format(date);
+}
 
 export function AssetsManager({ clientId }: { clientId: string }) {
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function load() {
-    const res = await fetch("/api/client/assets");
-    const json = (await res.json()) as { assets: Asset[] };
-    setAssets(json.assets ?? []);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/client/assets");
+      const json = (await res.json()) as { assets: Asset[] };
+      setAssets(json.assets ?? []);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function removeAsset(id: string) {
-    await fetch(`/api/client/assets?id=${id}`, { method: "DELETE" });
-    await load();
+    const shouldDelete = window.confirm(
+      "¿Quieres quitar este asset de la biblioteca?"
+    );
+    if (!shouldDelete) return;
+
+    setDeletingId(id);
+    try {
+      await fetch(`/api/client/assets?id=${id}`, { method: "DELETE" });
+      await load();
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   useEffect(() => {
@@ -37,11 +71,20 @@ export function AssetsManager({ clientId }: { clientId: string }) {
   return (
     <div className="space-y-4">
       <Card>
-        <CardTitle className="mb-4">Subir assets de identidad visual</CardTitle>
-        <div className="space-y-3">
+        <div className="mb-4">
+          <CardTitle>Subir assets de identidad visual</CardTitle>
+          <CardDescription className="mt-1">
+            Ordena logos, tipografías, fotos y referencias para que el brandbook
+            salga con mejor criterio.
+          </CardDescription>
+        </div>
+        <div className="grid gap-3 lg:grid-cols-2">
           {assetTypes.map((type) => (
-            <div key={type}>
-              <p className="mb-1 text-sm font-medium capitalize">{type}</p>
+            <div
+              key={type}
+              className="rounded-[8px] border-2 border-border bg-white/70 p-3"
+            >
+              <p className="mb-1 text-sm font-black">{assetTypeLabels[type]}</p>
               <FileUploader clientId={clientId} type={type} onUploaded={load} />
             </div>
           ))}
@@ -49,17 +92,28 @@ export function AssetsManager({ clientId }: { clientId: string }) {
       </Card>
 
       <Card>
-        <CardTitle className="mb-4">Biblioteca visual de marca</CardTitle>
-        {assets.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No hay assets aun. Sube elementos para reforzar tu visual identity.
-          </p>
+        <div className="mb-4">
+          <CardTitle>Biblioteca visual de marca</CardTitle>
+          <CardDescription className="mt-1">
+            Revisa lo que ya está disponible antes de generar o actualizar el
+            brandbook.
+          </CardDescription>
+        </div>
+        {loading ? (
+          <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+            Cargando biblioteca…
+          </div>
+        ) : assets.length === 0 ? (
+          <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+            Aún no hay assets. Sube los primeros elementos para reforzar la
+            identidad visual.
+          </div>
         ) : (
           <ul className="space-y-2">
             {assets.map((asset) => (
               <li
                 key={asset.id}
-                className="flex flex-col gap-2 rounded-md border border-border p-2 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-[8px] border-2 border-border bg-white/75 p-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex min-w-0 gap-3">
                   {asset.preview_url ? (
@@ -69,15 +123,28 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                       width={120}
                       height={120}
                       unoptimized
-                      className="h-16 w-16 shrink-0 rounded-md border border-border object-cover"
+                      className="h-16 w-16 shrink-0 rounded-[8px] border border-border object-cover"
                     />
                   ) : null}
                   <div className="min-w-0">
-                  <p className="text-sm font-medium">{asset.type}</p>
-                  <p className="break-all text-xs text-muted-foreground">{asset.storage_path}</p>
+                    <p className="text-sm font-black capitalize">
+                      {asset.type}
+                    </p>
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Subido el {formatDate(asset.created_at)}
+                    </p>
+                    <p className="break-all text-xs text-muted-foreground">
+                      {asset.storage_path}
+                    </p>
+                  </div>
                 </div>
-                </div>
-                <Button variant="outline" onClick={() => void removeAsset(asset.id)} className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  onClick={() => void removeAsset(asset.id)}
+                  disabled={deletingId === asset.id}
+                  className="w-full sm:w-auto"
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden />
                   Quitar asset
                 </Button>
               </li>

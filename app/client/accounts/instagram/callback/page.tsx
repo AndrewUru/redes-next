@@ -15,7 +15,9 @@ function getReasonFromHash(hashParams: URLSearchParams) {
 
 export default function InstagramBusinessCallbackPage() {
   const router = useRouter();
-  const [message, setMessage] = useState("Procesando autorizacion de Instagram...");
+  const [message, setMessage] = useState(
+    "Procesando autorizacion de Instagram..."
+  );
 
   useEffect(() => {
     async function finalize() {
@@ -28,32 +30,43 @@ export default function InstagramBusinessCallbackPage() {
       const accessToken = hashParams.get("access_token");
       const longLivedToken = hashParams.get("long_lived_token");
 
-      if (hashParams.get("error") || hashParams.get("error_reason") || hashParams.get("error_description")) {
+      if (
+        hashParams.get("error") ||
+        hashParams.get("error_reason") ||
+        hashParams.get("error_description")
+      ) {
         const reason = encodeURIComponent(getReasonFromHash(hashParams));
         router.replace(`/client/accounts?oauth=error&reason=${reason}`);
         return;
       }
 
       if (!state || (!accessToken && !longLivedToken)) {
-        router.replace("/client/accounts?oauth=error&reason=missing_oauth_fragment");
+        router.replace(
+          "/client/accounts?oauth=error&reason=missing_oauth_fragment"
+        );
         return;
       }
 
       setMessage("Validando permisos y vinculando cuenta...");
 
-      const res = await fetch("/api/client/social-accounts/instagram/business-complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          state,
-          accessToken: accessToken ?? undefined,
-          longLivedToken: longLivedToken ?? undefined
-        })
-      });
+      const res = await fetch(
+        "/api/client/social-accounts/instagram/business-complete",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            state,
+            accessToken: accessToken ?? undefined,
+            longLivedToken: longLivedToken ?? undefined
+          })
+        }
+      );
 
       if (!res.ok) {
         const json = (await res.json().catch(() => ({}))) as { error?: string };
-        const reason = encodeURIComponent(json.error ?? "business_complete_failed");
+        const reason = encodeURIComponent(
+          json.error ?? "business_complete_failed"
+        );
         router.replace(`/client/accounts?oauth=error&reason=${reason}`);
         return;
       }
@@ -65,11 +78,11 @@ export default function InstagramBusinessCallbackPage() {
   }, [router]);
 
   return (
-    <main className="space-y-4">
+    <div className="space-y-4">
       <Card className="space-y-2">
         <CardTitle>Conectando Instagram</CardTitle>
         <CardDescription>{message}</CardDescription>
       </Card>
-    </main>
+    </div>
   );
 }

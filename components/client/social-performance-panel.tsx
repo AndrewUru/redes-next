@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -76,12 +77,17 @@ function formatPercent(value: number | null) {
 function formatDelta(value: number | null, isPercent = false) {
   if (value === null || Number.isNaN(value)) return "Sin referencia";
   const absValue = Math.abs(value);
-  const formatted = isPercent ? `${absValue.toFixed(2)} pp` : formatMetric(absValue);
+  const formatted = isPercent
+    ? `${absValue.toFixed(2)} pp`
+    : formatMetric(absValue);
   if (value === 0) return `Sin cambio (${formatted})`;
   return `${value > 0 ? "+" : "-"}${formatted}`;
 }
 
-function formatDate(value: string | null, options?: Intl.DateTimeFormatOptions) {
+function formatDate(
+  value: string | null,
+  options?: Intl.DateTimeFormatOptions
+) {
   if (!value) return "Sin fecha";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Sin fecha";
@@ -105,10 +111,15 @@ function getSeries(history: HistoryPoint[], key: MetricKey) {
 }
 
 function averageMetric(values: Array<number | null>) {
-  const validValues = values.filter((value): value is number => typeof value === "number");
+  const validValues = values.filter(
+    (value): value is number => typeof value === "number"
+  );
   if (validValues.length === 0) return null;
   return Number(
-    (validValues.reduce((total, value) => total + value, 0) / validValues.length).toFixed(2)
+    (
+      validValues.reduce((total, value) => total + value, 0) /
+      validValues.length
+    ).toFixed(2)
   );
 }
 
@@ -120,7 +131,8 @@ function buildLinePath(values: number[], width: number, height: number) {
 
   return values
     .map((value, index) => {
-      const x = values.length === 1 ? width / 2 : (index / (values.length - 1)) * width;
+      const x =
+        values.length === 1 ? width / 2 : (index / (values.length - 1)) * width;
       const y = height - ((value - min) / range) * height;
       return `${index === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`;
     })
@@ -130,15 +142,24 @@ function buildLinePath(values: number[], width: number, height: number) {
 function getComparison(
   history: HistoryPoint[],
   key: MetricKey
-): { latest: number | null; previous: number | null; delta: number | null; trend: "up" | "down" | "flat" } {
+): {
+  latest: number | null;
+  previous: number | null;
+  delta: number | null;
+  trend: "up" | "down" | "flat";
+} {
   const values = history
     .map((point) => getMetricValue(point, key))
     .filter((value): value is number => typeof value === "number");
 
   const latest = values.at(-1) ?? null;
-  const previous = values.length > 1 ? values.at(-2) ?? null : null;
-  const delta = latest !== null && previous !== null ? Number((latest - previous).toFixed(2)) : null;
-  const trend = delta === null || delta === 0 ? "flat" : delta > 0 ? "up" : "down";
+  const previous = values.length > 1 ? (values.at(-2) ?? null) : null;
+  const delta =
+    latest !== null && previous !== null
+      ? Number((latest - previous).toFixed(2))
+      : null;
+  const trend =
+    delta === null || delta === 0 ? "flat" : delta > 0 ? "up" : "down";
 
   return { latest, previous, delta, trend };
 }
@@ -154,18 +175,24 @@ function analyzeAccount(account: AccountInsights) {
   const impressionsComparison = getComparison(history, "impressions7d");
   const profileViewsComparison = getComparison(history, "profileViews7d");
 
-  const topPost = [...account.posts].sort((a, b) => b.interactions - a.interactions)[0] ?? null;
+  const topPost =
+    [...account.posts].sort((a, b) => b.interactions - a.interactions)[0] ??
+    null;
   const averageInteractions =
     account.posts.length > 0
       ? Math.round(
-          account.posts.reduce((total, post) => total + post.interactions, 0) / account.posts.length
+          account.posts.reduce((total, post) => total + post.interactions, 0) /
+            account.posts.length
         )
       : null;
 
   let headline = "Sigue construyendo histórico para afinar el análisis.";
   if (followerComparison.delta !== null && followerComparison.delta > 0) {
     headline = `La comunidad crece: ${formatDelta(followerComparison.delta)} seguidores frente al último snapshot.`;
-  } else if (engagementComparison.delta !== null && engagementComparison.delta > 0) {
+  } else if (
+    engagementComparison.delta !== null &&
+    engagementComparison.delta > 0
+  ) {
     headline = `La interacción mejora: ${formatDelta(engagementComparison.delta, true)} en engagement frente al último snapshot.`;
   } else if (reachComparison.delta !== null && reachComparison.delta < 0) {
     headline = `El alcance ha caído ${formatDelta(reachComparison.delta)} y conviene revisar formatos y frecuencia.`;
@@ -175,10 +202,14 @@ function analyzeAccount(account: AccountInsights) {
   const risks: string[] = [];
 
   if (followerComparison.delta !== null && followerComparison.delta > 0) {
-    strengths.push("La base de seguidores está creciendo con respecto al último corte.");
+    strengths.push(
+      "La base de seguidores está creciendo con respecto al último corte."
+    );
   }
   if (engagementComparison.delta !== null && engagementComparison.delta > 0) {
-    strengths.push("El engagement mejora, señal de mejor respuesta del contenido reciente.");
+    strengths.push(
+      "El engagement mejora, señal de mejor respuesta del contenido reciente."
+    );
   }
   if (topPost) {
     strengths.push(
@@ -190,16 +221,27 @@ function analyzeAccount(account: AccountInsights) {
     risks.push("El alcance va a la baja frente al snapshot anterior.");
   }
   if (impressionsComparison.delta !== null && impressionsComparison.delta < 0) {
-    risks.push("Las impresiones están perdiendo tracción y conviene reforzar distribución.");
+    risks.push(
+      "Las impresiones están perdiendo tracción y conviene reforzar distribución."
+    );
   }
-  if (profileViewsComparison.delta !== null && profileViewsComparison.delta < 0) {
-    risks.push("Las visitas al perfil caen, así que el contenido está convirtiendo menos curiosidad en intención.");
+  if (
+    profileViewsComparison.delta !== null &&
+    profileViewsComparison.delta < 0
+  ) {
+    risks.push(
+      "Las visitas al perfil caen, así que el contenido está convirtiendo menos curiosidad en intención."
+    );
   }
   if (strengths.length === 0) {
-    strengths.push("Todavía no hay suficiente señal histórica para detectar patrones fuertes.");
+    strengths.push(
+      "Todavía no hay suficiente señal histórica para detectar patrones fuertes."
+    );
   }
   if (risks.length === 0) {
-    risks.push("No se detectan caídas fuertes en el último tramo del histórico.");
+    risks.push(
+      "No se detectan caídas fuertes en el último tramo del histórico."
+    );
   }
 
   return {
@@ -231,15 +273,25 @@ function MetricCard({
   accent?: string;
 }) {
   return (
-    <div className={`rounded-2xl border-2 border-border p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] ${accent}`}>
-      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+    <div
+      className={`rounded-[8px] border-2 border-border p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] ${accent}`}
+    >
+      <p className="text-[11px] font-bold uppercase text-muted-foreground">
+        {label}
+      </p>
       <p className="mt-2 text-2xl font-black text-foreground">{value}</p>
       <p className="mt-1 text-xs font-medium text-muted-foreground">{helper}</p>
     </div>
   );
 }
 
-function TrendBadge({ delta, isPercent = false }: { delta: number | null; isPercent?: boolean }) {
+function TrendBadge({
+  delta,
+  isPercent = false
+}: {
+  delta: number | null;
+  isPercent?: boolean;
+}) {
   const text = formatDelta(delta, isPercent);
   const tone =
     delta === null || delta === 0
@@ -248,7 +300,11 @@ function TrendBadge({ delta, isPercent = false }: { delta: number | null; isPerc
         ? "bg-emerald-100 text-emerald-800"
         : "bg-rose-100 text-rose-800";
 
-  return <span className={`rounded-full px-2 py-1 text-[11px] font-bold ${tone}`}>{text}</span>;
+  return (
+    <span className={`rounded-full px-2 py-1 text-[11px] font-bold ${tone}`}>
+      {text}
+    </span>
+  );
 }
 
 function MiniLineChart({
@@ -264,7 +320,9 @@ function MiniLineChart({
   color: string;
   formatter?: (value: number | null) => string;
 }) {
-  const validPoints = points.filter((point): point is ChartPoint & { value: number } => point.value !== null);
+  const validPoints = points.filter(
+    (point): point is ChartPoint & { value: number } => point.value !== null
+  );
   const path = buildLinePath(
     validPoints.map((point) => point.value),
     300,
@@ -272,11 +330,13 @@ function MiniLineChart({
   );
 
   return (
-    <div className="rounded-2xl border-2 border-border bg-white/85 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+    <div className="rounded-[8px] border-2 border-border bg-white/85 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-black">{title}</p>
-          <p className="text-xs font-medium text-muted-foreground">{subtitle}</p>
+          <p className="text-xs font-medium text-muted-foreground">
+            {subtitle}
+          </p>
         </div>
         <div className="text-right">
           <p className="text-sm font-black">
@@ -289,20 +349,42 @@ function MiniLineChart({
       </div>
 
       {validPoints.length < 2 ? (
-        <p className="text-xs text-muted-foreground">Hace falta más histórico para dibujar la tendencia.</p>
+        <p className="text-xs text-muted-foreground">
+          Hace falta más histórico para dibujar la tendencia.
+        </p>
       ) : (
         <>
-          <svg viewBox="0 0 300 90" className="h-24 w-full overflow-visible">
+          <svg
+            viewBox="0 0 300 90"
+            className="h-24 w-full overflow-visible"
+            role="img"
+            aria-label={`${title}: ${subtitle}`}
+          >
             <path d="M 0 89 L 300 89" stroke="#d6d3d1" strokeWidth="1" />
-            <path d={path} fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+            <path
+              d={path}
+              fill="none"
+              stroke={color}
+              strokeWidth="4"
+              strokeLinecap="round"
+            />
             {validPoints.map((point, index, list) => {
-              const x = list.length === 1 ? 150 : (index / (list.length - 1)) * 300;
+              const x =
+                list.length === 1 ? 150 : (index / (list.length - 1)) * 300;
               const values = list.map((item) => item.value);
               const max = Math.max(...values);
               const min = Math.min(...values);
               const range = max - min || 1;
               const y = 90 - ((point.value - min) / range) * 90;
-              return <circle key={`${point.label}-${index}`} cx={x} cy={y} r="4" fill={color} />;
+              return (
+                <circle
+                  key={`${point.label}-${index}`}
+                  cx={x}
+                  cy={y}
+                  r="4"
+                  fill={color}
+                />
+              );
             })}
           </svg>
           <div className="mt-2 flex justify-between gap-2 text-[11px] font-medium text-muted-foreground">
@@ -328,7 +410,7 @@ function ComparisonBars({
   const maxValue = Math.max(...validValues, 1);
 
   return (
-    <div className="rounded-2xl border-2 border-border bg-[#fff7ed] p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+    <div className="rounded-[8px] border-2 border-border bg-[#fff7ed] p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
       <p className="text-sm font-black">{title}</p>
       <div className="mt-3 space-y-3">
         {points.map((point) => (
@@ -355,12 +437,13 @@ function ComparisonBars({
 
 function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
   const topPosts = useMemo(
-    () => [...posts].sort((a, b) => b.interactions - a.interactions).slice(0, 5),
+    () =>
+      [...posts].sort((a, b) => b.interactions - a.interactions).slice(0, 5),
     [posts]
   );
 
   return (
-    <div className="rounded-2xl border-2 border-border bg-[#f0fdf4] p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+    <div className="rounded-[8px] border-2 border-border bg-[#f0fdf4] p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
       <div className="mb-3">
         <p className="text-sm font-black">Top publicaciones recientes</p>
         <p className="text-xs font-medium text-muted-foreground">
@@ -369,14 +452,19 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
       </div>
 
       {topPosts.length === 0 ? (
-        <p className="text-xs text-muted-foreground">No hay publicaciones recientes disponibles.</p>
+        <p className="text-xs text-muted-foreground">
+          No hay publicaciones recientes disponibles.
+        </p>
       ) : (
         <ul className="space-y-2">
           {topPosts.map((post, index) => (
-            <li key={post.id} className="rounded-xl border border-border bg-white/90 p-3">
+            <li
+              key={post.id}
+              className="rounded-[8px] border border-border bg-white/90 p-3"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                  <p className="text-xs font-bold uppercase text-muted-foreground">
                     Top {index + 1}
                   </p>
                   <p className="line-clamp-2 text-sm font-bold text-foreground">
@@ -415,18 +503,25 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
 
 export function SocialPerformancePanel() {
   const [insights, setInsights] = useState<AccountInsights[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const overview = useMemo(() => {
     const connectedAccounts = insights.length;
-    const totalFollowers = insights.reduce((total, account) => total + (account.followers ?? 0), 0);
+    const totalFollowers = insights.reduce(
+      (total, account) => total + (account.followers ?? 0),
+      0
+    );
     const totalInteractions = insights.reduce(
       (total, account) => total + account.interactionsRecentPosts,
       0
     );
-    const averageEngagement = averageMetric(insights.map((account) => account.engagementRate));
-    const accountsWithHistory = insights.filter((account) => account.history.length > 1).length;
+    const averageEngagement = averageMetric(
+      insights.map((account) => account.engagementRate)
+    );
+    const accountsWithHistory = insights.filter(
+      (account) => account.history.length > 1
+    ).length;
 
     return {
       connectedAccounts,
@@ -442,8 +537,13 @@ export function SocialPerformancePanel() {
     setError(null);
 
     try {
-      const response = await fetch("/api/client/social-accounts/insights", { cache: "no-store" });
-      const json = (await response.json()) as { error?: string; insights?: AccountInsights[] };
+      const response = await fetch("/api/client/social-accounts/insights", {
+        cache: "no-store"
+      });
+      const json = (await response.json()) as {
+        error?: string;
+        insights?: AccountInsights[];
+      };
 
       if (!response.ok) {
         setError(json.error ?? "No se pudo cargar el rendimiento.");
@@ -466,27 +566,42 @@ export function SocialPerformancePanel() {
     <Card className="space-y-6 overflow-hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.94))]">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-2">
-          <Badge className="w-fit bg-[#fde68a] text-slate-900">Instagram analytics</Badge>
+          <Badge className="w-fit bg-[#fde68a] text-slate-900">
+            Instagram analytics
+          </Badge>
           <CardTitle>Análisis completo de evolución y rendimiento</CardTitle>
           <CardDescription>
-            Seguimos la evolución de seguidores, alcance, impresiones, visitas al perfil y engagement
-            para convertir métricas sueltas en decisiones más claras.
+            Seguimos la evolución de seguidores, alcance, impresiones, visitas
+            al perfil y engagement para convertir métricas sueltas en decisiones
+            más claras.
           </CardDescription>
         </div>
-        <Button variant="outline" onClick={() => void loadInsights()} disabled={loading}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => void loadInsights()}
+          disabled={loading}
+        >
+          <RefreshCw
+            className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+            aria-hidden
+          />
           {loading ? "Actualizando…" : "Actualizar métricas"}
         </Button>
       </div>
 
-      {error ? (
-        <div className="rounded-2xl border-2 border-red-300 bg-red-50 p-3 text-sm font-medium text-red-700">
-          {error}
-        </div>
-      ) : null}
+      <div aria-live="polite">
+        {error ? (
+          <div className="rounded-[8px] border-2 border-red-700 bg-red-50 p-3 text-sm font-medium text-red-800">
+            {error}
+          </div>
+        ) : null}
+      </div>
 
       {!loading && insights.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          No hay cuentas de Instagram conectadas con OAuth para mostrar análisis.
+        <p className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+          No hay cuentas de Instagram conectadas con OAuth para mostrar
+          análisis.
         </p>
       ) : null}
 
@@ -533,14 +648,18 @@ export function SocialPerformancePanel() {
           return (
             <article
               key={account.accountId}
-              className="space-y-5 rounded-[28px] border-2 border-border bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(240,249,255,0.85))] p-5 shadow-[8px_8px_0_0_rgba(0,0,0,1)]"
+              className="space-y-5 rounded-[8px] border-2 border-border bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(240,249,255,0.85))] p-4 shadow-[8px_8px_0_0_rgba(0,0,0,1)] sm:p-5"
             >
               <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-xl font-black text-foreground">{accountName}</p>
+                    <p className="text-xl font-black text-foreground">
+                      {accountName}
+                    </p>
                     <Badge>7d</Badge>
-                    <Badge className="bg-white text-foreground">{account.platform}</Badge>
+                    <Badge className="bg-white text-foreground">
+                      {account.platform}
+                    </Badge>
                   </div>
                   <p className="max-w-3xl text-sm font-medium text-muted-foreground">
                     {analysis.headline}
@@ -549,18 +668,21 @@ export function SocialPerformancePanel() {
 
                 <div className="grid gap-2 sm:grid-cols-2">
                   <TrendBadge delta={analysis.comparisons.followers.delta} />
-                  <TrendBadge delta={analysis.comparisons.engagement.delta} isPercent />
+                  <TrendBadge
+                    delta={analysis.comparisons.engagement.delta}
+                    isPercent
+                  />
                 </div>
               </div>
 
               {account.error ? (
-                <p className="rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+                <p className="rounded-[8px] border-2 border-red-700 bg-red-50 p-3 text-sm font-medium text-red-800">
                   {account.error}
                 </p>
               ) : null}
 
               {account.insightsStatus !== "ok" && !account.error ? (
-                <p className="rounded-xl border border-amber-400 bg-amber-50 p-3 text-sm text-amber-900">
+                <p className="rounded-[8px] border-2 border-amber-500 bg-amber-50 p-3 text-sm font-medium text-amber-900">
                   {account.insightsMessage ??
                     "Meta no devolvió insights avanzados para esta cuenta. Revisa permisos y estado de revisión de la app."}
                 </p>
@@ -630,9 +752,21 @@ export function SocialPerformancePanel() {
                   <ComparisonBars
                     title="Pulso actual del funnel"
                     points={[
-                      { label: "Alcance 7d", value: account.reach7d, color: "#2563eb" },
-                      { label: "Impresiones 7d", value: account.impressions7d, color: "#f97316" },
-                      { label: "Visitas perfil 7d", value: account.profileViews7d, color: "#7c3aed" },
+                      {
+                        label: "Alcance 7d",
+                        value: account.reach7d,
+                        color: "#2563eb"
+                      },
+                      {
+                        label: "Impresiones 7d",
+                        value: account.impressions7d,
+                        color: "#f97316"
+                      },
+                      {
+                        label: "Visitas perfil 7d",
+                        value: account.profileViews7d,
+                        color: "#7c3aed"
+                      },
                       {
                         label: "Interacciones recientes",
                         value: account.interactionsRecentPosts,
@@ -641,11 +775,11 @@ export function SocialPerformancePanel() {
                     ]}
                   />
 
-                  <div className="rounded-2xl border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+                  <div className="rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
                     <p className="text-sm font-black">Lectura rápida</p>
                     <div className="mt-3 grid gap-3 md:grid-cols-2">
                       <div>
-                        <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                        <p className="text-xs font-bold uppercase text-muted-foreground">
                           Señales positivas
                         </p>
                         <ul className="mt-2 space-y-2 text-sm font-medium text-foreground">
@@ -655,7 +789,7 @@ export function SocialPerformancePanel() {
                         </ul>
                       </div>
                       <div>
-                        <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                        <p className="text-xs font-bold uppercase text-muted-foreground">
                           Alertas
                         </p>
                         <ul className="mt-2 space-y-2 text-sm font-medium text-foreground">
@@ -666,8 +800,10 @@ export function SocialPerformancePanel() {
                       </div>
                     </div>
                     {analysis.topPost ? (
-                      <p className="mt-3 rounded-xl bg-[#eff6ff] p-2 text-xs font-medium text-slate-700">
-                        Mejor contenido reciente: {formatMetric(analysis.topPost.interactions)} interacciones el{" "}
+                      <p className="mt-3 rounded-[8px] bg-[#eff6ff] p-2 text-xs font-medium text-slate-700">
+                        Mejor contenido reciente:{" "}
+                        {formatMetric(analysis.topPost.interactions)}{" "}
+                        interacciones el{" "}
                         {formatDate(analysis.topPost.publishedAt)}.
                       </p>
                     ) : null}

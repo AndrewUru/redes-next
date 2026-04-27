@@ -19,14 +19,24 @@ export function ClientSettingsForm({
   const [status, setStatus] = useState(initialStatus);
   const [notes, setNotes] = useState(initialNotes);
   const [msg, setMsg] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   async function save() {
-    const res = await fetch(`/api/admin/client/${clientId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, notes })
-    });
-    setMsg(res.ok ? "Estrategia actualizada." : "No se pudo guardar la configuracion.");
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/client/${clientId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, notes })
+      });
+      setMsg(
+        res.ok
+          ? "Estrategia actualizada."
+          : "No se pudo guardar la configuración."
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -35,9 +45,12 @@ export function ClientSettingsForm({
         <Label htmlFor="status">Fase del funnel</Label>
         <select
           id="status"
-          className="mt-1 h-10 w-full rounded-md border border-border bg-background px-3 text-sm"
+          name="status"
+          className="mt-1 min-h-10 w-full rounded-[8px] border-2 border-border bg-background px-3 text-sm shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           value={status}
-          onChange={(e) => setStatus(e.target.value as (typeof statuses)[number])}
+          onChange={(e) =>
+            setStatus(e.target.value as (typeof statuses)[number])
+          }
         >
           {statuses.map((s) => (
             <option key={s} value={s}>
@@ -48,12 +61,23 @@ export function ClientSettingsForm({
       </div>
       <div>
         <Label htmlFor="notes">Notas de posicionamiento y objeciones</Label>
-        <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
+        <Textarea
+          id="notes"
+          name="notes"
+          value={notes}
+          rows={5}
+          autoComplete="off"
+          onChange={(e) => setNotes(e.target.value)}
+        />
       </div>
-      <Button variant="outline" onClick={save}>
-        Guardar estrategia
+      <Button type="button" variant="outline" onClick={save} disabled={saving}>
+        {saving ? "Guardando…" : "Guardar estrategia"}
       </Button>
-      {msg ? <p className="text-xs text-muted-foreground">{msg}</p> : null}
+      <div aria-live="polite">
+        {msg ? (
+          <p className="text-xs font-medium text-muted-foreground">{msg}</p>
+        ) : null}
+      </div>
     </div>
   );
 }

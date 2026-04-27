@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Upload } from "lucide-react";
+import { useEffect, useId, useRef, useState } from "react";
+import { Upload, X } from "lucide-react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ export function FileUploader({
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const helpId = useId();
   const supabase = createClient();
 
   useEffect(() => {
@@ -63,11 +64,22 @@ export function FileUploader({
         body: JSON.stringify({
           type,
           storagePath: path,
-          metadata: { originalName: file.name, size: file.size, mimeType: file.type }
+          metadata: {
+            originalName: file.name,
+            size: file.size,
+            mimeType: file.type
+          }
         })
       });
       setSelectedFile(null);
+      if (inputRef.current) inputRef.current.value = "";
       onUploaded();
+    } catch (uploadError) {
+      setError(
+        uploadError instanceof Error
+          ? uploadError.message
+          : "No se pudo subir la imagen. Inténtalo de nuevo."
+      );
     } finally {
       setLoading(false);
     }
@@ -75,18 +87,24 @@ export function FileUploader({
 
   function setFileCandidate(file: File | null) {
     setSelectedFile(file);
-    setError(file && !file.type.startsWith("image/") ? "Solo se permiten imagenes." : null);
+    setError(
+      file && !file.type.startsWith("image/")
+        ? "Solo se permiten imagenes."
+        : null
+    );
   }
 
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground">
-        Desde PC: selecciona un archivo. Desde movil: puedes abrir camara o galeria.
+        Desde ordenador: selecciona un archivo. Desde móvil: puedes abrir cámara
+        o galería.
       </p>
       <div
         role="button"
         tabIndex={0}
         aria-label="Zona para arrastrar y soltar imagen"
+        aria-describedby={helpId}
         onClick={() => inputRef.current?.click()}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -116,14 +134,21 @@ export function FileUploader({
           const file = e.dataTransfer.files?.[0] ?? null;
           setFileCandidate(file);
         }}
-        className={`cursor-pointer rounded-md border border-dashed p-4 text-center transition-colors ${
-          isDragging ? "border-primary bg-primary/10" : "border-border bg-muted/20 hover:bg-muted/30"
+        className={`cursor-pointer rounded-[8px] border-2 border-dashed p-4 text-center transition-[background-color,border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+          isDragging
+            ? "border-primary bg-primary/10 shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
+            : "border-border bg-white/60 hover:bg-muted/40"
         }`}
       >
         <p className="text-sm font-medium">
-          {isDragging ? "Suelta la imagen aquí" : "Arrastra una imagen aquí o haz click para elegir"}
+          {isDragging
+            ? "Suelta la imagen aquí"
+            : "Arrastra una imagen aquí o haz clic para elegir"}
         </p>
       </div>
+      <p id={helpId} className="sr-only">
+        Se aceptan imágenes JPG, PNG y WEBP.
+      </p>
       <Input
         ref={inputRef}
         type="file"
@@ -133,9 +158,13 @@ export function FileUploader({
         onChange={(e) => setFileCandidate(e.target.files?.[0] ?? null)}
         className="hidden"
       />
-      {error ? <p className="text-xs text-destructive">{error}</p> : null}
+      <div aria-live="polite">
+        {error ? (
+          <p className="text-xs font-medium text-red-700">{error}</p>
+        ) : null}
+      </div>
       {selectedFile ? (
-        <div className="rounded-md border border-border bg-muted/30 p-3">
+        <div className="rounded-[8px] border-2 border-border bg-white/75 p-3">
           {previewUrl ? (
             <Image
               src={previewUrl}
@@ -143,7 +172,7 @@ export function FileUploader({
               width={1200}
               height={800}
               unoptimized
-              className="mb-3 h-40 w-full rounded-md border border-border object-cover sm:h-48"
+              className="mb-3 h-40 w-full rounded-[8px] border border-border object-cover sm:h-48"
             />
           ) : null}
           <p className="text-sm font-medium">{selectedFile.name}</p>
@@ -160,7 +189,7 @@ export function FileUploader({
           onClick={() => void handleUpload(selectedFile ?? undefined)}
           className="w-full sm:w-auto"
         >
-          <Upload className="mr-2 h-4 w-4" />
+          <Upload className="h-4 w-4" aria-hidden />
           {loading ? "Subiendo…" : "Subir asset"}
         </Button>
         {selectedFile ? (
@@ -168,9 +197,13 @@ export function FileUploader({
             type="button"
             variant="ghost"
             disabled={loading}
-            onClick={() => setSelectedFile(null)}
+            onClick={() => {
+              setSelectedFile(null);
+              if (inputRef.current) inputRef.current.value = "";
+            }}
             className="w-full sm:w-auto"
           >
+            <X className="h-4 w-4" aria-hidden />
             Limpiar
           </Button>
         ) : null}

@@ -130,6 +130,7 @@ export function OnboardingWizard({
   const [message, setMessage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const currentStep = intakeStepOrder[stepIndex];
+  const isLastStep = stepIndex === intakeStepOrder.length - 1;
 
   const defaultValues = useMemo(
     () => flattenStep(currentStep, draft),
@@ -150,7 +151,10 @@ export function OnboardingWizard({
     }),
     [draft, currentStep, watched]
   );
-  const completionPct = useMemo(() => calculateCompletionPct(liveDraft), [liveDraft]);
+  const completionPct = useMemo(
+    () => calculateCompletionPct(liveDraft),
+    [liveDraft]
+  );
 
   useEffect(() => {
     if (status === "submitted") return;
@@ -428,29 +432,37 @@ export function OnboardingWizard({
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-3">
         <Card className="space-y-2 bg-white/90">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="text-xs font-bold uppercase text-muted-foreground">
             Progreso
           </p>
-          <p className="text-3xl font-black text-foreground">{completionPct}%</p>
+          <p className="text-3xl font-black text-foreground">
+            {completionPct}%
+          </p>
           <p className="text-xs font-medium text-muted-foreground">
             Se actualiza automáticamente mientras completas cada bloque.
           </p>
         </Card>
         <Card className="space-y-2 bg-white/90">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="text-xs font-bold uppercase text-muted-foreground">
             Bloque actual
           </p>
-          <p className="text-lg font-black text-foreground">{stepMeta[currentStep].title}</p>
+          <p className="text-lg font-black text-foreground">
+            {stepMeta[currentStep].title}
+          </p>
           <p className="text-xs font-medium text-muted-foreground">
             Paso {stepIndex + 1} de {intakeStepOrder.length}
           </p>
         </Card>
         <Card className="space-y-2 bg-white/90">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="text-xs font-bold uppercase text-muted-foreground">
             Estado
           </p>
           <p className="text-lg font-black text-foreground">
-            {saving ? "Guardando…" : status === "submitted" ? "Enviado" : "Borrador activo"}
+            {saving
+              ? "Guardando…"
+              : status === "submitted"
+                ? "Enviado"
+                : "Borrador activo"}
           </p>
           <p className="text-xs font-medium text-muted-foreground">
             Puedes salir y volver sin perder el avance.
@@ -474,16 +486,22 @@ export function OnboardingWizard({
               onClick={() => setStepIndex((v) => Math.max(0, v - 1))}
               className="w-full sm:w-auto"
             >
-              Atras
+              Atrás
             </Button>
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-              <Button type="button" variant="outline" onClick={goNext} className="w-full sm:w-auto">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={goNext}
+                disabled={isLastStep}
+                className="w-full sm:w-auto"
+              >
                 Siguiente bloque
               </Button>
               <Button
                 type="button"
                 onClick={submitFinal}
-                disabled={status === "submitted"}
+                disabled={saving || status === "submitted"}
                 className="w-full sm:w-auto"
               >
                 {status === "submitted" ? "Enviado" : "Enviar onboarding"}
@@ -493,11 +511,21 @@ export function OnboardingWizard({
         </form>
       </StepLayout>
 
-      <p className="text-sm text-muted-foreground">
-        {saving ? "Guardando…" : "Guardado automatico activo"} | Progreso: {completionPct}% | Estado:{" "}
-        {status === "draft" ? "Borrador" : "Enviado"}
-      </p>
-      {message ? <p className="text-sm text-amber-700">{message}</p> : null}
+      <div className="rounded-[8px] border-2 border-border bg-white/85 px-3 py-2 text-sm font-medium text-muted-foreground">
+        <p aria-live="polite">
+          {saving ? "Guardando…" : "Guardado automático activo"} · Progreso:{" "}
+          {completionPct}% · Estado:{" "}
+          {status === "draft" ? "Borrador" : "Enviado"}
+        </p>
+      </div>
+      {message ? (
+        <p
+          className="rounded-[8px] border-2 border-amber-500 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900"
+          role="status"
+        >
+          {message}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -521,11 +549,23 @@ function Field({
     <div className="space-y-1">
       <Label htmlFor={name}>{label}</Label>
       {textarea ? (
-        <Textarea id={name} placeholder={placeholder} {...form.register(name)} />
+        <Textarea
+          id={name}
+          placeholder={placeholder}
+          autoComplete="off"
+          {...form.register(name)}
+        />
       ) : (
-        <Input id={name} placeholder={placeholder} {...form.register(name)} />
+        <Input
+          id={name}
+          placeholder={placeholder}
+          autoComplete="off"
+          {...form.register(name)}
+        />
       )}
-      {helperText ? <p className="text-xs text-muted-foreground">{helperText}</p> : null}
+      {helperText ? (
+        <p className="text-xs text-muted-foreground">{helperText}</p>
+      ) : null}
     </div>
   );
 }
