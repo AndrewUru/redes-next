@@ -48,6 +48,10 @@ type AccountInsights = {
   error?: string;
 };
 
+type SocialPerformancePanelProps = {
+  apiPath?: string;
+};
+
 type MetricKey =
   | "followers"
   | "reach7d"
@@ -501,7 +505,9 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
   );
 }
 
-export function SocialPerformancePanel() {
+export function SocialPerformancePanel({
+  apiPath = "/api/client/social-accounts/insights"
+}: SocialPerformancePanelProps) {
   const [insights, setInsights] = useState<AccountInsights[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -537,7 +543,7 @@ export function SocialPerformancePanel() {
     setError(null);
 
     try {
-      const response = await fetch("/api/client/social-accounts/insights", {
+      const response = await fetch(apiPath, {
         cache: "no-store"
       });
       const json = (await response.json()) as {

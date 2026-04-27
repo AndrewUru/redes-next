@@ -3,6 +3,7 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GenerateBrandbookButton } from "@/components/admin/generate-brandbook-button";
 import { ClientSettingsForm } from "@/components/admin/client-settings-form";
+import { SocialPerformancePanel } from "@/components/client/social-performance-panel";
 import { getClientSummary } from "@/lib/db/server";
 import { requireRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -82,6 +83,17 @@ export default async function AdminClientDetailPage({
           ) : null}
         </Card>
       </div>
+
+      <Card>
+        <CardTitle>Métricas sociales</CardTitle>
+        <CardDescription className="mb-4">
+          Visualiza el desempeño de Instagram y los últimos snapshots para
+          preparar informes y propuestas.
+        </CardDescription>
+        <SocialPerformancePanel
+          apiPath={`/api/admin/clients/${summary.client.id}/insights`}
+        />
+      </Card>
     </div>
   );
 }
