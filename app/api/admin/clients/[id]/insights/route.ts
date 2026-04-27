@@ -20,12 +20,17 @@ type SnapshotRow = {
   engagement_rate: number | null;
 };
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   await requireRole("admin");
-  const clientId = params.id;
+  const pathname = new URL(request.url).pathname;
+  const match = pathname.match(/\/api\/admin\/clients\/([^/]+)\/insights$/);
+  const clientId = match?.[1] ?? null;
+  if (!clientId) {
+    return NextResponse.json(
+      { error: "Cliente no encontrado en la ruta." },
+      { status: 400 }
+    );
+  }
   const supabase = await createClient();
 
   const { data, error } = await supabase
