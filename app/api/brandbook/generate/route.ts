@@ -90,11 +90,17 @@ export async function POST(request: Request) {
   const { data: signed, error: signedError } = await supabaseAdmin.storage
     .from("brandbooks")
     .createSignedUrl(path, 60 * 60);
+  const { data: download, error: downloadError } = await supabaseAdmin.storage
+    .from("brandbooks")
+    .createSignedUrl(path, 60 * 60, {
+      download: `guia-de-marca-v${version}.pdf`
+    });
 
   return NextResponse.json({
     ok: true,
     version,
     path,
-    signedUrl: signedError ? null : signed?.signedUrl ?? null
+    signedUrl: signedError ? null : signed?.signedUrl ?? null,
+    downloadUrl: downloadError ? null : download?.signedUrl ?? null
   });
 }

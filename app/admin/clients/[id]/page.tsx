@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { BrandbookList } from "@/components/brandbook-list";
 import { GenerateBrandbookButton } from "@/components/admin/generate-brandbook-button";
 import { ClientSettingsForm } from "@/components/admin/client-settings-form";
 import { SocialPerformancePanel } from "@/components/client/social-performance-panel";
@@ -18,13 +19,22 @@ export default async function AdminClientDetailPage({
   const summary = await getClientSummary(id);
   if (!summary.client) notFound();
   const supabase = await createClient();
-  const pdfPath = summary.latestBrandbook?.pdf_path ?? null;
-  const { data: signed } = pdfPath
-    ? await supabase.storage
+  const brandbookLinks = await Promise.all(
+    summary.brandbooks.map(async (brandbook) => {
+      const { data: signed } = await supabase.storage
         .from("brandbooks")
-        .createSignedUrl(pdfPath, 60 * 60)
-    : { data: null };
-  const brandbookUrl = signed?.signedUrl ?? null;
+        .createSignedUrl(brandbook.pdf_path, 60 * 60);
+
+      return {
+        id: brandbook.id,
+        version: brandbook.version,
+        pdf_path: brandbook.pdf_path,
+        created_at: brandbook.created_at,
+        signedUrl: signed?.signedUrl ?? null
+      };
+    })
+  );
+  const brandbookUrl = brandbookLinks[0]?.signedUrl ?? null;
 
   return (
     <div className="space-y-4">
@@ -83,6 +93,12 @@ export default async function AdminClientDetailPage({
           ) : null}
         </Card>
       </div>
+
+      <BrandbookList
+        brandbooks={brandbookLinks}
+        title="Brandbooks creados"
+        description="Historial de versiones PDF generadas para este cliente."
+      />
 
       <Card>
         <CardTitle>Métricas sociales</CardTitle>

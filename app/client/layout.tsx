@@ -24,14 +24,14 @@ const navItems = [
   },
   {
     href: "/client/onboarding",
-    label: "Onboarding",
-    helper: "Estrategia y brief",
+    label: "Primer formulario",
+    helper: "Cuentanos tu proyecto",
     icon: ListChecks
   },
   {
     href: "/client/assets",
-    label: "Assets",
-    helper: "Biblioteca visual",
+    label: "Materiales",
+    helper: "Fotos, logo e ideas",
     icon: FolderOpen
   }
 ] as const;
@@ -56,9 +56,9 @@ export default async function ClientLayout({
         <aside className="neo-box hidden bg-background lg:sticky lg:top-24 lg:block lg:self-start">
           <div className="border-b-2 border-border pb-4">
             <p className="text-xs font-semibold uppercase text-muted-foreground">
-              Área cliente
+              Area cliente
             </p>
-            <h1 className="mt-1 text-2xl sm:text-3xl">Ecosistema Usuario</h1>
+            <h1 className="mt-1 text-2xl sm:text-3xl">Tu espacio</h1>
             <p className="mt-2 text-sm text-muted-foreground">
               Hola, {userDisplayName}
             </p>
@@ -101,17 +101,17 @@ export default async function ClientLayout({
               Foco recomendado
             </p>
             <p className="mt-2 text-sm font-bold text-foreground">
-              Revisa tus métricas de evolución
+              Revisa tu evolucion
             </p>
             <p className="mt-1 text-xs font-medium text-muted-foreground">
-              Entra en Métricas para ver seguidores, alcance, engagement y top
-              publicaciones.
+              Entra en Metricas para ver seguidores, alcance y publicaciones
+              destacadas.
             </p>
             <Link
               href="/client/accounts"
               className="mt-3 inline-block text-sm font-bold underline"
             >
-              Abrir panel de métricas
+              Abrir metricas
             </Link>
           </div>
 
@@ -132,7 +132,7 @@ export default async function ClientLayout({
         <section className="space-y-4">
           <header className="neo-box space-y-3 bg-background lg:hidden">
             <p className="text-xs font-semibold uppercase text-muted-foreground">
-              Navegación
+              Navegacion
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               {navItems.map((item) => {

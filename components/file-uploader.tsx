@@ -44,7 +44,7 @@ export function FileUploader({
   async function handleUpload(file?: File) {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setError("Solo se permiten imagenes (JPG, PNG, WEBP, etc.)");
+      setError("Solo puedes subir imagenes (JPG, PNG, WEBP, etc.).");
       return;
     }
 
@@ -89,7 +89,7 @@ export function FileUploader({
     setSelectedFile(file);
     setError(
       file && !file.type.startsWith("image/")
-        ? "Solo se permiten imagenes."
+        ? "Solo puedes subir imagenes."
         : null
     );
   }
@@ -97,13 +97,13 @@ export function FileUploader({
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground">
-        Desde ordenador: selecciona un archivo. Desde móvil: puedes abrir cámara
-        o galería.
+        Elige una imagen desde tu ordenador o movil. Si estas en el movil,
+        tambien puedes hacer una foto.
       </p>
       <div
         role="button"
         tabIndex={0}
-        aria-label="Zona para arrastrar y soltar imagen"
+        aria-label="Elegir imagen"
         aria-describedby={helpId}
         onClick={() => inputRef.current?.click()}
         onKeyDown={(e) => {
@@ -142,12 +142,12 @@ export function FileUploader({
       >
         <p className="text-sm font-medium">
           {isDragging
-            ? "Suelta la imagen aquí"
-            : "Arrastra una imagen aquí o haz clic para elegir"}
+            ? "Suelta la imagen aqui"
+            : "Haz clic para elegir una imagen"}
         </p>
       </div>
       <p id={helpId} className="sr-only">
-        Se aceptan imágenes JPG, PNG y WEBP.
+        Se aceptan imagenes JPG, PNG y WEBP.
       </p>
       <Input
         ref={inputRef}
@@ -190,7 +190,7 @@ export function FileUploader({
           className="w-full sm:w-auto"
         >
           <Upload className="h-4 w-4" aria-hidden />
-          {loading ? "Subiendo…" : "Subir asset"}
+          {loading ? "Subiendo..." : "Subir imagen"}
         </Button>
         {selectedFile ? (
           <Button

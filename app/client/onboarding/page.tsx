@@ -28,16 +28,15 @@ export default async function ClientOnboardingPage() {
         <div className="relative flex flex-wrap items-start justify-between gap-3">
           <div className="max-w-3xl">
             <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
-              Bloque de estrategia
+              Primer formulario
             </p>
             <CardTitle className="text-4xl leading-[0.95] sm:text-5xl">
-              Onboarding estrategico: donde empieza todo
+              Cuentanos lo importante de tu proyecto
             </CardTitle>
             <CardDescription className="mt-2 text-sm leading-relaxed">
-              Este formulario define tu brand voice, posicionamiento, propuesta
-              de valor, sistema de contenido y camino de conversion. Cuanto
-              mejor lo completes, mejores decisiones podremos tomar en
-              contenido, creatividad y crecimiento.
+              Responde con tus palabras. No buscamos tecnicismos: queremos
+              entender que haces, a quien ayudas, que quieres conseguir y que
+              estilo te representa.
             </CardDescription>
           </div>
           <Badge className="self-start bg-[#f2d048] text-black">
@@ -47,7 +46,7 @@ export default async function ClientOnboardingPage() {
 
         <div className="onboarding-reveal-delay-1 rounded-[8px] border-2 border-border bg-white/70 p-3">
           <div className="mb-2 flex items-center justify-between text-sm font-semibold">
-            <span>Progreso del onboarding</span>
+            <span>Progreso del formulario</span>
             <span className="rounded-md border border-border bg-background px-2 py-0.5">
               {completionPct}%
             </span>
@@ -59,15 +58,15 @@ export default async function ClientOnboardingPage() {
           {[
             {
               title: "Por que importa",
-              text: "Evita contenido sin foco y alinea toda la estrategia con objetivos reales."
+              text: "Nos ayuda a crear contenido con una direccion clara."
             },
             {
-              title: "Como completarlo mejor",
-              text: "Responde con ejemplos concretos, pain points reales y lenguaje de tu audiencia."
+              title: "Como completarlo",
+              text: "Responde como se lo contarias a una persona, con ejemplos si puedes."
             },
             {
-              title: "Resultado esperado",
-              text: "Un sistema claro para atraer, conectar y convertir sin improvisar cada semana."
+              title: "Que haremos despues",
+              text: "Ordenaremos tus respuestas para preparar una guia y proximos pasos."
             }
           ].map((item, index) => (
             <div

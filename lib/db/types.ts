@@ -32,3 +32,12 @@ export interface SocialAccountRow {
   connected_at: string;
   updated_at: string;
 }
+
+export interface BrandbookRow {
+  id: string;
+  client_id: string;
+  version: number;
+  template_id: string | null;
+  pdf_path: string;
+  created_at: string;
+}

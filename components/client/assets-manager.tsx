@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
+import { Camera, FileImage, Image as ImageIcon, Trash2 } from "lucide-react";
 import { FileUploader } from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -15,13 +15,35 @@ type Asset = {
   preview_url?: string | null;
 };
 
-const assetTypes = ["logo", "typography", "photo", "reference"] as const;
+const assetTypes = ["logo", "photo", "reference"] as const;
 const assetTypeLabels: Record<(typeof assetTypes)[number], string> = {
   logo: "Logo",
-  typography: "Tipografía",
-  photo: "Fotos",
-  reference: "Referencias"
+  photo: "Fotos del negocio",
+  reference: "Ideas visuales"
 };
+
+const assetTypeDescriptions: Record<(typeof assetTypes)[number], string> = {
+  logo: "Sube el logo o una captura donde se vea bien.",
+  photo: "Fotos de producto, local, equipo, trabajos o resultados.",
+  reference: "Ejemplos de estilos, publicaciones o marcas que te gustan."
+};
+
+const assetTypeIcons: Record<(typeof assetTypes)[number], typeof FileImage> = {
+  logo: FileImage,
+  photo: Camera,
+  reference: ImageIcon
+};
+
+const storedAssetLabels: Record<string, string> = {
+  logo: "Logo",
+  typography: "Tipografia guardada",
+  photo: "Foto",
+  reference: "Idea visual"
+};
+
+function getAssetLabel(type: string) {
+  return storedAssetLabels[type] ?? "Archivo";
+}
 
 function formatDate(value: string) {
   const date = new Date(value);
@@ -51,7 +73,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
 
   async function removeAsset(id: string) {
     const shouldDelete = window.confirm(
-      "¿Quieres quitar este asset de la biblioteca?"
+      "Quieres quitar este archivo de la biblioteca?"
     );
     if (!shouldDelete) return;
 
@@ -72,41 +94,62 @@ export function AssetsManager({ clientId }: { clientId: string }) {
     <div className="space-y-4">
       <Card>
         <div className="mb-4">
-          <CardTitle>Subir assets de identidad visual</CardTitle>
+          <CardTitle>Sube tus archivos de marca</CardTitle>
           <CardDescription className="mt-1">
-            Ordena logos, tipografías, fotos y referencias para que el brandbook
-            salga con mejor criterio.
+            No necesitas preparar nada tecnico. Sube el logo, fotos y ejemplos
+            visuales que ayuden a entender tu estilo.
           </CardDescription>
         </div>
-        <div className="grid gap-3 lg:grid-cols-2">
-          {assetTypes.map((type) => (
-            <div
-              key={type}
-              className="rounded-[8px] border-2 border-border bg-white/70 p-3"
-            >
-              <p className="mb-1 text-sm font-black">{assetTypeLabels[type]}</p>
-              <FileUploader clientId={clientId} type={type} onUploaded={load} />
-            </div>
-          ))}
+        <div className="mb-4 rounded-[8px] border-2 border-border bg-[#eff6ff] p-3 text-sm font-medium text-muted-foreground">
+          Si no tienes logo o fotos profesionales, no pasa nada: sube lo que
+          tengas ahora. El objetivo es darnos contexto, no entregar una carpeta
+          perfecta.
+        </div>
+        <div className="grid gap-3 xl:grid-cols-3">
+          {assetTypes.map((type) => {
+            const Icon = assetTypeIcons[type];
+
+            return (
+              <div
+                key={type}
+                className="rounded-[8px] border-2 border-border bg-white/70 p-3"
+              >
+                <div className="mb-3 flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a]">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <div>
+                    <p className="text-sm font-black">
+                      {assetTypeLabels[type]}
+                    </p>
+                    <p className="mt-1 text-xs font-medium text-muted-foreground">
+                      {assetTypeDescriptions[type]}
+                    </p>
+                  </div>
+                </div>
+                <FileUploader clientId={clientId} type={type} onUploaded={load} />
+              </div>
+            );
+          })}
         </div>
       </Card>
 
       <Card>
         <div className="mb-4">
-          <CardTitle>Biblioteca visual de marca</CardTitle>
+          <CardTitle>Material recibido</CardTitle>
           <CardDescription className="mt-1">
-            Revisa lo que ya está disponible antes de generar o actualizar el
-            brandbook.
+            Aqui veras las imagenes que ya tenemos para preparar tu guia de
+            marca y tus contenidos.
           </CardDescription>
         </div>
         {loading ? (
           <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
-            Cargando biblioteca…
+            Cargando archivos...
           </div>
         ) : assets.length === 0 ? (
           <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
-            Aún no hay assets. Sube los primeros elementos para reforzar la
-            identidad visual.
+            Aun no hay archivos. Empieza por el logo o por algunas fotos del
+            proyecto.
           </div>
         ) : (
           <ul className="space-y-2">
@@ -127,14 +170,11 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                     />
                   ) : null}
                   <div className="min-w-0">
-                    <p className="text-sm font-black capitalize">
-                      {asset.type}
+                    <p className="text-sm font-black">
+                      {getAssetLabel(asset.type)}
                     </p>
                     <p className="text-xs font-medium text-muted-foreground">
                       Subido el {formatDate(asset.created_at)}
-                    </p>
-                    <p className="break-all text-xs text-muted-foreground">
-                      {asset.storage_path}
                     </p>
                   </div>
                 </div>
@@ -145,7 +185,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                   className="w-full sm:w-auto"
                 >
                   <Trash2 className="h-4 w-4" aria-hidden />
-                  Quitar asset
+                  Quitar archivo
                 </Button>
               </li>
             ))}

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth";
+import type { BrandbookRow } from "@/lib/db/types";
 
 export async function getAdminClients(query?: string) {
   const user = await requireAuth();
@@ -19,7 +20,7 @@ export async function getAdminClients(query?: string) {
 
 export async function getClientSummary(clientId: string) {
   const supabase = await createClient();
-  const [{ data: client }, { data: intake }, { count: assetsCount }, { data: brandbook }] =
+  const [{ data: client }, { data: intake }, { count: assetsCount }, { data: brandbooks }] =
     await Promise.all([
       supabase.from("clients").select("*").eq("id", clientId).maybeSingle(),
       supabase
@@ -35,13 +36,15 @@ export async function getClientSummary(clientId: string) {
         .select("*")
         .eq("client_id", clientId)
         .order("version", { ascending: false })
-        .limit(1)
-        .maybeSingle()
+        .returns<BrandbookRow[]>()
     ]);
+  const brandbookList = brandbooks ?? [];
+
   return {
     client: client ?? null,
     intake: intake ?? null,
     assetsCount: assetsCount ?? 0,
-    latestBrandbook: brandbook ?? null
+    brandbooks: brandbookList,
+    latestBrandbook: brandbookList[0] ?? null
   };
 }

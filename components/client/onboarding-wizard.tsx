@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Download, ExternalLink } from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { StepLayout } from "@/components/step-layout";
 import { Button } from "@/components/ui/button";
@@ -20,54 +21,54 @@ import { calculateCompletionPct } from "@/lib/intake/completion";
 const stepMeta: Record<IntakeStepKey, { title: string; description: string }> =
   {
     identity: {
-      title: "Tu marca en 1 minuto",
+      title: "Tu proyecto en pocas palabras",
       description:
-        "Queremos entender quién eres y cómo quieres que te perciban. Con esto armamos la base del contenido."
+        "Queremos entender quien eres, que haces y como te gustaria que te vean."
     },
     goals: {
-      title: "Qué quieres conseguir",
+      title: "Que quieres conseguir",
       description:
-        "Define objetivos concretos (ventas, reservas, mensajes, comunidad). Así medimos si vamos bien."
+        "Cuenta que seria un buen resultado para ti: mas reservas, ventas, mensajes o comunidad."
     },
     audience: {
-      title: "A quién le hablamos",
+      title: "A quien le hablamos",
       description:
-        "Cuanto más específico seas, más fácil es crear contenido que conecte y convierta."
+        "Describe a las personas que quieres atraer y que necesitan resolver."
     },
     tone: {
-      title: "Tu estilo al comunicar",
+      title: "Como quieres sonar",
       description:
-        "El tono y las palabras importan. Aquí definimos tu voz para que todo suene coherente."
+        "Elige palabras sencillas para describir tu estilo: cercano, profesional, directo, alegre..."
     },
     pillars: {
       title: "Temas que vas a tratar",
       description:
-        "Elegimos 3–6 temas recurrentes para no improvisar y mantener constancia."
+        "Elegimos varios temas recurrentes para no improvisar cada semana."
     },
     messaging: {
-      title: "Qué vendes y por qué tú",
+      title: "Que ofreces y por que elegirte",
       description:
-        "Tu propuesta de valor: qué ofreces, qué te diferencia y qué genera confianza."
+        "Cuentanos que vendes, que te diferencia y que genera confianza."
     },
     ctas: {
-      title: "Cómo te contactan o compran",
+      title: "Como te contactan o compran",
       description:
-        "Definimos la acción principal que queremos que hagan (DM, WhatsApp, web, reserva, compra)."
+        "Define la accion principal: escribir por DM, WhatsApp, reservar, comprar o visitar la web."
     },
     visual: {
       title: "Estilo visual",
       description:
-        "Colores, referencias y cosas a evitar para que el feed se vea profesional y consistente."
+        "Cuentanos colores, ejemplos y cosas que no te gustan. No hace falta saber de diseno."
     },
     references: {
       title: "Referencias y competidores",
       description:
-        "Para entender el mercado y alinear expectativas: qué te gusta, qué no, y contra quién compites."
+        "Comparte cuentas, marcas o ejemplos que nos ayuden a entender tu mundo."
     },
     logistics: {
-      title: "Cómo vamos a trabajar",
+      title: "Como vamos a trabajar",
       description:
-        "Aprobaciones, ritmo de publicaciones y cómo coordinamos para que sea fácil y sostenible."
+        "Dinos como prefieres revisar propuestas y que ritmo te resulta realista."
     }
   };
 
@@ -128,6 +129,11 @@ export function OnboardingWizard({
   const [draft, setDraft] = useState<Partial<IntakeData>>(initialData ?? {});
   const [status, setStatus] = useState<"draft" | "submitted">(initialStatus);
   const [message, setMessage] = useState<string | null>(null);
+  const [brandbookUrl, setBrandbookUrl] = useState<string | null>(null);
+  const [brandbookDownloadUrl, setBrandbookDownloadUrl] = useState<
+    string | null
+  >(null);
+  const [brandbookVersion, setBrandbookVersion] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const currentStep = intakeStepOrder[stepIndex];
   const isLastStep = stepIndex === intakeStepOrder.length - 1;
@@ -223,10 +229,16 @@ export function OnboardingWizard({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ clientId })
     });
-    const pdfJson = (await pdfRes.json()) as { error?: string; path?: string };
+    const pdfJson = (await pdfRes.json()) as {
+      error?: string;
+      path?: string;
+      version?: number;
+      signedUrl?: string | null;
+      downloadUrl?: string | null;
+    };
     if (!pdfRes.ok) {
       setMessage(
-        `Onboarding enviado, pero no se pudo generar el PDF: ${pdfJson.error ?? "error desconocido"}`
+        `Formulario enviado, pero no se pudo generar el PDF: ${pdfJson.error ?? "error desconocido"}`
       );
       setDraft(finalParsed.data);
       setStatus("submitted");
@@ -235,7 +247,10 @@ export function OnboardingWizard({
 
     setDraft(finalParsed.data);
     setStatus("submitted");
-    setMessage(`Onboarding enviado y PDF generado: ${pdfJson.path ?? "ok"}`);
+    setBrandbookUrl(pdfJson.signedUrl ?? null);
+    setBrandbookDownloadUrl(pdfJson.downloadUrl ?? pdfJson.signedUrl ?? null);
+    setBrandbookVersion(pdfJson.version ?? null);
+    setMessage("Tu guia de marca esta lista para descargar.");
   }
 
   function renderFields() {
@@ -525,6 +540,42 @@ export function OnboardingWizard({
         >
           {message}
         </p>
+      ) : null}
+      {brandbookDownloadUrl ? (
+        <div
+          className="rounded-[8px] border-2 border-emerald-700 bg-emerald-50 p-4 text-emerald-950 shadow-[4px_5px_0_0_rgba(0,0,0,1)]"
+          role="status"
+        >
+          <p className="text-sm font-black">
+            Guia de marca lista
+            {brandbookVersion ? `: version ${brandbookVersion}` : ""}
+          </p>
+          <p className="mt-1 text-xs font-medium text-emerald-900">
+            Puedes descargar el PDF ahora. Tambien quedara disponible en tu
+            panel principal.
+          </p>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <a
+              href={brandbookDownloadUrl}
+              download
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-white px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-emerald-100 hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+            >
+              <Download className="h-4 w-4" aria-hidden />
+              Descargar PDF
+            </a>
+            {brandbookUrl ? (
+              <a
+                href={brandbookUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-emerald-100 px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-white hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+              >
+                <ExternalLink className="h-4 w-4" aria-hidden />
+                Abrir PDF
+              </a>
+            ) : null}
+          </div>
+        </div>
       ) : null}
     </div>
   );
