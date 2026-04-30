@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { LayoutDashboard, LogIn, Menu, X } from "lucide-react";
 
 const publicLinks = [
+  { href: "/webs", label: "Webs" },
   { href: "/privacy", label: "Privacidad" },
   { href: "/terms", label: "Términos" }
 ] as const;

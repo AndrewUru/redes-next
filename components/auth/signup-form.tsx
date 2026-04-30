@@ -47,10 +47,10 @@ export function SignupForm() {
   return (
     <Card className="w-full space-y-5 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(239,246,255,0.92))]">
       <div>
-        <CardTitle>Solicita tu acceso privado</CardTitle>
+        <CardTitle>Crea tu dashboard privado</CardTitle>
         <CardDescription>
-          Crea tu acceso para compartir información, materiales y seguir el
-          proceso de trabajo desde un solo espacio.
+          Tendras un espacio para gestionar el trabajo conmigo: formularios,
+          materiales, guias, avances y proximos pasos en un solo lugar.
         </CardDescription>
       </div>
       <form action={onSubmit} className="space-y-3">
@@ -120,13 +120,13 @@ export function SignupForm() {
         </div>
         <Button className="w-full" disabled={loading}>
           <UserPlus className="h-4 w-4" aria-hidden />
-          {loading ? "Creando…" : "Crear acceso"}
+          {loading ? "Creando..." : "Crear mi dashboard"}
         </Button>
       </form>
       <p className="text-sm text-muted-foreground">
-        ¿Ya tienes acceso?{" "}
+        Ya tienes dashboard?{" "}
         <Link href="/login" className="underline">
-          Entrar al espacio privado
+          Entrar
         </Link>
       </p>
     </Card>

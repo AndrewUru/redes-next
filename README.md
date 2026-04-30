@@ -67,6 +67,7 @@ cp .env.example .env.local
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_JWT_SECRET` (opcional para utilidades avanzadas)
+- `DEFAULT_ADMIN_ID` o `DEFAULT_ADMIN_EMAIL` (opcional; fija que administrador/desarrollador recibe los nuevos registros)
 - `META_APP_ID` (recomendado para app Business con Facebook Login)
 - `META_APP_SECRET` (recomendado para app Business con Facebook Login)
 - `META_BUSINESS_CONFIG_ID` (Business Login Configuration ID de Meta)
@@ -99,7 +100,8 @@ npm run dev
 ```
 
 ## Flujo funcional
-- Admin entra a `/admin/clients`, crea cliente + usuario cliente.
+- Un usuario puede registrarse en `/signup`; al entrar en `/dashboard` se crea su espacio de cliente y queda asignado al administrador/desarrollador configurado.
+- Admin entra a `/admin/clients`, ve los usuarios registrados y tambien puede crear cliente + usuario cliente manualmente.
 - Cliente entra a `/client/onboarding`, completa wizard y autosave guarda draft en `intake_responses`.
 - Cliente sube archivos en `/client/assets`, se registran en tabla `assets` y bucket `brand-assets`.
 - Admin (o cliente con intake enviado) dispara `POST /api/brandbook/generate` para generar PDF y versionarlo en `brandbooks`.

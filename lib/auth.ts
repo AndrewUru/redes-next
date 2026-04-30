@@ -63,6 +63,78 @@ function getDisplayName(email?: string | null, fullName?: string | null) {
   return "Cliente nuevo";
 }
 
+async function getDefaultDeveloperAdminId() {
+  const configuredAdminId = process.env.DEFAULT_ADMIN_ID?.trim();
+  if (configuredAdminId) return configuredAdminId;
+
+  const configuredAdminEmail = (
+    process.env.DEFAULT_ADMIN_EMAIL ?? process.env.SEED_ADMIN_EMAIL
+  )
+    ?.trim()
+    .toLowerCase();
+
+  if (configuredAdminEmail) {
+    const { data: listUsers, error: listUsersError } =
+      await supabaseAdmin.auth.admin.listUsers();
+    if (listUsersError) throw listUsersError;
+
+    const adminUserId = listUsers.users.find(
+      (candidate) => candidate.email?.toLowerCase() === configuredAdminEmail
+    )?.id;
+
+    if (adminUserId) {
+      const { data: adminProfile, error: adminProfileError } =
+        await supabaseAdmin
+          .from("profiles")
+          .select("id")
+          .eq("id", adminUserId)
+          .eq("role", "admin")
+          .maybeSingle();
+      if (adminProfileError) throw adminProfileError;
+      if (adminProfile?.id) return String(adminProfile.id);
+    }
+  }
+
+  const { data: firstAdmin, error: firstAdminError } = await supabaseAdmin
+    .from("profiles")
+    .select("id")
+    .eq("role", "admin")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (firstAdminError) throw firstAdminError;
+
+  return firstAdmin?.id ? String(firstAdmin.id) : null;
+}
+
+async function ensureClientOwnedByDeveloper(clientId: string, adminId: string) {
+  const { data: client, error: clientError } = await supabaseAdmin
+    .from("clients")
+    .select("id,owner_admin_id,profiles:owner_admin_id(role)")
+    .eq("id", clientId)
+    .maybeSingle();
+  if (clientError) throw clientError;
+  if (!client) return;
+
+  const ownerProfile = Array.isArray(client.profiles)
+    ? client.profiles[0]
+    : client.profiles;
+  const ownerRole =
+    ownerProfile &&
+    typeof ownerProfile === "object" &&
+    "role" in ownerProfile
+      ? String(ownerProfile.role)
+      : null;
+
+  if (client.owner_admin_id === adminId || ownerRole === "admin") return;
+
+  const { error: updateError } = await supabaseAdmin
+    .from("clients")
+    .update({ owner_admin_id: adminId })
+    .eq("id", clientId);
+  if (updateError) throw updateError;
+}
+
 export async function ensureClientOnboarding() {
   const user = await requireAuth();
 
@@ -96,6 +168,13 @@ export async function ensureClientOnboarding() {
 
   if (profile.role === "admin") return profile;
 
+  const developerAdminId = await getDefaultDeveloperAdminId();
+  if (!developerAdminId) {
+    throw new Error(
+      "No hay un administrador configurado para asignar nuevos espacios de cliente."
+    );
+  }
+
   const { data: membership, error: membershipError } = await supabaseAdmin
     .from("client_users")
     .select("client_id")
@@ -104,11 +183,13 @@ export async function ensureClientOnboarding() {
     .maybeSingle();
   if (membershipError) throw membershipError;
 
-  if (!membership?.client_id) {
+  if (membership?.client_id) {
+    await ensureClientOwnedByDeveloper(membership.client_id, developerAdminId);
+  } else {
     const { data: createdClient, error: createClientError } = await supabaseAdmin
       .from("clients")
       .insert({
-        owner_admin_id: user.id,
+        owner_admin_id: developerAdminId,
         display_name: getDisplayName(user.email, profile.full_name ?? inferredName),
         status: "onboarding"
       })
