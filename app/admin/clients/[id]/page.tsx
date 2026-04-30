@@ -2,12 +2,19 @@ import { notFound } from "next/navigation";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BrandbookList } from "@/components/brandbook-list";
+import {
+  AdminAssetsGallery,
+  AdminDecisionSnapshot,
+  AdminIntakeSummary,
+  AdminSocialAccountsSummary
+} from "@/components/admin/client-decision-panels";
 import { GenerateBrandbookButton } from "@/components/admin/generate-brandbook-button";
 import { ClientSettingsForm } from "@/components/admin/client-settings-form";
 import { SocialPerformancePanel } from "@/components/client/social-performance-panel";
 import { getClientSummary } from "@/lib/db/server";
 import { requireRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import type { IntakeData } from "@/lib/intake/schema";
 
 export default async function AdminClientDetailPage({
   params
@@ -35,6 +42,27 @@ export default async function AdminClientDetailPage({
     })
   );
   const brandbookUrl = brandbookLinks[0]?.signedUrl ?? null;
+  const assetLinks = await Promise.all(
+    summary.assets.map(async (asset) => {
+      const { data: signed } = await supabase.storage
+        .from("brand-assets")
+        .createSignedUrl(asset.storage_path, 60 * 60);
+      const originalName =
+        typeof asset.metadata.originalName === "string"
+          ? asset.metadata.originalName
+          : null;
+
+      return {
+        id: asset.id,
+        type: asset.type,
+        storagePath: asset.storage_path,
+        createdAt: asset.created_at,
+        previewUrl: signed?.signedUrl ?? null,
+        originalName
+      };
+    })
+  );
+  const intakeData = (summary.intake?.data ?? null) as Partial<IntakeData> | null;
 
   return (
     <div className="space-y-4">
@@ -94,6 +122,20 @@ export default async function AdminClientDetailPage({
         </Card>
       </div>
 
+      <AdminDecisionSnapshot
+        intake={intakeData}
+        assetsCount={summary.assetsCount}
+        brandbooksCount={summary.brandbooks.length}
+        socialAccounts={summary.socialAccounts}
+      />
+
+      <div className="grid gap-4 xl:grid-cols-[1fr_0.9fr]">
+        <AdminIntakeSummary intake={intakeData} />
+        <AdminSocialAccountsSummary accounts={summary.socialAccounts} />
+      </div>
+
+      <AdminAssetsGallery assets={assetLinks} />
+
       <BrandbookList
         brandbooks={brandbookLinks}
         title="Brandbooks creados"
@@ -101,10 +143,10 @@ export default async function AdminClientDetailPage({
       />
 
       <Card>
-        <CardTitle>Métricas sociales</CardTitle>
+        <CardTitle>Publicaciones y metricas sociales</CardTitle>
         <CardDescription className="mb-4">
-          Visualiza el desempeño de Instagram y los últimos snapshots para
-          preparar informes y propuestas.
+          Visualiza el desempeno de Instagram, publicaciones recientes, top
+          contenidos y ultimos snapshots para preparar informes y propuestas.
         </CardDescription>
         <SocialPerformancePanel
           apiPath={`/api/admin/clients/${summary.client.id}/insights`}

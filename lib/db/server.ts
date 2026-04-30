@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth";
-import type { BrandbookRow } from "@/lib/db/types";
+import type { AssetRow, BrandbookRow, SocialAccountRow } from "@/lib/db/types";
 
 export async function getAdminClients(query?: string) {
   const user = await requireAuth();
@@ -20,7 +20,13 @@ export async function getAdminClients(query?: string) {
 
 export async function getClientSummary(clientId: string) {
   const supabase = await createClient();
-  const [{ data: client }, { data: intake }, { count: assetsCount }, { data: brandbooks }] =
+  const [
+    { data: client },
+    { data: intake },
+    { data: assets },
+    { data: brandbooks },
+    { data: socialAccounts }
+  ] =
     await Promise.all([
       supabase.from("clients").select("*").eq("id", clientId).maybeSingle(),
       supabase
@@ -30,21 +36,35 @@ export async function getClientSummary(clientId: string) {
         .order("updated_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
-      supabase.from("assets").select("*", { count: "exact", head: true }).eq("client_id", clientId),
+      supabase
+        .from("assets")
+        .select("*")
+        .eq("client_id", clientId)
+        .order("created_at", { ascending: false })
+        .returns<AssetRow[]>(),
       supabase
         .from("brandbooks")
         .select("*")
         .eq("client_id", clientId)
         .order("version", { ascending: false })
-        .returns<BrandbookRow[]>()
+        .returns<BrandbookRow[]>(),
+      supabase
+        .from("social_accounts")
+        .select("*")
+        .eq("client_id", clientId)
+        .order("updated_at", { ascending: false })
+        .returns<SocialAccountRow[]>()
     ]);
   const brandbookList = brandbooks ?? [];
+  const assetList = assets ?? [];
 
   return {
     client: client ?? null,
     intake: intake ?? null,
-    assetsCount: assetsCount ?? 0,
+    assets: assetList,
+    assetsCount: assetList.length,
     brandbooks: brandbookList,
-    latestBrandbook: brandbookList[0] ?? null
+    latestBrandbook: brandbookList[0] ?? null,
+    socialAccounts: socialAccounts ?? []
   };
 }

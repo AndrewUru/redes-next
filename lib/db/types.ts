@@ -41,3 +41,12 @@ export interface BrandbookRow {
   pdf_path: string;
   created_at: string;
 }
+
+export interface AssetRow {
+  id: string;
+  client_id: string;
+  type: string;
+  storage_path: string;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
