@@ -2,6 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import {
   BarChart3,
+  Code2,
   FolderOpen,
   LayoutDashboard,
   ListChecks
@@ -27,6 +28,12 @@ const navItems = [
     label: "Primer formulario",
     helper: "Cuentanos tu proyecto",
     icon: ListChecks
+  },
+  {
+    href: "/client/web",
+    label: "Proyecto web",
+    helper: "Brief y avances",
+    icon: Code2
   },
   {
     href: "/client/assets",

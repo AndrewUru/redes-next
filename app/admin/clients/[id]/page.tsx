@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BrandbookList } from "@/components/brandbook-list";
@@ -74,6 +75,12 @@ export default async function AdminClientDetailPage({
         </CardDescription>
         <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <Badge>{summary.client.status}</Badge>
+          <Link
+            href={`/admin/clients/${summary.client.id}/web`}
+            className="inline-flex min-h-10 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a] px-4 py-2 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-[#f2d048] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            Ver proyecto web
+          </Link>
           <GenerateBrandbookButton clientId={id} />
         </div>
         <div className="mt-4">
