@@ -7,6 +7,7 @@ import { LayoutDashboard, LogIn, Menu, X } from "lucide-react";
 
 const publicLinks = [
   { href: "/webs", label: "Webs" },
+  { href: "/recomendaciones", label: "Recomendaciones" },
   { href: "/privacy", label: "Privacidad" },
   { href: "/terms", label: "Términos" }
 ] as const;
@@ -34,8 +35,8 @@ export function AppHeader() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-30 -mx-4 border-b-2 border-black bg-background/85 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-30 border-b-2 border-black bg-background/85 backdrop-blur">
+      <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           className="rounded-[8px] font-black uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           href="/"

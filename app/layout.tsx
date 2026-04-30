@@ -43,24 +43,23 @@ export default function RootLayout({
         >
           Saltar al contenido
         </a>
-        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-          <AppHeader />
 
-          <main
-            id="main-content"
-            tabIndex={-1}
-            className="flex-1 py-6 outline-none sm:py-8"
-          >
-            {children}
-          </main>
+        <AppHeader />
 
-          <footer className="mt-8 border-t-2 border-black py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-sm">
-            <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-              <p>© {currentYear} ElSaltoWeb</p>
-              <p>Sistema de marca y crecimiento</p>
-            </div>
-          </footer>
-        </div>
+        <main
+  id="main-content"
+  tabIndex={-1}
+  className="w-full flex-1 px-4 py-6 outline-none sm:px-6 sm:py-8 lg:px-8"
+>
+  {children}
+</main>
+
+        <footer className="mx-auto mt-8 w-full max-w-[1440px] border-t-2 border-black px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-sm sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <p>© {currentYear} ElSaltoWeb</p>
+            <p>Sistema de marca y crecimiento</p>
+          </div>
+        </footer>
       </body>
     </html>
   );

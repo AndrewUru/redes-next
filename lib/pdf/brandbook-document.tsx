@@ -3,12 +3,12 @@ import type { IntakeData } from "@/lib/intake/schema";
 
 const colors = {
   ink: "#111827",
-  muted: "#6b7280",
+  muted: "#4b5563",
   soft: "#f3f4f6",
   softBlue: "#eff6ff",
   blue: "#2563eb",
   blueDark: "#1e3a8a",
-  border: "#e5e7eb",
+  border: "#d1d5db",
   card: "#ffffff",
   accent: "#f59e0b"
 };
@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
     paddingTop: 34,
     paddingHorizontal: 34,
     paddingBottom: 46,
-    fontSize: 10.5,
-    lineHeight: 1.45,
+    fontSize: 11,
+    lineHeight: 1.5,
     color: colors.ink,
     backgroundColor: "#f8fafc"
   },
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
 
   eyebrow: {
-    fontSize: 8,
+    fontSize: 8.5,
     textTransform: "uppercase",
     letterSpacing: 1.4,
     color: "#bfdbfe",
@@ -42,14 +42,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 25,
+    fontSize: 26,
     fontWeight: 700,
     lineHeight: 1.12,
     marginBottom: 7
   },
 
   subtitle: {
-    fontSize: 10.5,
+    fontSize: 11,
     color: "#dbeafe",
     maxWidth: 430
   },
@@ -100,9 +100,16 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 700,
     color: colors.ink
+  },
+
+  sectionDescription: {
+    fontSize: 9,
+    color: colors.muted,
+    marginTop: -2,
+    marginBottom: 8
   },
 
   row: {
@@ -110,7 +117,7 @@ const styles = StyleSheet.create({
   },
 
   label: {
-    fontSize: 8.5,
+    fontSize: 9,
     color: colors.muted,
     textTransform: "uppercase",
     letterSpacing: 0.6,
@@ -119,8 +126,14 @@ const styles = StyleSheet.create({
   },
 
   value: {
-    fontSize: 10.5,
+    fontSize: 11,
     color: colors.ink
+  },
+
+  helpText: {
+    fontSize: 9.5,
+    color: colors.muted,
+    marginTop: 3
   },
 
   grid: {
@@ -152,7 +165,7 @@ const styles = StyleSheet.create({
 
   bulletText: {
     flex: 1,
-    fontSize: 10.2,
+    fontSize: 10.8,
     color: colors.ink
   },
 
@@ -170,6 +183,27 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 4
+  },
+
+  summaryGrid: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 10
+  },
+
+  summaryCard: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+    border: `1 solid ${colors.border}`,
+    borderRadius: 10,
+    padding: 9
+  },
+
+  summaryValue: {
+    fontSize: 10,
+    color: colors.ink,
+    fontWeight: 700,
+    marginTop: 2
   },
 
   footer: {
@@ -192,12 +226,13 @@ const styles = StyleSheet.create({
 });
 
 function asArray(value: string[] | undefined | null): string[] {
-  if (!value || value.length === 0) return ["Sin definir"];
-  return value;
+  const cleanItems = (value ?? []).map((item) => item.trim()).filter(Boolean);
+  if (cleanItems.length === 0) return ["Sin definir"];
+  return cleanItems;
 }
 
 function clean(value: string | undefined | null): string {
-  return value?.trim() ? value : "Sin definir";
+  return value?.trim() ? value.trim() : "Sin definir";
 }
 
 function Field({
@@ -221,7 +256,7 @@ function BulletList({ items }: { items: string[] | undefined | null }) {
       {asArray(items).map((item, index) => (
         <View key={`${item}-${index}`} style={styles.bulletRow}>
           <View style={styles.bulletDot} />
-          <Text style={styles.bulletText}>{item}</Text>
+          <Text style={styles.bulletText}>{clean(item)}</Text>
         </View>
       ))}
     </View>
@@ -231,19 +266,33 @@ function BulletList({ items }: { items: string[] | undefined | null }) {
 function Section({
   number,
   title,
+  description,
   children
 }: {
   number: string;
   title: string;
+  description?: string;
   children: React.ReactNode;
 }) {
   return (
-    <View style={styles.section} wrap={false}>
+    <View style={styles.section} wrap={false} minPresenceAhead={80}>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionNumber}>{number}</Text>
         <Text style={styles.sectionTitle}>{title}</Text>
       </View>
+      {description ? (
+        <Text style={styles.sectionDescription}>{description}</Text>
+      ) : null}
       {children}
+    </View>
+  );
+}
+
+function SummaryCard({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.summaryCard}>
+      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.summaryValue}>{clean(value)}</Text>
     </View>
   );
 }
@@ -255,63 +304,99 @@ export function BrandbookDocument({
   clientName: string;
   data: IntakeData;
 }) {
+  const documentTitle = `Libro de marca - ${clientName}`;
+
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
+    <Document
+      title={documentTitle}
+      author="ElSaltoWeb"
+      subject="Guía estratégica de marca para contenido, posicionamiento y conversión"
+      keywords="marca, estrategia, contenido, posicionamiento, conversión"
+      creator="ElSaltoWeb"
+      producer="ElSaltoWeb"
+      language="es-ES"
+    >
+      <Page size="A4" style={styles.page} bookmark={documentTitle}>
         <View style={styles.hero}>
-          <Text style={styles.eyebrow}>Brandbook estrategico</Text>
-          <Text style={styles.title}>Libro de Marca - {clientName}</Text>
+          <Text style={styles.eyebrow}>Guía estratégica de marca</Text>
+          <Text style={styles.title}>Libro de marca - {clientName}</Text>
           <Text style={styles.subtitle}>
-            Version ejecutable para contenido, narrativa, posicionamiento y
-            conversion.
+            Versión práctica para ordenar mensaje, contenido, tono,
+            posicionamiento y conversión.
           </Text>
 
           <View style={styles.metaRow}>
             <Text style={styles.metaPill}>Contenido</Text>
             <Text style={styles.metaPill}>Marca</Text>
-            <Text style={styles.metaPill}>Conversion</Text>
+            <Text style={styles.metaPill}>Conversión</Text>
           </View>
         </View>
 
-        <Section number="01" title="Brand Identity">
-          <Field label="Brand name" value={data.identity.brandName} />
-          <Field label="Tagline" value={data.identity.tagline} />
+        <View style={styles.summaryGrid}>
+          <SummaryCard label="Marca" value={data.identity.brandName} />
+          <SummaryCard label="Objetivo" value={data.goals.businessGoals[0]} />
+          <SummaryCard label="Acción clave" value={data.ctas.primaryCTA} />
+        </View>
+
+        <Section
+          number="01"
+          title="Identidad de marca"
+          description="Base para entender quién eres, qué haces y cómo quieres que te perciban."
+        >
+          <Field label="Nombre de marca" value={data.identity.brandName} />
+          <Field label="Frase corta" value={data.identity.tagline} />
           <View style={styles.highlightBox}>
-            <Field label="Mision" value={data.identity.mission} />
+            <Field label="Misión" value={data.identity.mission} />
           </View>
         </Section>
 
-        <Section number="02" title="Growth Goals">
+        <Section
+          number="02"
+          title="Objetivos de crecimiento"
+          description="Prioridades que deben orientar contenido, decisiones y medición."
+        >
           <Text style={styles.label}>Objetivos de negocio</Text>
           <BulletList items={data.goals.businessGoals} />
           <Field label="Corto plazo" value={data.goals.shortTermGoals} />
         </Section>
 
-        <Section number="03" title="Audience Fit">
+        <Section
+          number="03"
+          title="Audiencia ideal"
+          description="Personas a las que hablamos y problemas que deben sentirse reconocidos."
+        >
           <Field
             label="Audiencia primaria"
             value={data.audience.primaryAudience}
           />
-          <Text style={styles.label}>Pain points</Text>
+          <Text style={styles.label}>Problemas, dudas o necesidades</Text>
           <BulletList items={data.audience.painPoints} />
         </Section>
 
-        <Section number="04" title="Brand Voice">
+        <Section
+          number="04"
+          title="Voz y tono"
+          description="Guía para que los textos suenen coherentes en redes, web y mensajes comerciales."
+        >
           <View style={styles.grid}>
             <View style={styles.col}>
-              <Text style={styles.label}>Atributos de voz</Text>
+              <Text style={styles.label}>Cómo debe sonar</Text>
               <BulletList items={data.tone.voiceAttributes} />
             </View>
 
             <View style={styles.col}>
-              <Text style={styles.label}>Palabras a evitar</Text>
+              <Text style={styles.label}>Palabras o estilos a evitar</Text>
               <BulletList items={data.tone.forbiddenWords} />
             </View>
           </View>
         </Section>
 
-        <Section number="05" title="Content System">
-          <Text style={styles.label}>Pilares</Text>
+        <Section
+          number="05"
+          title="Sistema de contenido"
+          description="Temas y mensajes que ayudan a publicar con dirección, no por improvisación."
+        >
+          <Text style={styles.label}>Pilares de contenido</Text>
           <BulletList items={data.pillars.contentPillars} />
 
           <View style={styles.highlightBox}>
@@ -322,14 +407,26 @@ export function BrandbookDocument({
           <BulletList items={data.messaging.differentiators} />
         </Section>
 
-        <Section number="06" title="Conversion Path">
+        <Section
+          number="06"
+          title="Ruta de conversión"
+          description="Acciones que queremos facilitar para transformar atención en oportunidad."
+        >
           <View style={styles.ctaBox}>
             <Field label="CTA principal" value={data.ctas.primaryCTA} />
-            <Field label="CTA secundaria" value={data.ctas.secondaryCTA} />
+            <Field label="CTA secundario" value={data.ctas.secondaryCTA} />
           </View>
+          <Text style={styles.helpText}>
+            Usa estas llamadas a la acción de forma consistente en perfiles,
+            publicaciones, web y piezas comerciales.
+          </Text>
         </Section>
 
-        <Section number="07" title="Visual Identity">
+        <Section
+          number="07"
+          title="Dirección visual"
+          description="Criterios para mantener una presencia reconocible y evitar decisiones visuales incoherentes."
+        >
           <View style={styles.grid}>
             <View style={styles.col}>
               <Text style={styles.label}>Colores</Text>
@@ -337,16 +434,20 @@ export function BrandbookDocument({
             </View>
 
             <View style={styles.col}>
-              <Text style={styles.label}>Visual DO</Text>
+              <Text style={styles.label}>Sí usar</Text>
               <BulletList items={data.visual.visualDo} />
             </View>
           </View>
 
-          <Text style={styles.label}>Visual DONT</Text>
+          <Text style={styles.label}>Evitar</Text>
           <BulletList items={data.visual.visualDont} />
         </Section>
 
-        <Section number="08" title="Referencias y Operacion">
+        <Section
+          number="08"
+          title="Referencias y forma de trabajo"
+          description="Contexto externo y acuerdos operativos para avanzar con claridad."
+        >
           <View style={styles.grid}>
             <View style={styles.col}>
               <Text style={styles.label}>Competidores / referentes</Text>
@@ -354,7 +455,7 @@ export function BrandbookDocument({
             </View>
 
             <View style={styles.col}>
-              <Text style={styles.label}>Inspiracion</Text>
+              <Text style={styles.label}>Inspiración</Text>
               <BulletList items={data.references.inspirationLinks} />
             </View>
           </View>
@@ -366,11 +467,11 @@ export function BrandbookDocument({
         <View style={styles.footer} fixed>
           <Text>
             <Text style={styles.footerStrong}>{clientName}</Text> - Libro de
-            Marca
+            marca
           </Text>
           <Text
             render={({ pageNumber, totalPages }) =>
-              `Pagina ${pageNumber} / ${totalPages}`
+              `Página ${pageNumber} / ${totalPages}`
             }
           />
         </View>
