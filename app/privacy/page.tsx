@@ -51,8 +51,8 @@ export default function PrivacyPage() {
             <p className="font-semibold">Contacto</p>
             <p>
               Para consultas de privacidad o ejercicio de derechos:{" "}
-              <a className="underline" href="mailto:info@redes.elsaltoweb.es">
-                info@redes.elsaltoweb.es
+              <a className="underline" href="mailto:atobio459@gmail.com">
+                atobio459@gmail.com
               </a>
             </p>
           </div>

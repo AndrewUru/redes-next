@@ -27,8 +27,8 @@ export default function DataDeletionPage() {
             <p className="font-semibold">Como solicitarlo</p>
             <p>
               Envia un correo a{" "}
-              <a className="underline" href="mailto:info@redes.elsaltoweb.es">
-                info@redes.elsaltoweb.es
+              <a className="underline" href="mailto:atobio459@gmail.com">
+                atobio459@gmail.com
               </a>{" "}
               con asunto:{" "}
               <span className="font-semibold">

@@ -50,8 +50,8 @@ export default function TermsPage() {
             <p className="font-semibold">Contacto</p>
             <p>
               Para dudas legales o contractuales:{" "}
-              <a className="underline" href="mailto:info@redes.elsaltoweb.es">
-                info@redes.elsaltoweb.es
+              <a className="underline" href="mailto:atobio459@gmail.com">
+                atobio459@gmail.com
               </a>
             </p>
           </div>

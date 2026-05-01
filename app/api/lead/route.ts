@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { sendLeadNotification } from "@/lib/email/lead-notification";
 
 const leadSchema = z.object({
   full_name: z.string().trim().min(2).max(120),
@@ -8,6 +9,8 @@ const leadSchema = z.object({
   company: z.string().trim().max(200).optional().or(z.literal("")),
   phone: z.string().trim().max(50).optional().or(z.literal("")),
   message: z.string().trim().min(10).max(2000),
+  service: z.string().trim().max(120).optional().or(z.literal("")),
+  source: z.string().trim().max(120).optional().or(z.literal("")),
   website: z.string().optional().or(z.literal(""))
 });
 
@@ -43,6 +46,26 @@ export async function POST(request: Request) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  try {
+    await sendLeadNotification({
+      id: data.id,
+      fullName: parsed.data.full_name,
+      email: parsed.data.email,
+      company: parsed.data.company || null,
+      phone: parsed.data.phone || null,
+      message: parsed.data.message,
+      service: parsed.data.service || "Formulario de contacto",
+      source: parsed.data.source || null
+    });
+  } catch (notificationError) {
+    const message =
+      notificationError instanceof Error
+        ? notificationError.message
+        : "No se pudo enviar el email de notificacion.";
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, id: data.id }, { status: 200 });

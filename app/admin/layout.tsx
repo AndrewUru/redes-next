@@ -10,7 +10,7 @@ export default async function AdminLayout({
   await requireRole("admin");
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
+    <div className="w-full space-y-6 px-4 py-6 sm:px-6 sm:py-8">
       <header className="neo-box flex flex-col gap-4 bg-background sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl sm:text-4xl">Growth Control Room</h1>

@@ -67,6 +67,9 @@ cp .env.example .env.local
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_JWT_SECRET` (opcional para utilidades avanzadas)
+- `CONTACT_INBOX_EMAIL` (por defecto: `atobio459@gmail.com`)
+- `RESEND_API_KEY` (necesario para enviar emails de formularios)
+- `RESEND_FROM_EMAIL` (remitente verificado en Resend)
 - `DEFAULT_ADMIN_ID` o `DEFAULT_ADMIN_EMAIL` (opcional; fija que administrador/desarrollador recibe los nuevos registros)
 - `META_APP_ID` (recomendado para app Business con Facebook Login)
 - `META_APP_SECRET` (recomendado para app Business con Facebook Login)

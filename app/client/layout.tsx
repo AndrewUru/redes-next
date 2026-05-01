@@ -58,7 +58,7 @@ export default async function ClientLayout({
   const pathname = (await headers()).get("x-current-path") ?? "/client";
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8">
+    <div className="w-full space-y-6 px-4 py-6 sm:px-6 sm:py-8">
       <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
         <aside className="neo-box hidden bg-background lg:sticky lg:top-24 lg:block lg:self-start">
           <div className="border-b-2 border-border pb-4">
