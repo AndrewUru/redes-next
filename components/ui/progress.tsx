@@ -12,7 +12,7 @@ export function Progress({
   return (
     <div
       className={cn(
-        "relative h-3 w-full overflow-hidden rounded-full border-2 border-border bg-white/75",
+        "relative h-2 w-full overflow-hidden rounded-full bg-muted",
         className
       )}
       role="progressbar"
@@ -21,7 +21,7 @@ export function Progress({
       aria-valuenow={Math.round(normalized)}
     >
       <div
-        className="progress-fill h-full rounded-full border-r border-black/30 transition-[width] duration-500 ease-out"
+        className="progress-fill h-full rounded-full transition-[width] duration-500 ease-out"
         style={{ width: `${normalized}%` }}
       />
     </div>

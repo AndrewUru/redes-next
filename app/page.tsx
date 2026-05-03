@@ -5,17 +5,12 @@ import Link from "next/link";
 import {
   ArrowRight,
   BarChart3,
-  CalendarCheck,
   CheckCircle2,
-  ClipboardList,
   FileText,
   FolderOpen,
   LineChart,
   MessageSquare,
-  Sparkles,
-  Target,
-  UploadCloud,
-  Users
+  Target
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -25,67 +20,36 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-const dashboardStats = [
-  { label: "Avance del plan", value: "74%", detail: "Estrategia en marcha" },
-  { label: "Ideas listas", value: "28", detail: "Publicaciones priorizadas" },
-  { label: "Materiales", value: "16", detail: "Archivos organizados" }
+const metrics = [
+  { label: "Plan activo", value: "74%" },
+  { label: "Ideas listas", value: "28" },
+  { label: "Materiales", value: "16" }
 ] as const;
 
-const platformModules = [
+const modules = [
   {
-    title: "Estrategia clara",
-    description:
-      "Mensaje, posicionamiento y objetivos visibles desde el primer día.",
-    icon: Target,
-    tone: "bg-[#f7a9c9]"
+    title: "Estrategia",
+    description: "Mensaje, pilares y posicionamiento en una sola vista.",
+    icon: Target
   },
   {
-    title: "Calendario útil",
-    description:
-      "Ideas ordenadas por prioridad para publicar con intención, no por inercia.",
-    icon: CalendarCheck,
-    tone: "bg-[#f2d048]"
+    title: "Materiales",
+    description: "Archivos, referencias y notas organizadas por proyecto.",
+    icon: FolderOpen
   },
   {
-    title: "Materiales reunidos",
-    description:
-      "Referencias, archivos y notas del proyecto en un espacio privado.",
-    icon: FolderOpen,
-    tone: "bg-[#a8e6df]"
-  },
-  {
-    title: "Seguimiento real",
-    description:
-      "Estado del trabajo, próximos pasos y avances sin conversaciones perdidas.",
-    icon: LineChart,
-    tone: "bg-[#c7b7ef]"
+    title: "Seguimiento",
+    description: "Próximos pasos, avances y decisiones siempre visibles.",
+    icon: LineChart
   }
 ] as const;
 
-const activityItems = [
-  {
-    title: "Base de marca actualizada",
-    detail: "Tono, pilares y enfoque editorial revisados.",
-    icon: FileText
-  },
-  {
-    title: "Material recibido",
-    detail: "Nuevas fotos y referencias añadidas al espacio privado.",
-    icon: UploadCloud
-  },
-  {
-    title: "Próximo bloque definido",
-    detail: "Contenido de conversión preparado para validación.",
-    icon: CheckCircle2
-  }
-] as const;
-
-const workflowSteps = [
+const timeline = [
   "Diagnóstico inicial",
-  "Propuesta de dirección",
-  "Organización de material",
+  "Dirección estratégica",
+  "Materiales y briefing",
   "Plan de contenido",
-  "Seguimiento y ajustes"
+  "Medición y ajustes"
 ] as const;
 
 type FormState = { ok: true; id: string } | { ok: false; error: string } | null;
@@ -135,322 +99,282 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <section className="mx-auto max-w-6xl space-y-12 px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
-        <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+    <div className="mx-auto w-full max-w-7xl space-y-20 py-6 sm:py-10">
+      <section className="grid min-h-[calc(100dvh-11rem)] gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+        <div className="space-y-7">
+          <Badge>Dashboard privado para marcas en crecimiento</Badge>
           <div className="space-y-5">
-            <Badge className="bg-white/90">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Dashboard privado para crecer con orden
-            </Badge>
-
-            <div className="space-y-4">
-              <h1 className="max-w-3xl text-4xl sm:text-5xl lg:text-6xl">
-                Tu estrategia de contenido, organizada como una plataforma de
-                trabajo
-              </h1>
-              <p className="max-w-2xl text-base font-medium leading-relaxed text-muted-foreground sm:text-lg">
-                Definimos qué comunicar, ordenamos tus ideas y convertimos tu
-                presencia en redes en un sistema claro, constante y medible.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#solicitud"
-                className={cn(buttonVariants(), "w-full sm:w-auto")}
-              >
-                Solicitar propuesta
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </a>
-              <Link
-                href="/login"
-                className={cn(
-                  buttonVariants({ variant: "outline" }),
-                  "w-full sm:w-auto"
-                )}
-              >
-                Ver acceso cliente
-              </Link>
-            </div>
-          </div>
-
-          <div className="neo-box bg-white/90 p-0">
-            <div className="border-b-2 border-border bg-[#111] px-4 py-3 text-white">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase text-white/60">
-                    Vista demo
-                  </p>
-                  <h2 className="text-2xl text-white">Panel de crecimiento</h2>
-                </div>
-                <Badge className="border-white bg-[#f2d048] text-foreground">
-                  Activo
-                </Badge>
-              </div>
-            </div>
-
-            <div className="space-y-4 p-4 sm:p-5">
-              <div className="grid gap-3 sm:grid-cols-3">
-                {dashboardStats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="rounded-[8px] border-2 border-border bg-background p-3 shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
-                  >
-                    <p className="text-xs font-bold uppercase text-muted-foreground">
-                      {stat.label}
-                    </p>
-                    <p className="number mt-1 text-foreground">{stat.value}</p>
-                    <p className="text-xs font-semibold text-muted-foreground">
-                      {stat.detail}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="rounded-[8px] border-2 border-border bg-[#f8f0ff] p-4">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-bold uppercase text-muted-foreground">
-                        Próximos pasos
-                      </p>
-                      <h3 className="text-2xl">Plan editorial</h3>
-                    </div>
-                    <ClipboardList className="h-6 w-6" aria-hidden="true" />
-                  </div>
-                  <div className="space-y-3">
-                    {workflowSteps.map((step, index) => (
-                      <div key={step} className="flex items-center gap-3">
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-border bg-white text-xs font-black">
-                          {index + 1}
-                        </span>
-                        <div className="h-3 min-w-0 flex-1 rounded-full border-2 border-border bg-white">
-                          <div
-                            className="h-full rounded-full bg-[#f7a9c9]"
-                            style={{ width: `${92 - index * 12}%` }}
-                          />
-                        </div>
-                        <p className="w-24 text-xs font-bold sm:w-28">
-                          {step}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-[8px] border-2 border-border bg-white p-4">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-bold uppercase text-muted-foreground">
-                        Actividad
-                      </p>
-                      <h3 className="text-2xl">Trabajo visible</h3>
-                    </div>
-                    <MessageSquare className="h-6 w-6" aria-hidden="true" />
-                  </div>
-                  <div className="space-y-3">
-                    {activityItems.map((item) => {
-                      const Icon = item.icon;
-
-                      return (
-                        <div
-                          key={item.title}
-                          className="flex gap-3 rounded-[8px] border-2 border-border bg-background p-3"
-                        >
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] border-2 border-border bg-[#a8e6df]">
-                            <Icon className="h-4 w-4" aria-hidden="true" />
-                          </span>
-                          <div>
-                            <p className="text-sm font-bold">{item.title}</p>
-                            <p className="text-xs font-medium leading-relaxed text-muted-foreground">
-                              {item.detail}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {platformModules.map((module) => {
-            const Icon = module.icon;
-
-            return (
-              <Card key={module.title} className="bg-white/88">
-                <span
-                  className={cn(
-                    "mb-4 flex h-11 w-11 items-center justify-center rounded-[8px] border-2 border-border shadow-[2px_3px_0_0_rgba(0,0,0,1)]",
-                    module.tone
-                  )}
-                >
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <CardTitle>{module.title}</CardTitle>
-                <CardDescription className="mt-2">
-                  {module.description}
-                </CardDescription>
-              </Card>
-            );
-          })}
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <div className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl">
-              Menos improvisación. Más sistema.
-            </h2>
-            <p className="max-w-xl text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
-              La plataforma funciona como una sala de trabajo compartida:
-              estrategia, materiales, tareas y evolución del contenido en un
-              mismo lugar.
+            <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.03em] sm:text-6xl lg:text-7xl">
+              Estrategia de contenido con orden, foco y seguimiento.
+            </h1>
+            <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
+              ElSaltoWeb reúne briefing, materiales, dirección de marca y
+              métricas para convertir tus redes en un sistema de trabajo claro.
             </p>
           </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Card className="bg-[#111] text-white">
-              <Users className="mb-5 h-7 w-7" aria-hidden="true" />
-              <CardTitle className="text-white">Perfil claro</CardTitle>
-              <p className="mt-2 text-sm font-medium leading-relaxed text-white/70">
-                Una presencia más coherente para que se entienda tu valor.
-              </p>
-            </Card>
-            <Card className="bg-[#f2d048]">
-              <BarChart3 className="mb-5 h-7 w-7" aria-hidden="true" />
-              <CardTitle>Contenido medible</CardTitle>
-              <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
-                Ideas conectadas con reservas, ventas o colaboraciones.
-              </p>
-            </Card>
-            <Card className="bg-white/90">
-              <CheckCircle2 className="mb-5 h-7 w-7" aria-hidden="true" />
-              <CardTitle>Avance visible</CardTitle>
-              <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
-                Seguimiento real para saber qué está hecho y qué viene después.
-              </p>
-            </Card>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#solicitud"
+              className={cn(buttonVariants(), "min-h-12 w-full sm:w-auto")}
+            >
+              Solicitar propuesta
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "min-h-12 w-full sm:w-auto"
+              )}
+            >
+              Acceso cliente
+            </Link>
           </div>
         </div>
 
-        <section
-          id="solicitud"
-          className="grid scroll-mt-24 gap-6 rounded-[8px] border-2 border-border bg-white/90 p-4 shadow-[7px_10px_0_3px_rgba(0,0,0,1)] sm:p-6 lg:grid-cols-[0.82fr_1.18fr]"
-        >
-          <div className="space-y-4">
-            <Badge className="bg-[#a8e6df]">Primer paso</Badge>
-            <div className="space-y-3">
-              <h2 className="text-3xl sm:text-4xl">
-                Cuéntame tu proyecto y preparo el enfoque
-              </h2>
-              <p className="text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
-                Completa tus datos y revisaré cómo podríamos trabajar tu
-                estrategia de contenido, tu organización y el seguimiento dentro
-                de la plataforma.
-              </p>
+        <Card className="overflow-hidden p-0">
+          <div className="border-b border-border p-5 sm:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Vista del sistema
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold">
+                  Panel de crecimiento
+                </h2>
+              </div>
+              <Badge className="bg-white">Activo</Badge>
             </div>
-            <div className="rounded-[8px] border-2 border-border bg-background p-4">
-              <p className="text-sm font-bold">Después de enviarlo:</p>
-              <ul className="mt-3 space-y-2 text-sm font-medium text-muted-foreground">
-                <li>Reviso tu situación actual y tus objetivos.</li>
-                <li>Te respondo con una propuesta de dirección.</li>
-                <li>Si encaja, activamos tu espacio privado de trabajo.</li>
-              </ul>
+          </div>
+          <div className="space-y-6 p-5 sm:p-6">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {metrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="rounded-2xl border border-border bg-muted/45 p-4"
+                >
+                  <p className="text-sm text-muted-foreground">
+                    {metric.label}
+                  </p>
+                  <p className="mt-2 text-3xl font-semibold tabular-nums">
+                    {metric.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="rounded-2xl border border-border p-4">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <p className="font-semibold">Ruta del proyecto</p>
+                  <FileText className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                </div>
+                <div className="space-y-3">
+                  {timeline.map((step, index) => (
+                    <div key={step} className="flex items-center gap-3">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                        {index + 1}
+                      </span>
+                      <p className="text-sm text-muted-foreground">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border p-4">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <p className="font-semibold">Actividad reciente</p>
+                  <MessageSquare
+                    className="h-5 w-5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="space-y-3">
+                  {[
+                    "Brief actualizado",
+                    "Material visual recibido",
+                    "Próximo bloque definido"
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-3 rounded-xl bg-muted/55 p-3"
+                    >
+                      <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                      <p className="text-sm font-medium">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-3">
+        {modules.map((module) => {
+          const Icon = module.icon;
+
+          return (
+            <Card key={module.title}>
+              <Icon className="mb-5 h-5 w-5 text-muted-foreground" aria-hidden="true" />
+              <CardTitle>{module.title}</CardTitle>
+              <CardDescription className="mt-2">
+                {module.description}
+              </CardDescription>
+            </Card>
+          );
+        })}
+      </section>
+
+      <section className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div className="space-y-4">
+          <Badge>Cómo trabajamos</Badge>
+          <h2 className="max-w-xl text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
+            Menos improvisación. Más sistema.
+          </h2>
+          <p className="max-w-xl leading-7 text-muted-foreground">
+            Cada proyecto entra en un flujo simple: entender tu marca, ordenar
+            los materiales, definir dirección y medir lo que pasa después.
+          </p>
+        </div>
+        <div className="grid gap-3">
+          {timeline.map((step, index) => (
+            <div
+              key={step}
+              className="flex items-center gap-4 rounded-2xl border border-border bg-white p-4"
+            >
+              <span className="text-sm font-semibold text-muted-foreground tabular-nums">
+                0{index + 1}
+              </span>
+              <p className="font-medium">{step}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section
+        id="solicitud"
+        className="grid scroll-mt-24 gap-8 rounded-3xl border border-border bg-white p-5 shadow-sm sm:p-8 lg:grid-cols-[0.85fr_1.15fr]"
+      >
+        <div className="space-y-4">
+          <Badge>Primer paso</Badge>
+          <h2 className="text-3xl font-semibold tracking-[-0.02em] sm:text-4xl">
+            Cuéntame tu proyecto
+          </h2>
+          <p className="leading-7 text-muted-foreground">
+            Completa tus datos y reviso cómo podríamos ordenar tu estrategia,
+            tus contenidos y tu seguimiento dentro del dashboard.
+          </p>
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="full_name">Nombre *</Label>
+              <Input
+                id="full_name"
+                name="full_name"
+                autoComplete="name"
+                required
+                placeholder="Ej. Ana García"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                inputMode="email"
+                spellCheck={false}
+                required
+                placeholder="Ej. ana@proyecto.com"
+              />
             </div>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1">
-                <Label htmlFor="full_name">Nombre *</Label>
-                <Input
-                  id="full_name"
-                  name="full_name"
-                  autoComplete="name"
-                  required
-                  placeholder="Ej. Ana García"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  inputMode="email"
-                  spellCheck={false}
-                  required
-                  placeholder="Ej. ana@proyecto.com"
-                />
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1">
-                <Label htmlFor="company">Empresa / proyecto</Label>
-                <Input
-                  id="company"
-                  name="company"
-                  autoComplete="organization"
-                  placeholder="Ej. Estudio Norte"
-                />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="phone">Teléfono</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="Ej. +34 600 000 000"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <Label htmlFor="message">¿Qué necesitas exactamente? *</Label>
-              <Textarea
-                id="message"
-                name="message"
-                required
-                rows={5}
-                placeholder="Cuéntame qué haces, qué publicas ahora, qué te está costando y qué te gustaría mejorar."
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="company">Empresa / proyecto</Label>
+              <Input
+                id="company"
+                name="company"
+                autoComplete="organization"
+                placeholder="Ej. Estudio Norte"
               />
             </div>
-
-            <input
-              name="website"
-              className="hidden"
-              tabIndex={-1}
-              autoComplete="off"
-              aria-hidden="true"
-            />
-
-            <Button disabled={loading} className="w-full">
-              {loading ? "Enviando..." : "Enviar solicitud"}
-            </Button>
-
-            <div aria-live="polite">
-              {result?.ok === true ? (
-                <p className="rounded-[8px] border-2 border-emerald-700 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
-                  He recibido tu solicitud. Te escribiré pronto con los
-                  siguientes pasos. (ref: {result.id})
-                </p>
-              ) : null}
-              {result?.ok === false ? (
-                <p className="rounded-[8px] border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
-                  {result.error}
-                </p>
-              ) : null}
+            <div className="space-y-2">
+              <Label htmlFor="phone">Teléfono</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                placeholder="Ej. +34 600 000 000"
+              />
             </div>
-          </form>
-        </section>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="message">Qué necesitas exactamente *</Label>
+            <Textarea
+              id="message"
+              name="message"
+              required
+              rows={5}
+              placeholder="Cuéntame qué haces, qué publicas ahora y qué te gustaría mejorar."
+            />
+          </div>
+
+          <input
+            name="website"
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
+
+          <Button disabled={loading} className="w-full sm:w-auto">
+            {loading ? "Enviando…" : "Enviar solicitud"}
+          </Button>
+
+          <div aria-live="polite">
+            {result?.ok === true ? (
+              <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+                He recibido tu solicitud. Te escribiré pronto con los
+                siguientes pasos. Ref: {result.id}
+              </p>
+            ) : null}
+            {result?.ok === false ? (
+              <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
+                {result.error}
+              </p>
+            ) : null}
+          </div>
+        </form>
+      </section>
+
+      <section className="flex flex-col items-start justify-between gap-4 rounded-3xl bg-primary p-6 text-primary-foreground sm:flex-row sm:items-center sm:p-8">
+        <div>
+          <h2 className="text-2xl font-semibold">
+            ¿Ya tienes acceso privado?
+          </h2>
+          <p className="mt-1 text-sm text-primary-foreground/70">
+            Entra para revisar briefing, materiales, guías y métricas.
+          </p>
+        </div>
+        <Link
+          href="/login"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "border-white/20 bg-white text-foreground hover:bg-white/90"
+          )}
+        >
+          Entrar al dashboard
+          <BarChart3 className="h-4 w-4" aria-hidden="true" />
+        </Link>
       </section>
     </div>
   );

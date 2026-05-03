@@ -1,8 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, BarChart3, FolderOpen, ListChecks } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3,
+  BookOpen,
+  FileText,
+  FolderOpen,
+  ListChecks
+} from "lucide-react";
 import { BrandbookList } from "@/components/brandbook-list";
-import { SummaryCard } from "@/components/summary-card";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -15,9 +22,9 @@ import { getClientSummary } from "@/lib/db/server";
 import { createClient } from "@/lib/supabase/server";
 
 const actionLinkClass =
-  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-background px-4 py-2 text-sm font-semibold shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-muted hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 const primaryActionLinkClass =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-[#fde68a] px-4 py-2 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-[#f2d048] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
 export default async function ClientHomePage() {
   const [clientId, profile, user] = await Promise.all([
@@ -29,6 +36,7 @@ export default async function ClientHomePage() {
 
   const summary = await getClientSummary(clientId);
   if (!summary.client) notFound();
+
   const supabase = await createClient();
   const brandbookLinks = await Promise.all(
     summary.brandbooks.map(async (brandbook) => {
@@ -45,6 +53,7 @@ export default async function ClientHomePage() {
       };
     })
   );
+
   const brandbookUrl = brandbookLinks[0]?.signedUrl ?? null;
   const onboardingPct = summary.intake?.completion_pct ?? 0;
   const onboardingDone = onboardingPct >= 100;
@@ -60,235 +69,212 @@ export default async function ClientHomePage() {
   const cleanName = profile?.full_name?.trim();
   const emailName = user?.email?.split("@")[0]?.trim();
   const userDisplayName = cleanName || emailName || "Cliente";
-  const metricsPreview = [
+
+  const essentials = [
     {
-      title: "Evolución de seguidores",
-      helper: "Detecta si la comunidad crece o se estanca.",
-      bars: [34, 48, 44, 62, 76, 82]
+      title: "Formulario",
+      value: `${onboardingPct}%`,
+      description: onboardingDone ? "Completo" : "Pendiente de completar",
+      href: "/client/onboarding",
+      icon: ListChecks
     },
     {
-      title: "Engagement y respuesta",
-      helper: "Comprueba si el contenido genera interacción real.",
-      bars: [22, 28, 36, 31, 46, 54]
+      title: "Materiales",
+      value: String(assetsCount),
+      description: assetsCount > 0 ? "Archivos recibidos" : "Sin archivos",
+      href: "/client/assets",
+      icon: FolderOpen
     },
     {
-      title: "Top publicaciones",
-      helper: "Encuentra los formatos que mas tiran del perfil.",
-      bars: [40, 72, 58, 81, 49, 67]
+      title: "Guía de marca",
+      value: summary.latestBrandbook
+        ? `v${summary.latestBrandbook.version}`
+        : "No lista",
+      description: brandbookUrl ? "PDF disponible" : "En preparación",
+      href: "/client",
+      externalHref: brandbookUrl,
+      icon: BookOpen
     }
   ] as const;
 
+  const nextSteps = [
+    onboardingDone
+      ? "Revisa si el briefing sigue reflejando tu dirección actual."
+      : "Completa el formulario inicial para cerrar la base estratégica.",
+    assetsCount > 0
+      ? "Añade nuevas fotos o referencias cuando cambie tu oferta."
+      : "Sube logo, fotos o referencias visuales para contextualizar el proyecto.",
+    brandbookUrl
+      ? "Consulta la última guía de marca antes de crear nuevas piezas."
+      : "La guía de marca aparecerá aquí cuando esté generada."
+  ];
+
   return (
-    <div className="space-y-6">
-      <Card className="space-y-4 bg-white/90">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <CardDescription className="uppercase">
-              Panel de cliente
-            </CardDescription>
-            <CardTitle className="mt-1">
-              Tu espacio de trabajo
-            </CardTitle>
-            <p className="mt-1 text-sm font-semibold">
-              Usuario: {userDisplayName}
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Empieza por completar el primer formulario, subir tus materiales
-              y revisar la evolucion de tus redes.
-            </p>
-          </div>
-          <div className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold">
-            Etapa actual: {stageLabel}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm font-semibold">
-            <p>Progreso del primer formulario</p>
-            <p className="tabular-nums">{onboardingPct}%</p>
-          </div>
-          <Progress value={onboardingPct} />
-        </div>
-      </Card>
-
-      <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-        <Card className="space-y-4 overflow-hidden bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(239,246,255,0.94))]">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <CardDescription className="uppercase">
-                Nuevo foco
-              </CardDescription>
-              <CardTitle className="mt-1">
-                Tus metricas listas para revisar
-              </CardTitle>
-              <p className="mt-2 max-w-2xl text-sm font-medium text-muted-foreground">
-                Entra al panel para revisar seguidores, alcance, interacciones
-                y las publicaciones que mejor estan funcionando.
+    <div className="mx-auto w-full max-w-7xl space-y-6">
+      <section className="grid gap-6 lg:grid-cols-[1fr_0.36fr]">
+        <Card className="space-y-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-2xl">
+              <Badge>Panel de cliente</Badge>
+              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">
+                Hola, {userDisplayName}
+              </h1>
+              <p className="mt-3 leading-7 text-muted-foreground">
+                Este es tu espacio para centralizar briefing, materiales, guías
+                y métricas del proyecto.
               </p>
             </div>
-            <Link href="/client/accounts" className={primaryActionLinkClass}>
-              <BarChart3 className="h-4 w-4" aria-hidden />
-              Ver metricas
-            </Link>
+            <div className="rounded-2xl border border-border bg-muted/45 px-4 py-3 text-sm">
+              <p className="text-muted-foreground">Etapa actual</p>
+              <p className="mt-1 font-semibold">{stageLabel}</p>
+            </div>
           </div>
 
-          <div className="grid gap-3 lg:grid-cols-3">
-            {metricsPreview.map((item) => (
-              <div
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-4 text-sm">
+              <p className="font-medium">Progreso del primer formulario</p>
+              <p className="font-semibold tabular-nums">{onboardingPct}%</p>
+            </div>
+            <Progress value={onboardingPct} />
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link href="/client/onboarding" className={primaryActionLinkClass}>
+              <ListChecks className="h-4 w-4" aria-hidden="true" />
+              Abrir formulario
+            </Link>
+            <Link href="/client/assets" className={actionLinkClass}>
+              <FolderOpen className="h-4 w-4" aria-hidden="true" />
+              Subir materiales
+            </Link>
+            <Link href="/client/accounts" className={actionLinkClass}>
+              <BarChart3 className="h-4 w-4" aria-hidden="true" />
+              Ver métricas
+            </Link>
+          </div>
+        </Card>
+
+        <Card className="space-y-4">
+          <CardDescription>Resumen</CardDescription>
+          <div className="space-y-3">
+            <div>
+              <p className="text-3xl font-semibold tabular-nums">
+                {onboardingPct}%
+              </p>
+              <p className="text-sm text-muted-foreground">Briefing inicial</p>
+            </div>
+            <div className="border-t border-border pt-3">
+              <p className="text-3xl font-semibold tabular-nums">
+                {assetsCount}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Materiales subidos
+              </p>
+            </div>
+          </div>
+        </Card>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-3">
+        {essentials.map((item) => {
+          const Icon = item.icon;
+          const externalHref =
+            "externalHref" in item ? item.externalHref : null;
+          const cardClassName =
+            "group rounded-2xl border border-border bg-white p-5 shadow-sm transition-colors hover:bg-muted/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+          const cardContent = (
+            <>
+              <div className="flex items-start justify-between gap-4">
+                <Icon
+                  className="h-5 w-5 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <ArrowRight
+                  className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </div>
+              <p className="mt-5 text-sm text-muted-foreground">
+                {item.title}
+              </p>
+              <p className="mt-1 text-2xl font-semibold">{item.value}</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {item.description}
+              </p>
+            </>
+          );
+
+          if (externalHref) {
+            return (
+              <a
                 key={item.title}
-                className="rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+                href={externalHref}
+                target="_blank"
+                rel="noreferrer"
+                className={cardClassName}
               >
-                <p className="text-sm font-black">{item.title}</p>
-                <p className="mt-1 text-xs font-medium text-muted-foreground">
-                  {item.helper}
-                </p>
-                <div className="mt-4 flex h-20 items-end gap-2 rounded-[8px] border border-border bg-[#f8fafc] p-2">
-                  {item.bars.map((bar, index) => (
-                    <div
-                      key={`${item.title}-${index}`}
-                      className="flex-1 rounded-t-md bg-[linear-gradient(180deg,#f97316,#fb7185)]"
-                      style={{ height: `${bar}%` }}
-                    />
-                  ))}
-                </div>
+                {cardContent}
+              </a>
+            );
+          }
+
+          return (
+            <Link
+              key={item.title}
+              href={item.href}
+              className={cardClassName}
+            >
+              {cardContent}
+            </Link>
+          );
+        })}
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-[0.72fr_0.28fr]">
+        <Card className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <CardTitle>Próximos pasos</CardTitle>
+              <CardDescription className="mt-2">
+                Acciones recomendadas para mantener el proyecto desbloqueado.
+              </CardDescription>
+            </div>
+            <FileText className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+          </div>
+          <div className="divide-y divide-border rounded-2xl border border-border">
+            {nextSteps.map((step, index) => (
+              <div key={step} className="flex gap-4 p-4">
+                <span className="text-sm font-semibold text-muted-foreground tabular-nums">
+                  0{index + 1}
+                </span>
+                <p className="text-sm leading-6">{step}</p>
               </div>
             ))}
           </div>
         </Card>
 
-        <Card className="space-y-3 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(254,243,199,0.92))]">
-          <CardTitle>Accesos rapidos</CardTitle>
-          <div className="grid gap-3">
-            <Link
-              href="/client/accounts"
-              className="group rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-[#ecfeff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              <p className="flex items-center justify-between gap-2 text-sm font-black">
-                Abrir evolucion de redes
-                <ArrowRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                  aria-hidden
-                />
-              </p>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                Seguidores, interacciones y comparativas sencillas.
-              </p>
-            </Link>
-            <Link
-              href="/client/accounts#conectar-redes"
-              className="group rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-[#f0fdf4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              <p className="flex items-center justify-between gap-2 text-sm font-black">
-                Conectar o revisar Instagram
-                <ArrowRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                  aria-hidden
-                />
-              </p>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                Conecta la cuenta para poder medir la evolucion.
-              </p>
-            </Link>
-            <Link
-              href="/client/accounts#insights"
-              className="group rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:-translate-y-0.5 hover:bg-[#fff7ed] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            >
-              <p className="flex items-center justify-between gap-2 text-sm font-black">
-                Ir al panel visual
-                <ArrowRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                  aria-hidden
-                />
-              </p>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                Entra directo a tendencias y publicaciones destacadas.
-              </p>
-            </Link>
-          </div>
-        </Card>
-      </section>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <SummaryCard title="Fase de crecimiento" value={stageLabel} />
-        <SummaryCard
-          title="Primer formulario completado"
-          value={`${onboardingPct}%`}
-          subtitle={
-            onboardingDone
-              ? "Listo para avanzar."
-              : "Aun hay campos pendientes."
-          }
-        />
-        <SummaryCard
-          title="Materiales subidos"
-          value={String(assetsCount)}
-          subtitle={
-            assetsCount > 0
-              ? "Material recibido."
-              : "Aun no hay archivos cargados."
-          }
-        />
-        <SummaryCard
-          title="Guia de marca"
-          value={
-            summary.latestBrandbook
-              ? `v${summary.latestBrandbook.version}`
-              : "Sin version"
-          }
-        />
-      </div>
-
-      <section className="grid gap-4 lg:grid-cols-3">
-        <Card className="space-y-3 bg-white/90 lg:col-span-2">
-          <CardTitle>Proximos pasos recomendados</CardTitle>
-          <ul className="space-y-2 text-sm font-medium text-foreground">
-            <li>
-              {onboardingDone
-                ? "Primer formulario finalizado. Buen trabajo."
-                : "Completa el primer formulario del proyecto."}
-            </li>
-            <li>
-              {assetsCount > 0
-                ? "Sigue ampliando tus materiales con fotos e ideas visuales."
-                : "Sube logo, fotos o ejemplos visuales. No hace falta subir tipografias."}
-            </li>
-            <li>
-              {brandbookUrl
-                ? "Tu guia de marca ya esta disponible para consultar."
-                : "Cuando tengamos la informacion, prepararemos tu guia de marca."}
-            </li>
-          </ul>
-          <div className="flex flex-wrap gap-2">
-            <Link href="/client/onboarding" className={actionLinkClass}>
-              <ListChecks className="h-4 w-4" aria-hidden />
-              Abrir formulario
-            </Link>
-            <Link href="/client/assets" className={actionLinkClass}>
-              <FolderOpen className="h-4 w-4" aria-hidden />
-              Subir materiales
-            </Link>
-            <Link href="/client/accounts" className={actionLinkClass}>
-              <BarChart3 className="h-4 w-4" aria-hidden />
-              Abrir metricas y redes
-            </Link>
-          </div>
-        </Card>
-
-        <Card className="space-y-3 bg-white/90">
+        <Card className="space-y-3">
           <CardTitle>Estado rápido</CardTitle>
-          <div className="space-y-2 text-sm">
-            <p className="font-semibold">
-              Formulario: {onboardingDone ? "Completo" : "En progreso"}
+          <div className="space-y-3 text-sm">
+            <p className="flex justify-between gap-3">
+              <span className="text-muted-foreground">Formulario</span>
+              <span className="font-medium">
+                {onboardingDone ? "Completo" : "En progreso"}
+              </span>
             </p>
-            <p className="font-semibold">
-              Materiales:{" "}
-              {assetsCount > 0 ? `${assetsCount} cargados` : "Sin archivos"}
+            <p className="flex justify-between gap-3">
+              <span className="text-muted-foreground">Materiales</span>
+              <span className="font-medium">
+                {assetsCount > 0 ? `${assetsCount} cargados` : "Sin archivos"}
+              </span>
             </p>
-            <p className="font-semibold">
-              Guia:{" "}
-              {summary.latestBrandbook
-                ? `v${summary.latestBrandbook.version}`
-                : "No generado"}
+            <p className="flex justify-between gap-3">
+              <span className="text-muted-foreground">Guía</span>
+              <span className="font-medium">
+                {summary.latestBrandbook
+                  ? `v${summary.latestBrandbook.version}`
+                  : "No generada"}
+              </span>
             </p>
           </div>
         </Card>
@@ -296,18 +282,16 @@ export default async function ClientHomePage() {
 
       <BrandbookList
         brandbooks={brandbookLinks}
-        title="Tus guias de marca"
-        description="Aqui puedes consultar todas las versiones PDF que ya estan listas."
+        title="Tus guías de marca"
+        description="Aquí puedes consultar todas las versiones PDF que ya están listas."
       />
 
       {brandbookUrl ? (
-        <section className="neo-box flex flex-col gap-3 bg-white/90 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <section className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold">
-              Tu guia de marca en PDF ya esta disponible.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Abre la version actual o descargala para compartir con tu equipo.
+            <p className="font-semibold">Guía de marca disponible</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Abre la versión actual o descárgala para compartir con tu equipo.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-sm font-semibold">
@@ -315,11 +299,15 @@ export default async function ClientHomePage() {
               href={brandbookUrl}
               target="_blank"
               rel="noreferrer"
-              className="underline"
+              className="underline underline-offset-4"
             >
               Ver PDF
             </a>
-            <a href={brandbookUrl} download className="underline">
+            <a
+              href={brandbookUrl}
+              download
+              className="underline underline-offset-4"
+            >
               Descargar PDF
             </a>
           </div>

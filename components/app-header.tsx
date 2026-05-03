@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LayoutDashboard, LogIn, Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const publicLinks = [
   { href: "/webs", label: "Webs" },
@@ -35,17 +36,17 @@ export function AppHeader() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-30 border-b-2 border-black bg-background/85 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-xl">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
-          className="rounded-[8px] font-black uppercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="rounded-full text-sm font-semibold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           href="/"
         >
           ElSaltoWeb
         </Link>
 
         <nav
-          className="hidden items-center gap-2 text-sm font-semibold sm:flex"
+          className="hidden items-center gap-1 text-sm font-medium sm:flex"
           aria-label="Principal"
         >
           {publicLinks.map((item) => {
@@ -56,9 +57,10 @@ export function AppHeader() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`rounded-[8px] px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  isActive ? "bg-muted text-foreground" : "hover:bg-white/45"
-                }`}
+                className={cn(
+                  "rounded-full px-3 py-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                  isActive && "bg-muted text-foreground"
+                )}
               >
                 {item.label}
               </Link>
@@ -66,9 +68,9 @@ export function AppHeader() {
           })}
           <Link
             href={ctaHref}
-            className="inline-flex h-10 items-center gap-2 rounded-[8px] border-2 border-border bg-[#fde68a] px-3 text-sm font-black shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="ml-2 inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            <CtaIcon className="h-4 w-4" aria-hidden />
+            <CtaIcon className="h-4 w-4" aria-hidden="true" />
             {ctaLabel}
           </Link>
         </nav>
@@ -76,29 +78,25 @@ export function AppHeader() {
         <div className="relative sm:hidden">
           <button
             type="button"
-            aria-label={
-              mobileMenuOpen ? "Cerrar navegación" : "Abrir navegación"
-            }
+            aria-label={mobileMenuOpen ? "Cerrar navegación" : "Abrir navegación"}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-main-nav"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[8px] border-2 border-border bg-white/90 shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={() => setMobileMenuOpen((open) => !open)}
           >
             {mobileMenuOpen ? (
-              <X className="h-5 w-5" aria-hidden />
+              <X className="h-5 w-5" aria-hidden="true" />
             ) : (
-              <Menu className="h-5 w-5" aria-hidden />
+              <Menu className="h-5 w-5" aria-hidden="true" />
             )}
-            <span className="sr-only">
-              {mobileMenuOpen ? "Cerrar navegación" : "Abrir navegación"}
-            </span>
           </button>
 
           <nav
             id="mobile-main-nav"
-            className={`absolute right-0 top-12 z-40 w-[min(86vw,19rem)] rounded-[8px] border-2 border-border bg-white p-3 text-sm font-semibold shadow-[6px_8px_0_0_rgba(0,0,0,1)] ${
-              mobileMenuOpen ? "grid gap-2" : "hidden"
-            }`}
+            className={cn(
+              "absolute right-0 top-12 z-40 w-[min(86vw,20rem)] rounded-2xl border border-border bg-white p-2 text-sm font-medium shadow-xl",
+              mobileMenuOpen ? "grid gap-1" : "hidden"
+            )}
             aria-label="Principal móvil"
           >
             {publicLinks.map((item) => {
@@ -109,9 +107,10 @@ export function AppHeader() {
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`rounded-[8px] border-2 border-border px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                    isActive ? "bg-muted" : "bg-white/70 hover:bg-muted/70"
-                  }`}
+                  className={cn(
+                    "rounded-xl px-3 py-3 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                    isActive && "bg-muted text-foreground"
+                  )}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.label}
@@ -120,10 +119,10 @@ export function AppHeader() {
             })}
             <Link
               href={ctaHref}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-[#fde68a] px-3 font-black shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-4 font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <CtaIcon className="h-4 w-4" aria-hidden />
+              <CtaIcon className="h-4 w-4" aria-hidden="true" />
               {ctaLabel}
             </Link>
           </nav>

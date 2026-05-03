@@ -129,8 +129,8 @@ export default function WebCreationServicePage() {
                 Paginas web creadas desde una estrategia clara de marca
               </h1>
               <p className="max-w-2xl text-base font-medium leading-relaxed text-muted-foreground sm:text-lg">
-                Antes de disenar, ordenamos mensaje, estructura, estilo y
-                objetivos. El resultado es una web con direccion, no solo una
+                Antes de diseñar, ordenamos mensaje, estructura, estilo y
+                objetivos. El resultado es una web con dirección, no solo una
                 pantalla bonita.
               </p>
             </div>
@@ -164,7 +164,7 @@ export default function WebCreationServicePage() {
                   <h2 className="text-2xl text-white">Webbook de proyecto</h2>
                 </div>
                 <Badge className="border-white bg-[#a8e6df] text-foreground">
-                  En preparacion
+                  En preparación
                 </Badge>
               </div>
             </div>
