@@ -7,6 +7,7 @@ import { LayoutDashboard, LogIn, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const publicLinks = [
+  { href: "/", label: "Inicio" },
   { href: "/webs", label: "Webs" },
   { href: "/recomendaciones", label: "Recomendaciones" },
   { href: "/privacy", label: "Privacidad" },
