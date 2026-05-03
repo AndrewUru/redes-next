@@ -27,25 +27,29 @@ export function LoginForm() {
       password
     });
     setLoading(false);
+
     if (signInError) {
-      setError(signInError.message);
+      setError(
+        "No se pudo iniciar sesión. Revisa el email y la contraseña e inténtalo de nuevo."
+      );
       return;
     }
+
     router.replace("/dashboard");
     router.refresh();
   }
 
   return (
-    <Card className="w-full space-y-5 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.92))]">
-      <div>
-        <CardTitle>Entra a tu espacio privado</CardTitle>
+    <Card className="w-full space-y-6 p-5 sm:p-6">
+      <div className="space-y-2">
+        <CardTitle>Entrar</CardTitle>
         <CardDescription>
-          Accede al panel para completar tu onboarding, subir materiales y ver
-          el avance de tu sistema de marca.
+          Usa las credenciales que recibiste para acceder a tu dashboard privado.
         </CardDescription>
       </div>
-      <form action={onSubmit} className="space-y-3">
-        <div className="space-y-1">
+
+      <form action={onSubmit} className="space-y-4">
+        <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -56,16 +60,14 @@ export function LoginForm() {
             spellCheck={false}
             required
             aria-describedby="login-email-help"
-            placeholder="Ej. ana@proyecto.com…"
+            placeholder="Ej. ana@proyecto.com"
           />
-          <p
-            id="login-email-help"
-            className="text-xs font-medium text-muted-foreground"
-          >
-            Usa el correo con el que recibiste acceso a tu espacio privado.
+          <p id="login-email-help" className="text-sm text-muted-foreground">
+            Usa el correo asociado a tu espacio privado.
           </p>
         </div>
-        <div className="space-y-1">
+
+        <div className="space-y-2">
           <Label htmlFor="password">Contraseña</Label>
           <div className="relative">
             <Input
@@ -75,13 +77,13 @@ export function LoginForm() {
               autoComplete="current-password"
               required
               aria-describedby="login-password-help"
-              placeholder="Tu contraseña…"
-              className="pr-12"
+              placeholder="Tu contraseña"
+              className="pr-14"
             />
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center justify-center rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute right-1.5 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-controls="password"
               aria-pressed={showPassword}
               aria-label={
@@ -89,39 +91,40 @@ export function LoginForm() {
               }
             >
               {showPassword ? (
-                <EyeOff className="h-4 w-4" aria-hidden />
+                <EyeOff className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <Eye className="h-4 w-4" aria-hidden />
+                <Eye className="h-4 w-4" aria-hidden="true" />
               )}
             </button>
           </div>
-          <p
-            id="login-password-help"
-            className="text-xs font-medium text-muted-foreground"
-          >
-            Puedes mostrar la contraseña para revisar lo que escribes antes de
-            entrar.
+          <p id="login-password-help" className="text-sm text-muted-foreground">
+            Puedes mostrarla para revisar lo que escribes antes de entrar.
           </p>
         </div>
+
         <div aria-live="polite">
           {error ? (
             <p
-              className="rounded-[8px] border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-800"
+              className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
               role="alert"
             >
               {error}
             </p>
           ) : null}
         </div>
-        <Button className="w-full" disabled={loading}>
-          <LogIn className="h-4 w-4" aria-hidden />
-          {loading ? "Entrando…" : "Entrar"}
+
+        <Button className="min-h-12 w-full" disabled={loading}>
+          <LogIn className="h-4 w-4" aria-hidden="true" />
+          {loading ? "Entrando…" : "Entrar al dashboard"}
         </Button>
       </form>
-      <p className="text-sm text-muted-foreground">
-        ¿Todavía no tienes acceso? Completa el formulario inicial y te
-        responderé con los siguientes pasos.{" "}
-        <Link href="/signup" className="underline">
+
+      <p className="border-t border-border pt-4 text-sm leading-6 text-muted-foreground">
+        ¿Todavía no tienes acceso?{" "}
+        <Link
+          href="/signup"
+          className="font-medium text-foreground underline underline-offset-4"
+        >
           Solicitar acceso
         </Link>
       </p>
