@@ -62,20 +62,20 @@ export default async function ClientLayout({
   const pathname = (await headers()).get("x-current-path") ?? "/client";
 
   return (
-    <div className="w-full space-y-6 px-4 py-6 sm:px-6 sm:py-8">
-      <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
-        <aside className="neo-box hidden bg-background lg:sticky lg:top-24 lg:block lg:self-start">
-          <div className="border-b-2 border-border pb-4">
+    <div className="w-full bg-[radial-gradient(circle_at_top_left,hsl(199_89%_96%),transparent_34rem)] px-4 py-6 sm:px-6 sm:py-8">
+      <div className="mx-auto grid w-full max-w-[96rem] gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <aside className="hidden rounded-2xl border border-border bg-white/95 p-5 shadow-[0_24px_70px_hsl(222_47%_11%/0.08)] lg:sticky lg:top-24 lg:block lg:self-start">
+          <div className="border-b border-border pb-5">
             <p className="text-xs font-semibold uppercase text-muted-foreground">
               Area cliente
             </p>
-            <h1 className="mt-1 text-2xl sm:text-3xl">Tu espacio</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h1 className="mt-2 text-3xl">Tu espacio</h1>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Hola, {userDisplayName}
             </p>
           </div>
 
-          <nav className="mt-4 grid gap-2">
+          <nav className="mt-5 grid gap-2">
             {navItems.map((item) => {
               const isActive = isCurrentPath(pathname, item.href);
               const Icon = item.icon;
@@ -85,10 +85,10 @@ export default async function ClientLayout({
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
-                  className={`group flex items-center gap-3 rounded-[8px] border-2 px-3 py-3 transition-[background-color,transform,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  className={`group flex min-h-14 items-center gap-3 rounded-xl border px-3.5 py-3 transition-[background-color,border-color,color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     isActive
-                      ? "border-black bg-[#fde68a] shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
-                      : "border-border bg-background hover:-translate-y-0.5 hover:bg-muted hover:shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
+                      ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-slate-900/10"
+                      : "border-transparent bg-transparent text-foreground hover:border-border hover:bg-muted"
                   }`}
                 >
                   <Icon className="h-5 w-5 shrink-0" aria-hidden />
@@ -96,7 +96,13 @@ export default async function ClientLayout({
                     <span className="block text-sm font-black">
                       {item.label}
                     </span>
-                    <span className="block truncate text-xs font-medium text-muted-foreground">
+                    <span
+                      className={`block truncate text-xs font-medium ${
+                        isActive
+                          ? "text-primary-foreground/75"
+                          : "text-muted-foreground"
+                      }`}
+                    >
                       {item.helper}
                     </span>
                   </span>
@@ -105,7 +111,7 @@ export default async function ClientLayout({
             })}
           </nav>
 
-          <div className="mt-5 rounded-[8px] border-2 border-border bg-[#eff6ff] p-3">
+          <div className="mt-6 rounded-2xl border border-sky-100 bg-sky-50/80 p-4">
             <p className="text-xs font-bold uppercase text-muted-foreground">
               Foco recomendado
             </p>
@@ -118,14 +124,14 @@ export default async function ClientLayout({
             </p>
             <Link
               href="/client/accounts"
-              className="mt-3 inline-block text-sm font-bold underline"
+              className="mt-3 inline-flex min-h-10 items-center rounded-full text-sm font-bold underline underline-offset-4"
             >
               Abrir metricas
             </Link>
           </div>
 
-          <div className="mt-5 space-y-3 border-t-2 border-border pt-4">
-            <div className="inline-flex items-center gap-2 rounded-full border-2 border-emerald-700 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+          <div className="mt-6 space-y-3 border-t border-border pt-5">
+            <div className="inline-flex min-h-8 items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
               <span
                 className="inline-block h-2 w-2 rounded-full bg-emerald-600"
                 aria-hidden
@@ -139,7 +145,7 @@ export default async function ClientLayout({
         </aside>
 
         <section className="space-y-4">
-          <header className="neo-box space-y-3 bg-background lg:hidden">
+          <header className="space-y-3 rounded-2xl border border-border bg-white/95 p-4 shadow-sm lg:hidden">
             <p className="text-xs font-semibold uppercase text-muted-foreground">
               Navegacion
             </p>
@@ -153,10 +159,10 @@ export default async function ClientLayout({
                     key={item.href}
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
-                    className={`flex items-center gap-3 rounded-[8px] border-2 px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                    className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       isActive
-                        ? "border-black bg-[#fde68a] shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
-                        : "border-border bg-white/80 hover:bg-muted/80"
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-white hover:bg-muted/80"
                     }`}
                   >
                     <Icon className="h-5 w-5 shrink-0" aria-hidden />
@@ -164,7 +170,13 @@ export default async function ClientLayout({
                       <span className="block text-sm font-black">
                         {item.label}
                       </span>
-                      <span className="block truncate text-xs font-medium text-muted-foreground">
+                      <span
+                        className={`block truncate text-xs font-medium ${
+                          isActive
+                            ? "text-primary-foreground/75"
+                            : "text-muted-foreground"
+                        }`}
+                      >
                         {item.helper}
                       </span>
                     </span>
@@ -172,8 +184,8 @@ export default async function ClientLayout({
                 );
               })}
             </div>
-            <div className="flex flex-wrap items-center gap-2 border-t-2 border-border pt-3">
-              <div className="inline-flex items-center gap-2 rounded-full border-2 border-emerald-700 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
+            <div className="flex flex-wrap items-center gap-2 border-t border-border pt-3">
+              <div className="inline-flex min-h-8 items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">
                 <span
                   className="inline-block h-2 w-2 rounded-full bg-emerald-600"
                   aria-hidden

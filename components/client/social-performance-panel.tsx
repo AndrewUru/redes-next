@@ -5,6 +5,7 @@ import { RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type PostInsights = {
   id: string;
@@ -278,13 +279,18 @@ function MetricCard({
 }) {
   return (
     <div
-      className={`rounded-[8px] border-2 border-border p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)] ${accent}`}
+      className={cn(
+        "rounded-2xl border border-border/80 p-4 shadow-sm ring-1 ring-white/70",
+        accent
+      )}
     >
       <p className="text-[11px] font-bold uppercase text-muted-foreground">
         {label}
       </p>
-      <p className="mt-2 text-2xl font-black text-foreground">{value}</p>
-      <p className="mt-1 text-xs font-medium text-muted-foreground">{helper}</p>
+      <p className="mt-2 text-2xl font-bold tabular-nums text-foreground">
+        {value}
+      </p>
+      <p className="mt-1 text-xs leading-5 text-muted-foreground">{helper}</p>
     </div>
   );
 }
@@ -305,7 +311,9 @@ function TrendBadge({
         : "bg-rose-100 text-rose-800";
 
   return (
-    <span className={`rounded-full px-2 py-1 text-[11px] font-bold ${tone}`}>
+    <span
+      className={`inline-flex min-h-8 items-center rounded-full border border-black/5 px-3 py-1 text-[11px] font-bold ${tone}`}
+    >
       {text}
     </span>
   );
@@ -334,16 +342,16 @@ function MiniLineChart({
   );
 
   return (
-    <div className="rounded-[8px] border-2 border-border bg-white/85 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+    <div className="rounded-2xl border border-border bg-white/95 p-4 shadow-sm">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-black">{title}</p>
+          <p className="text-sm font-bold">{title}</p>
           <p className="text-xs font-medium text-muted-foreground">
             {subtitle}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-sm font-black">
+          <p className="text-sm font-bold tabular-nums">
             {formatter(validPoints.at(-1)?.value ?? null)}
           </p>
           <p className="text-[11px] font-medium text-muted-foreground">
@@ -360,11 +368,11 @@ function MiniLineChart({
         <>
           <svg
             viewBox="0 0 300 90"
-            className="h-24 w-full overflow-visible"
+            className="h-28 w-full overflow-visible"
             role="img"
             aria-label={`${title}: ${subtitle}`}
           >
-            <path d="M 0 89 L 300 89" stroke="#d6d3d1" strokeWidth="1" />
+            <path d="M 0 89 L 300 89" stroke="#e2e8f0" strokeWidth="1" />
             <path
               d={path}
               fill="none"
@@ -414,16 +422,16 @@ function ComparisonBars({
   const maxValue = Math.max(...validValues, 1);
 
   return (
-    <div className="rounded-[8px] border-2 border-border bg-[#fff7ed] p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-      <p className="text-sm font-black">{title}</p>
-      <div className="mt-3 space-y-3">
+    <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+      <p className="text-sm font-bold">{title}</p>
+      <div className="mt-4 space-y-3.5">
         {points.map((point) => (
           <div key={point.label} className="space-y-1">
             <div className="flex items-center justify-between gap-3 text-xs font-medium">
               <span>{point.label}</span>
-              <span>{formatter(point.value)}</span>
+              <span className="tabular-nums">{formatter(point.value)}</span>
             </div>
-            <div className="h-3 rounded-full border border-border bg-white">
+            <div className="h-2.5 rounded-full bg-slate-100">
               <div
                 className="h-full rounded-full"
                 style={{
@@ -447,9 +455,9 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
   );
 
   return (
-    <div className="rounded-[8px] border-2 border-border bg-[#f0fdf4] p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+    <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-4 shadow-sm">
       <div className="mb-3">
-        <p className="text-sm font-black">Top publicaciones recientes</p>
+        <p className="text-sm font-bold">Top publicaciones recientes</p>
         <p className="text-xs font-medium text-muted-foreground">
           Ranking por interacciones para detectar formatos que mejor responden.
         </p>
@@ -464,7 +472,7 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
           {topPosts.map((post, index) => (
             <li
               key={post.id}
-              className="rounded-[8px] border border-border bg-white/90 p-3"
+              className="rounded-xl border border-border bg-white/95 p-3 shadow-sm"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -475,7 +483,7 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
                     {post.caption || `Publicación ${post.id.slice(0, 8)}`}
                   </p>
                 </div>
-                <div className="shrink-0 rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-800">
+                <div className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold tabular-nums text-emerald-800">
                   {formatMetric(post.interactions)}
                 </div>
               </div>
@@ -492,7 +500,7 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
                   href={post.permalink}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-2 inline-block text-xs font-bold underline"
+                  className="mt-2 inline-flex min-h-8 items-center text-xs font-bold underline underline-offset-4"
                 >
                   Ver publicación
                 </a>
@@ -569,13 +577,15 @@ export function SocialPerformancePanel({
   }, [loadInsights]);
 
   return (
-    <Card className="space-y-6 overflow-hidden bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,247,237,0.94))]">
+    <Card className="space-y-6 overflow-hidden border-border/80 bg-white/95 shadow-[0_24px_70px_hsl(222_47%_11%/0.07)]">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-2">
-          <Badge className="w-fit bg-[#fde68a] text-slate-900">
+          <Badge className="w-fit border-sky-200 bg-sky-50 text-sky-900">
             Instagram analytics
           </Badge>
-          <CardTitle>Análisis completo de evolución y rendimiento</CardTitle>
+          <CardTitle className="text-2xl">
+            Análisis completo de evolución y rendimiento
+          </CardTitle>
           <CardDescription>
             Seguimos la evolución de seguidores, alcance, impresiones, visitas
             al perfil y engagement para convertir métricas sueltas en decisiones
@@ -587,6 +597,7 @@ export function SocialPerformancePanel({
           variant="outline"
           onClick={() => void loadInsights()}
           disabled={loading}
+          className="w-fit bg-white"
         >
           <RefreshCw
             className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
@@ -598,21 +609,21 @@ export function SocialPerformancePanel({
 
       <div aria-live="polite">
         {error ? (
-          <div className="rounded-[8px] border-2 border-red-700 bg-red-50 p-3 text-sm font-medium text-red-800">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-800">
             {error}
           </div>
         ) : null}
       </div>
 
       {!loading && insights.length === 0 ? (
-        <p className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+        <p className="rounded-xl border border-dashed border-border bg-white/70 p-4 text-sm font-medium text-muted-foreground">
           No hay cuentas de Instagram conectadas con OAuth para mostrar
           análisis.
         </p>
       ) : null}
 
       {insights.length > 0 ? (
-        <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <MetricCard
             label="Cuentas conectadas"
             value={formatMetric(overview.connectedAccounts)}
@@ -621,25 +632,25 @@ export function SocialPerformancePanel({
                 ? `${formatMetric(overview.accountsWithHistory)} con histórico útil`
                 : "El histórico todavía se está formando"
             }
-            accent="bg-[#eef2ff]"
+            accent="bg-indigo-50"
           />
           <MetricCard
             label="Seguidores totales"
             value={formatMetric(overview.totalFollowers)}
             helper="Suma actual de audiencia conectada"
-            accent="bg-[#ecfeff]"
+            accent="bg-cyan-50"
           />
           <MetricCard
             label="Interacciones recientes"
             value={formatMetric(overview.totalInteractions)}
             helper="Likes y comentarios agregados"
-            accent="bg-[#f0fdf4]"
+            accent="bg-emerald-50"
           />
           <MetricCard
             label="Engagement medio"
             value={formatPercent(overview.averageEngagement)}
             helper="Referencia rápida entre cuentas"
-            accent="bg-[#fef3c7]"
+            accent="bg-amber-50"
           />
         </section>
       ) : null}
@@ -654,15 +665,15 @@ export function SocialPerformancePanel({
           return (
             <article
               key={account.accountId}
-              className="space-y-5 rounded-[8px] border-2 border-border bg-[linear-gradient(135deg,rgba(255,255,255,0.9),rgba(240,249,255,0.85))] p-4 shadow-[8px_8px_0_0_rgba(0,0,0,1)] sm:p-5"
+              className="space-y-5 rounded-3xl border border-border bg-slate-50/70 p-4 shadow-sm sm:p-5"
             >
               <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-xl font-black text-foreground">
+                    <p className="text-xl font-bold text-foreground">
                       {accountName}
                     </p>
-                    <Badge>7d</Badge>
+                    <Badge className="bg-white text-foreground">7d</Badge>
                     <Badge className="bg-white text-foreground">
                       {account.platform}
                     </Badge>
@@ -682,30 +693,30 @@ export function SocialPerformancePanel({
               </div>
 
               {account.error ? (
-                <p className="rounded-[8px] border-2 border-red-700 bg-red-50 p-3 text-sm font-medium text-red-800">
+                <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-800">
                   {account.error}
                 </p>
               ) : null}
 
               {account.insightsStatus !== "ok" && !account.error ? (
-                <p className="rounded-[8px] border-2 border-amber-500 bg-amber-50 p-3 text-sm font-medium text-amber-900">
+                <p className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm font-medium leading-6 text-amber-900">
                   {account.insightsMessage ??
                     "Meta no devolvió insights avanzados para esta cuenta. Revisa permisos y estado de revisión de la app."}
                 </p>
               ) : null}
 
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <MetricCard
                   label="Seguidores"
                   value={formatMetric(account.followers)}
                   helper={`Cambio último snapshot: ${formatDelta(analysis.comparisons.followers.delta)}`}
-                  accent="bg-[#ecfeff]"
+                  accent="bg-cyan-50"
                 />
                 <MetricCard
                   label="Engagement"
                   value={formatPercent(account.engagementRate)}
                   helper={`Cambio último snapshot: ${formatDelta(analysis.comparisons.engagement.delta, true)}`}
-                  accent="bg-[#fef3c7]"
+                  accent="bg-amber-50"
                 />
                 <MetricCard
                   label="Interacciones recientes"
@@ -715,13 +726,13 @@ export function SocialPerformancePanel({
                       ? "Sin publicaciones suficientes"
                       : `Media por post: ${formatMetric(analysis.averageInteractions)}`
                   }
-                  accent="bg-[#f0fdf4]"
+                  accent="bg-emerald-50"
                 />
                 <MetricCard
                   label="Media publicada"
                   value={formatMetric(account.mediaCount)}
                   helper={`Siguiendo: ${formatMetric(account.following)}`}
-                  accent="bg-[#fdf2f8]"
+                  accent="bg-rose-50"
                 />
               </div>
 
@@ -781,14 +792,14 @@ export function SocialPerformancePanel({
                     ]}
                   />
 
-                  <div className="rounded-[8px] border-2 border-border bg-white/90 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-                    <p className="text-sm font-black">Lectura rápida</p>
+                  <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+                    <p className="text-sm font-bold">Lectura rápida</p>
                     <div className="mt-3 grid gap-3 md:grid-cols-2">
                       <div>
                         <p className="text-xs font-bold uppercase text-muted-foreground">
                           Señales positivas
                         </p>
-                        <ul className="mt-2 space-y-2 text-sm font-medium text-foreground">
+                        <ul className="mt-2 space-y-2 text-sm leading-6 text-foreground">
                           {analysis.strengths.map((item) => (
                             <li key={item}>{item}</li>
                           ))}
@@ -798,7 +809,7 @@ export function SocialPerformancePanel({
                         <p className="text-xs font-bold uppercase text-muted-foreground">
                           Alertas
                         </p>
-                        <ul className="mt-2 space-y-2 text-sm font-medium text-foreground">
+                        <ul className="mt-2 space-y-2 text-sm leading-6 text-foreground">
                           {analysis.risks.map((item) => (
                             <li key={item}>{item}</li>
                           ))}
@@ -806,7 +817,7 @@ export function SocialPerformancePanel({
                       </div>
                     </div>
                     {analysis.topPost ? (
-                      <p className="mt-3 rounded-[8px] bg-[#eff6ff] p-2 text-xs font-medium text-slate-700">
+                      <p className="mt-3 rounded-xl bg-sky-50 p-3 text-xs font-medium leading-5 text-slate-700">
                         Mejor contenido reciente:{" "}
                         {formatMetric(analysis.topPost.interactions)}{" "}
                         interacciones el{" "}

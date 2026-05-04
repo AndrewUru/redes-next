@@ -10,13 +10,19 @@ export default async function ClientAccountsPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="space-y-2 bg-white/90">
-        <CardTitle>Centro de cuentas y analítica</CardTitle>
-        <CardDescription>
-          Desde aquí puedes conectar perfiles y revisar un análisis visual de la
-          evolución de seguidores, likes, interacciones y señales de
-          rendimiento.
-        </CardDescription>
+      <Card className="overflow-hidden border-border/80 bg-white/95 shadow-[0_20px_60px_hsl(222_47%_11%/0.06)]">
+        <div className="flex flex-col gap-2 lg:max-w-4xl">
+          <p className="text-xs font-bold uppercase text-muted-foreground">
+            Analitica de cliente
+          </p>
+          <CardTitle className="text-2xl">
+            Centro de cuentas y analítica
+          </CardTitle>
+          <CardDescription>
+            Conecta perfiles y revisa la evolución de seguidores, likes,
+            interacciones y señales de rendimiento en un panel claro.
+          </CardDescription>
+        </div>
       </Card>
       <SocialAccountsManager />
       <SocialPerformancePanel />
