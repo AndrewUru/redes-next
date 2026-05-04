@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -51,6 +51,24 @@ type AccountInsights = {
 
 type SocialPerformancePanelProps = {
   apiPath?: string;
+  aiSummaryApiPath?: string | null;
+};
+
+type AiSocialSummary = {
+  headline: string;
+  executiveSummary: string;
+  opportunities: string[];
+  risks: string[];
+  nextActions: Array<{
+    title: string;
+    reason: string;
+    priority: "alta" | "media" | "baja";
+  }>;
+  contentIdeas: Array<{
+    format: string;
+    angle: string;
+    hook: string;
+  }>;
 };
 
 type MetricKey =
@@ -514,11 +532,15 @@ function PostPerformanceList({ posts }: { posts: PostInsights[] }) {
 }
 
 export function SocialPerformancePanel({
-  apiPath = "/api/client/social-accounts/insights"
+  apiPath = "/api/client/social-accounts/insights",
+  aiSummaryApiPath = "/api/client/ai/social-summary"
 }: SocialPerformancePanelProps) {
   const [insights, setInsights] = useState<AccountInsights[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [aiSummary, setAiSummary] = useState<AiSocialSummary | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   const overview = useMemo(() => {
     const connectedAccounts = insights.length;
@@ -576,6 +598,35 @@ export function SocialPerformancePanel({
     void loadInsights();
   }, [loadInsights]);
 
+  const generateAiSummary = useCallback(async () => {
+    if (!aiSummaryApiPath) return;
+
+    setAiLoading(true);
+    setAiError(null);
+
+    try {
+      const response = await fetch(aiSummaryApiPath, {
+        method: "POST",
+        cache: "no-store"
+      });
+      const json = (await response.json()) as {
+        error?: string;
+        summary?: AiSocialSummary;
+      };
+
+      if (!response.ok || !json.summary) {
+        setAiError(json.error ?? "No se pudo generar la lectura con IA.");
+        return;
+      }
+
+      setAiSummary(json.summary);
+    } catch {
+      setAiError("No se pudo generar la lectura con IA.");
+    } finally {
+      setAiLoading(false);
+    }
+  }, [aiSummaryApiPath]);
+
   return (
     <Card className="space-y-6 overflow-hidden border-border/80 bg-white/95 shadow-[0_24px_70px_hsl(222_47%_11%/0.07)]">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
@@ -620,6 +671,117 @@ export function SocialPerformancePanel({
           No hay cuentas de Instagram conectadas con OAuth para mostrar
           análisis.
         </p>
+      ) : null}
+
+      {aiSummaryApiPath && insights.length > 0 ? (
+        <section className="rounded-3xl border border-violet-100 bg-violet-50/60 p-4 shadow-sm">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-3xl space-y-1">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-violet-700" aria-hidden />
+                <p className="text-sm font-bold text-violet-950">
+                  Lectura con IA
+                </p>
+              </div>
+              <p className="text-sm leading-6 text-muted-foreground">
+                Genera una interpretacion ejecutiva con oportunidades, riesgos,
+                proximas acciones e ideas de contenido.
+              </p>
+            </div>
+            <Button
+              type="button"
+              onClick={() => void generateAiSummary()}
+              disabled={aiLoading}
+              className="w-fit bg-violet-700 text-white hover:bg-violet-800"
+            >
+              <Sparkles className="h-4 w-4" aria-hidden />
+              {aiLoading ? "Generando..." : "Generar lectura con IA"}
+            </Button>
+          </div>
+
+          <div aria-live="polite">
+            {aiError ? (
+              <p className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-800">
+                {aiError}
+              </p>
+            ) : null}
+          </div>
+
+          {aiSummary ? (
+            <div className="mt-4 grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
+              <div className="rounded-2xl border border-violet-100 bg-white p-4 shadow-sm">
+                <p className="text-xs font-bold uppercase text-muted-foreground">
+                  Resumen
+                </p>
+                <h4 className="mt-2 text-xl font-bold text-foreground">
+                  {aiSummary.headline}
+                </h4>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                  {aiSummary.executiveSummary}
+                </p>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+                  <p className="text-sm font-bold">Oportunidades</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-foreground">
+                    {aiSummary.opportunities.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+                  <p className="text-sm font-bold">Riesgos</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-foreground">
+                    {aiSummary.risks.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-white p-4 shadow-sm xl:col-span-2">
+                <p className="text-sm font-bold">Proximas acciones</p>
+                <div className="mt-3 grid gap-3 md:grid-cols-3">
+                  {aiSummary.nextActions.map((action) => (
+                    <div
+                      key={action.title}
+                      className="rounded-xl border border-border bg-slate-50 p-3"
+                    >
+                      <span className="rounded-full bg-white px-2 py-1 text-[11px] font-bold uppercase text-muted-foreground">
+                        {action.priority}
+                      </span>
+                      <p className="mt-3 text-sm font-bold">{action.title}</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                        {action.reason}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-white p-4 shadow-sm xl:col-span-2">
+                <p className="text-sm font-bold">Ideas de contenido</p>
+                <div className="mt-3 grid gap-3 md:grid-cols-3">
+                  {aiSummary.contentIdeas.map((idea) => (
+                    <div
+                      key={`${idea.format}-${idea.hook}`}
+                      className="rounded-xl border border-border bg-slate-50 p-3"
+                    >
+                      <p className="text-xs font-bold uppercase text-muted-foreground">
+                        {idea.format}
+                      </p>
+                      <p className="mt-2 text-sm font-bold">{idea.angle}</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                        {idea.hook}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </section>
       ) : null}
 
       {insights.length > 0 ? (

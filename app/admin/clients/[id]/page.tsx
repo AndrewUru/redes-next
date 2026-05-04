@@ -157,6 +157,7 @@ export default async function AdminClientDetailPage({
         </CardDescription>
         <SocialPerformancePanel
           apiPath={`/api/admin/clients/${summary.client.id}/insights`}
+          aiSummaryApiPath={null}
         />
       </Card>
     </div>
