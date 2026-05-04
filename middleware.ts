@@ -4,16 +4,12 @@ import { updateSession } from "@/lib/supabase/middleware";
 const protectedPrefixes = ["/admin", "/client"];
 
 export async function middleware(request: NextRequest) {
-  const response = await updateSession(request);
-
-  const hasSession = request.cookies.getAll().some((cookie) =>
-    cookie.name.startsWith("sb-")
-  );
+  const { response, user } = await updateSession(request);
 
   const isProtected = protectedPrefixes.some((prefix) =>
     request.nextUrl.pathname.startsWith(prefix)
   );
-  if (isProtected && !hasSession) {
+  if (isProtected && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

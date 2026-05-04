@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LayoutDashboard, LogIn, Menu, X } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 const publicLinks = [
@@ -21,20 +22,42 @@ function isCurrentPath(pathname: string, href: string) {
 export function AppHeader() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   const isWorkspace =
     pathname.startsWith("/client") || pathname.startsWith("/admin");
-  const ctaHref = isWorkspace ? "/dashboard" : "/login";
-  const ctaLabel = isWorkspace
+  const showDashboardCta = authenticated || isWorkspace;
+  const ctaHref = showDashboardCta ? "/dashboard" : "/login";
+  const ctaLabel = showDashboardCta
     ? "Dashboard"
     : isAuthPage
       ? "Volver al acceso"
       : "Acceder";
-  const CtaIcon = isWorkspace ? LayoutDashboard : LogIn;
+  const CtaIcon = showDashboardCta ? LayoutDashboard : LogIn;
 
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let active = true;
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (active) setAuthenticated(Boolean(data.user));
+    });
+
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthenticated(Boolean(session?.user));
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/88 backdrop-blur-xl">

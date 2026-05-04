@@ -10,6 +10,7 @@ import {
   AdminSocialAccountsSummary
 } from "@/components/admin/client-decision-panels";
 import { GenerateBrandbookButton } from "@/components/admin/generate-brandbook-button";
+import { AiMonthlyReportCard } from "@/components/admin/ai-monthly-report-card";
 import { ClientSettingsForm } from "@/components/admin/client-settings-form";
 import { SocialPerformancePanel } from "@/components/client/social-performance-panel";
 import { getClientSummary } from "@/lib/db/server";
@@ -135,6 +136,8 @@ export default async function AdminClientDetailPage({
         brandbooksCount={summary.brandbooks.length}
         socialAccounts={summary.socialAccounts}
       />
+
+      <AiMonthlyReportCard clientId={id} />
 
       <div className="grid gap-4 xl:grid-cols-[1fr_0.9fr]">
         <AdminIntakeSummary intake={intakeData} />
