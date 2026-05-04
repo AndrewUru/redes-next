@@ -43,6 +43,10 @@ const navItems = [
   }
 ] as const;
 
+function isCurrentPath(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default async function ClientLayout({
   children
 }: {
@@ -73,9 +77,7 @@ export default async function ClientLayout({
 
           <nav className="mt-4 grid gap-2">
             {navItems.map((item) => {
-              const isActive =
-                pathname === item.href ||
-                (item.href !== "/client" && pathname.startsWith(item.href));
+              const isActive = isCurrentPath(pathname, item.href);
               const Icon = item.icon;
 
               return (
@@ -143,9 +145,7 @@ export default async function ClientLayout({
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               {navItems.map((item) => {
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/client" && pathname.startsWith(item.href));
+                const isActive = isCurrentPath(pathname, item.href);
                 const Icon = item.icon;
 
                 return (
