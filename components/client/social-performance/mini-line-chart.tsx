@@ -1,5 +1,18 @@
 import type { ChartPoint } from "./types";
-import { buildLinePath, formatMetric } from "./utils";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig
+} from "@/components/ui/chart";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis
+} from "recharts";
+import { formatMetric } from "./utils";
 
 type MiniLineChartProps = {
   title: string;
@@ -19,11 +32,16 @@ export function MiniLineChart({
   const validPoints = points.filter(
     (point): point is ChartPoint & { value: number } => point.value !== null
   );
-  const path = buildLinePath(
-    validPoints.map((point) => point.value),
-    300,
-    90
-  );
+  const chartData = validPoints.map((point) => ({
+    label: point.label,
+    value: point.value
+  }));
+  const chartConfig = {
+    value: {
+      label: title,
+      color
+    }
+  } satisfies ChartConfig;
 
   return (
     <div className="rounded-2xl border border-border bg-white/95 p-4 shadow-sm">
@@ -50,39 +68,43 @@ export function MiniLineChart({
         </p>
       ) : (
         <>
-          <svg
-            viewBox="0 0 300 90"
-            className="h-28 w-full overflow-visible"
-            role="img"
-            aria-label={`${title}: ${subtitle}`}
+          <ChartContainer
+            config={chartConfig}
+            className="h-28 w-full aspect-auto"
           >
-            <path d="M 0 89 L 300 89" stroke="#e2e8f0" strokeWidth="1" />
-            <path
-              d={path}
-              fill="none"
-              stroke={color}
-              strokeWidth="4"
-              strokeLinecap="round"
-            />
-            {validPoints.map((point, index, list) => {
-              const x =
-                list.length === 1 ? 150 : (index / (list.length - 1)) * 300;
-              const values = list.map((item) => item.value);
-              const max = Math.max(...values);
-              const min = Math.min(...values);
-              const range = max - min || 1;
-              const y = 90 - ((point.value - min) / range) * 90;
-              return (
-                <circle
-                  key={`${point.label}-${index}`}
-                  cx={x}
-                  cy={y}
-                  r="4"
-                  fill={color}
-                />
-              );
-            })}
-          </svg>
+            <LineChart
+              accessibilityLayer
+              data={chartData}
+              margin={{ left: 4, right: 4, top: 8, bottom: 0 }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="label"
+                tickLine={false}
+                axisLine={false}
+                tick={false}
+              />
+              <YAxis hide domain={["dataMin", "dataMax"]} />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    formatter={(value) =>
+                      typeof value === "number" ? formatter(value) : String(value)
+                    }
+                  />
+                }
+              />
+              <Line
+                dataKey="value"
+                type="monotone"
+                stroke="var(--color-value)"
+                strokeWidth={3}
+                dot={{ r: 3, fill: "var(--color-value)" }}
+                activeDot={{ r: 5 }}
+              />
+            </LineChart>
+          </ChartContainer>
           <div className="mt-2 flex justify-between gap-2 text-[11px] font-medium text-muted-foreground">
             <span>{validPoints[0]?.label}</span>
             <span>{validPoints.at(-1)?.label}</span>

@@ -101,6 +101,52 @@ type SnapshotRow = {
   engagement_rate: number | null;
 };
 
+type HistoryRange = "6m" | "12m" | "all";
+
+function getHistoryRange(request: Request): HistoryRange {
+  const range = new URL(request.url).searchParams.get("range");
+  return range === "12m" || range === "all" ? range : "6m";
+}
+
+function monthsAgo(months: number) {
+  const date = new Date();
+  date.setMonth(date.getMonth() - months);
+  return date.toISOString().slice(0, 10);
+}
+
+function normalizeDate(value: string | null | undefined) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toISOString().slice(0, 10);
+}
+
+async function getHistoryFromDate(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  clientId: string,
+  accounts: SocialAccountRow[],
+  range: HistoryRange
+) {
+  if (range === "6m") return monthsAgo(6);
+  if (range === "12m") return monthsAgo(12);
+
+  const { data: client } = await supabase
+    .from("clients")
+    .select("created_at")
+    .eq("id", clientId)
+    .maybeSingle();
+
+  const clientStart = normalizeDate(
+    (client as Record<string, unknown> | null)?.created_at as string | null
+  );
+  const firstConnected = accounts
+    .map((account) => normalizeDate(account.connected_at))
+    .filter((date): date is string => Boolean(date))
+    .sort()[0];
+
+  return clientStart ?? firstConnected ?? monthsAgo(12);
+}
+
 function asRecord(value: unknown) {
   return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
 }
@@ -290,9 +336,10 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
   };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const ctx = await getClientContext();
   if ("error" in ctx) return ctx.error;
+  const historyRange = getHistoryRange(request);
 
   const { data, error } = await ctx.supabase
     .from("social_accounts")
@@ -333,9 +380,12 @@ export async function GET() {
     }
   }
 
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const fromDate = thirtyDaysAgo.toISOString().slice(0, 10);
+  const fromDate = await getHistoryFromDate(
+    ctx.supabase,
+    ctx.clientId,
+    accounts,
+    historyRange
+  );
 
   const accountIds = accounts.map((account) => account.id);
   const { data: historyRows, error: historyError } = await ctx.supabase
@@ -375,5 +425,5 @@ export async function GET() {
     history: historyByAccount.get(item.accountId) ?? []
   }));
 
-  return NextResponse.json({ insights: enriched });
+  return NextResponse.json({ insights: enriched, range: historyRange });
 }

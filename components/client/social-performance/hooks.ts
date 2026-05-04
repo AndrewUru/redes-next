@@ -1,9 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { AccountInsights, AiSocialSummary } from "./types";
+import type { AccountInsights, AiSocialSummary, HistoryRange } from "./types";
 
-export function useSocialInsights(apiPath: string) {
+function withRange(apiPath: string, range: HistoryRange) {
+  const separator = apiPath.includes("?") ? "&" : "?";
+  return `${apiPath}${separator}range=${range}`;
+}
+
+export function useSocialInsights(apiPath: string, range: HistoryRange) {
   const [insights, setInsights] = useState<AccountInsights[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,7 +18,7 @@ export function useSocialInsights(apiPath: string) {
     setError(null);
 
     try {
-      const response = await fetch(apiPath, {
+      const response = await fetch(withRange(apiPath, range), {
         cache: "no-store"
       });
       const json = (await response.json()) as {
@@ -32,7 +37,7 @@ export function useSocialInsights(apiPath: string) {
     } finally {
       setLoading(false);
     }
-  }, [apiPath]);
+  }, [apiPath, range]);
 
   useEffect(() => {
     void reload();

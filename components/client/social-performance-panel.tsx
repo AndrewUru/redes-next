@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,19 @@ import { AccountInsightsCard } from "./social-performance/account-insights-card"
 import { AiSummaryPanel } from "./social-performance/ai-summary-panel";
 import { useAiSocialSummary, useSocialInsights } from "./social-performance/hooks";
 import { MetricCard } from "./social-performance/metric-card";
-import type { SocialOverview } from "./social-performance/types";
+import type { HistoryRange, SocialOverview } from "./social-performance/types";
 import { buildOverview, formatMetric, formatPercent } from "./social-performance/utils";
 
 type SocialPerformancePanelProps = {
   apiPath?: string;
   aiSummaryApiPath?: string | null;
 };
+
+const historyRanges: Array<{ value: HistoryRange; label: string }> = [
+  { value: "6m", label: "6 meses" },
+  { value: "12m", label: "1 año" },
+  { value: "all", label: "Desde inicio" }
+];
 
 function OverviewMetrics({ overview }: { overview: SocialOverview }) {
   return (
@@ -56,14 +62,18 @@ export function SocialPerformancePanel({
   apiPath = "/api/client/social-accounts/insights",
   aiSummaryApiPath = "/api/client/ai/social-summary"
 }: SocialPerformancePanelProps) {
-  const { insights, loading, error, reload } = useSocialInsights(apiPath);
+  const [historyRange, setHistoryRange] = useState<HistoryRange>("6m");
+  const { insights, loading, error, reload } = useSocialInsights(
+    apiPath,
+    historyRange
+  );
   const ai = useAiSocialSummary(aiSummaryApiPath);
   const overview = useMemo(() => buildOverview(insights), [insights]);
   const hasInsights = insights.length > 0;
 
   return (
     <Card className="space-y-6 overflow-hidden border-border/80 bg-white/95 shadow-[0_24px_70px_hsl(222_47%_11%/0.07)]">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-2">
           <Badge className="w-fit border-sky-200 bg-sky-50 text-sky-900">
             Instagram analytics
@@ -77,19 +87,45 @@ export function SocialPerformancePanel({
             mas claras.
           </CardDescription>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => void reload()}
-          disabled={loading}
-          className="w-fit bg-white"
-        >
-          <RefreshCw
-            className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-            aria-hidden
-          />
-          {loading ? "Actualizando..." : "Actualizar metricas"}
-        </Button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div
+            className="inline-flex w-fit rounded-full border border-border bg-white p-1 shadow-sm"
+            aria-label="Rango de historial"
+          >
+            {historyRanges.map((range) => {
+              const isActive = historyRange === range.value;
+
+              return (
+                <button
+                  key={range.value}
+                  type="button"
+                  className={`min-h-9 rounded-full px-3 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                  aria-pressed={isActive}
+                  onClick={() => setHistoryRange(range.value)}
+                >
+                  {range.label}
+                </button>
+              );
+            })}
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => void reload()}
+            disabled={loading}
+            className="w-fit bg-white"
+          >
+            <RefreshCw
+              className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
+              aria-hidden
+            />
+            {loading ? "Actualizando..." : "Actualizar metricas"}
+          </Button>
+        </div>
       </div>
 
       <div aria-live="polite">

@@ -77,3 +77,5 @@ export type SocialOverview = {
   averageEngagement: number | null;
   accountsWithHistory: number;
 };
+
+export type HistoryRange = "6m" | "12m" | "all";
