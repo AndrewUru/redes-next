@@ -56,7 +56,8 @@ export function getSeries(history: HistoryPoint[], key: MetricKey) {
 
 export function averageMetric(values: Array<number | null>) {
   const validValues = values.filter(
-    (value): value is number => typeof value === "number"
+    (value): value is number =>
+      typeof value === "number" && !Number.isNaN(value)
   );
   if (validValues.length === 0) return null;
   return Number(
