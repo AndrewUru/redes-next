@@ -137,7 +137,7 @@ export function FileUploader({
         className={`cursor-pointer rounded-[8px] border-2 border-dashed p-4 text-center transition-[background-color,border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
           isDragging
             ? "border-primary bg-primary/10 shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
-            : "border-border bg-white/60 hover:bg-muted/40"
+            : "border-border bg-surface/60 hover:bg-muted/40"
         }`}
       >
         <p className="text-sm font-medium">
@@ -164,7 +164,7 @@ export function FileUploader({
         ) : null}
       </div>
       {selectedFile ? (
-        <div className="rounded-[8px] border-2 border-border bg-white/75 p-3">
+        <div className="rounded-[8px] border-2 border-border bg-surface/75 p-3">
           {previewUrl ? (
             <Image
               src={previewUrl}

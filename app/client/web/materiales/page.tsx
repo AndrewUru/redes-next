@@ -9,7 +9,7 @@ export default async function ClientWebMaterialsPage() {
 
   return (
     <div className="space-y-4">
-      <Card className="bg-white/90">
+      <Card className="bg-surface/90">
         <CardDescription className="uppercase">Materiales web</CardDescription>
         <CardTitle className="mt-1">
           Archivos para construir tu pagina

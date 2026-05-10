@@ -25,14 +25,14 @@ export function BrandbookList({
   description?: string;
 }) {
   return (
-    <Card className="space-y-4 bg-white/90">
+    <Card className="space-y-4 bg-surface/90">
       <div>
         <CardTitle>{title}</CardTitle>
         <CardDescription className="mt-1">{description}</CardDescription>
       </div>
 
       {brandbooks.length === 0 ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
           Todavia no hay guias de marca creadas.
         </div>
       ) : (
@@ -40,7 +40,7 @@ export function BrandbookList({
           {brandbooks.map((brandbook) => (
             <li
               key={brandbook.id}
-              className="flex flex-col gap-3 rounded-[8px] border-2 border-border bg-white/75 p-3 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex min-w-0 items-center gap-3">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a]">

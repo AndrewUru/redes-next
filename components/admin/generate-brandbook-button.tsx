@@ -16,7 +16,11 @@ export function GenerateBrandbookButton({ clientId }: { clientId: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ clientId })
     });
-    const json = (await res.json()) as { error?: string; path?: string; signedUrl?: string | null };
+    const json = (await res.json()) as {
+      error?: string;
+      path?: string;
+      signedUrl?: string | null;
+    };
     setLoading(false);
     setPdfUrl(json.signedUrl ?? null);
     setMessage(
@@ -31,7 +35,9 @@ export function GenerateBrandbookButton({ clientId }: { clientId: string }) {
       <Button onClick={generate} disabled={loading}>
         {loading ? "Generando…" : "Generar brandbook PDF"}
       </Button>
-      {message ? <p className="text-xs text-muted-foreground">{message}</p> : null}
+      {message ? (
+        <p className="text-xs text-muted-foreground">{message}</p>
+      ) : null}
       {pdfUrl ? (
         <a
           href={pdfUrl}

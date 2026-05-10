@@ -24,7 +24,7 @@ export default async function ClientOnboardingPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="onboarding-reveal space-y-5 overflow-hidden bg-white/90">
+      <Card className="onboarding-reveal space-y-5 overflow-hidden bg-surface/90">
         <div className="relative flex flex-wrap items-start justify-between gap-3">
           <div className="max-w-3xl">
             <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
@@ -44,7 +44,7 @@ export default async function ClientOnboardingPage() {
           </Badge>
         </div>
 
-        <div className="onboarding-reveal-delay-1 rounded-[8px] border-2 border-border bg-white/70 p-3">
+        <div className="onboarding-reveal-delay-1 rounded-[8px] border-2 border-border bg-surface/70 p-3">
           <div className="mb-2 flex items-center justify-between text-sm font-semibold">
             <span>Progreso del formulario</span>
             <span className="rounded-md border border-border bg-background px-2 py-0.5">

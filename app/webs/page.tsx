@@ -120,7 +120,7 @@ export default function WebCreationServicePage() {
       <section className="mx-auto max-w-6xl space-y-12 px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div className="space-y-5">
-            <Badge className="w-fit bg-white/90">
+            <Badge className="w-fit bg-surface/90">
               <Globe2 className="h-3.5 w-3.5" aria-hidden />
               Nuevo servicio
             </Badge>
@@ -154,7 +154,7 @@ export default function WebCreationServicePage() {
             </div>
           </div>
 
-          <div className="neo-box overflow-hidden bg-white/90 p-0">
+          <div className="neo-box overflow-hidden bg-surface/90 p-0">
             <div className="border-b-2 border-border bg-[#111] px-4 py-3 text-white">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -163,7 +163,7 @@ export default function WebCreationServicePage() {
                   </p>
                   <h2 className="text-2xl text-white">Webbook de proyecto</h2>
                 </div>
-                <Badge className="border-white bg-[#a8e6df] text-foreground">
+                <Badge className="border-border bg-[#a8e6df] text-foreground">
                   En preparación
                 </Badge>
               </div>
@@ -198,10 +198,10 @@ export default function WebCreationServicePage() {
                   {["Hero", "Prueba social", "Servicios", "Contacto"].map(
                     (section, index) => (
                       <div key={section} className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border bg-white text-xs font-black">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border bg-surface text-xs font-black">
                           {index + 1}
                         </span>
-                        <div className="min-w-0 flex-1 rounded-[8px] border-2 border-border bg-white px-3 py-2 text-sm font-bold">
+                        <div className="min-w-0 flex-1 rounded-[8px] border-2 border-border bg-surface px-3 py-2 text-sm font-bold">
                           {section}
                         </div>
                       </div>
@@ -218,7 +218,7 @@ export default function WebCreationServicePage() {
             const Icon = step.icon;
 
             return (
-              <Card key={step.title} className="bg-white/88">
+              <Card key={step.title} className="bg-surface/88">
                 <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a] shadow-[2px_3px_0_0_rgba(0,0,0,1)]">
                   <Icon className="h-5 w-5" aria-hidden />
                 </span>
@@ -252,7 +252,7 @@ export default function WebCreationServicePage() {
                 interfaz coherente.
               </p>
             </Card>
-            <Card className="bg-white/90">
+            <Card className="bg-surface/90">
               <MousePointerClick className="mb-5 h-7 w-7" aria-hidden />
               <CardTitle>Conversion sencilla</CardTitle>
               <p className="mt-2 text-sm font-medium leading-relaxed text-muted-foreground">
@@ -263,7 +263,7 @@ export default function WebCreationServicePage() {
           </div>
         </div>
 
-        <section className="grid gap-6 rounded-[8px] border-2 border-border bg-white/90 p-4 shadow-[7px_10px_0_3px_rgba(0,0,0,1)] sm:p-6 lg:grid-cols-[0.82fr_1.18fr]">
+        <section className="grid gap-6 rounded-[8px] border-2 border-border bg-surface/90 p-4 shadow-[7px_10px_0_3px_rgba(0,0,0,1)] sm:p-6 lg:grid-cols-[0.82fr_1.18fr]">
           <div className="space-y-4">
             <Badge className="bg-[#f2d048]">
               <Sparkles className="h-3.5 w-3.5" aria-hidden />

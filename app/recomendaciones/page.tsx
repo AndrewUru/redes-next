@@ -17,9 +17,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 const primaryActionClass =
-  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-primary px-4 py-2 text-center text-sm font-semibold leading-tight text-primary-foreground shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,color,box-shadow,transform] hover:translate-y-[1px] hover:bg-[#f7a9c9] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-primary px-4 py-2 text-center text-sm font-semibold leading-tight text-primary-foreground shadow-[2px_5px_0_0_hsl(var(--foreground))] transition-[background-color,border-color,color,box-shadow,transform] hover:translate-y-[1px] hover:bg-primary/90 hover:shadow-[2px_4px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-[2px_5px_0_0_hsl(0_0%_0%/0.65)] dark:hover:shadow-[2px_4px_0_0_hsl(0_0%_0%/0.65)]";
 const secondaryActionClass =
-  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-background px-4 py-2 text-center text-sm font-semibold leading-tight text-foreground shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,border-color,color,box-shadow,transform] hover:translate-y-[1px] hover:bg-muted hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-surface px-4 py-2 text-center text-sm font-semibold leading-tight text-foreground shadow-[2px_5px_0_0_hsl(var(--foreground))] transition-[background-color,border-color,color,box-shadow,transform] hover:translate-y-[1px] hover:bg-muted hover:shadow-[2px_4px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-[2px_5px_0_0_hsl(0_0%_0%/0.65)] dark:hover:shadow-[2px_4px_0_0_hsl(0_0%_0%/0.65)]";
 
 export const metadata: Metadata = {
   title: "Recomendaciones web | ElSaltoWeb",
@@ -58,11 +58,12 @@ const technologyOptions = [
       "La seguridad depende mucho del mantenimiento."
     ],
     icon: Wrench,
-    tone: "bg-[#fde68a]"
+    tone: "bg-amber-200 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/15 dark:text-amber-100"
   },
   {
     title: "Astro",
-    ideal: "Webs informativas, rápidas, con mucho contenido estático y poca lógica compleja.",
+    ideal:
+      "Webs informativas, rápidas, con mucho contenido estático y poca lógica compleja.",
     pros: [
       "Carga muy rápida porque envía poco JavaScript por defecto.",
       "Muy buena opción para landing pages, portfolios y webs de servicio.",
@@ -74,11 +75,12 @@ const technologyOptions = [
       "Menos familiar para clientes que esperan un panel tipo WordPress."
     ],
     icon: MonitorSmartphone,
-    tone: "bg-[#a8e6df]"
+    tone: "bg-teal-200 text-teal-950 dark:border-teal-300/30 dark:bg-teal-300/15 dark:text-teal-100"
   },
   {
     title: "Next.js",
-    ideal: "Proyectos con dashboard, área privada, formularios avanzados o integraciones.",
+    ideal:
+      "Proyectos con dashboard, área privada, formularios avanzados o integraciones.",
     pros: [
       "Sirve para webs y aplicaciones completas.",
       "Permite contenido estático, renderizado en servidor y zonas privadas.",
@@ -90,7 +92,7 @@ const technologyOptions = [
       "Conviene planificar bien datos, despliegue y costes."
     ],
     icon: Code2,
-    tone: "bg-[#c7b7ef]"
+    tone: "bg-violet-200 text-violet-950 dark:border-violet-300/30 dark:bg-violet-300/15 dark:text-violet-100"
   }
 ] as const;
 
@@ -150,7 +152,7 @@ export default function RecommendationsPage() {
       <section className="mx-auto max-w-6xl space-y-12 px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div className="space-y-5">
-            <Badge className="w-fit bg-white/90">
+            <Badge className="w-fit bg-surface/90">
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
               Recomendaciones para clientes
             </Badge>
@@ -181,7 +183,7 @@ export default function RecommendationsPage() {
             </div>
           </div>
 
-          <div className="neo-box bg-white/90">
+          <div className="neo-box bg-surface/90">
             <div className="flex flex-col gap-4">
               <div className="rounded-[8px] border-2 border-border bg-[#111] p-4 text-white">
                 <p className="text-xs font-bold uppercase text-white/60">
@@ -209,7 +211,7 @@ export default function RecommendationsPage() {
         </div>
 
         <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <Card className="space-y-4 bg-white/90">
+          <Card className="space-y-4 bg-surface/90">
             <Server className="h-7 w-7" aria-hidden />
             <CardTitle>Qué contratar normalmente</CardTitle>
             <CardDescription>
@@ -220,7 +222,7 @@ export default function RecommendationsPage() {
             </CardDescription>
           </Card>
 
-          <Card className="space-y-4 bg-white/90">
+          <Card className="space-y-4 bg-surface/90">
             <AlertTriangle className="h-7 w-7" aria-hidden />
             <CardTitle>Qué revisar antes de pagar</CardTitle>
             <CardDescription>
@@ -233,9 +235,7 @@ export default function RecommendationsPage() {
 
         <section id="comparativa" className="scroll-mt-24 space-y-4">
           <div>
-            <h2 className="text-3xl sm:text-4xl">
-              WordPress, Astro o Next.js
-            </h2>
+            <h2 className="text-3xl sm:text-4xl">WordPress, Astro o Next.js</h2>
             <p className="mt-2 max-w-3xl text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
               No hay una opción universal. La mejor tecnología depende de quién
               editará la web, cuánta interacción necesita y cuánto mantenimiento
@@ -247,9 +247,9 @@ export default function RecommendationsPage() {
               const Icon = option.icon;
 
               return (
-                <Card key={option.title} className="space-y-4 bg-white/90">
+                <Card key={option.title} className="space-y-4 bg-surface/90">
                   <span
-                    className={`flex h-11 w-11 items-center justify-center rounded-[8px] border-2 border-border shadow-[2px_3px_0_0_rgba(0,0,0,1)] ${option.tone}`}
+                    className={`flex h-11 w-11 items-center justify-center rounded-[8px] border-2 border-border shadow-[2px_3px_0_0_hsl(var(--foreground))] dark:shadow-[2px_3px_0_0_hsl(0_0%_0%/0.65)] ${option.tone}`}
                   >
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
@@ -300,7 +300,7 @@ export default function RecommendationsPage() {
               negocio.
             </p>
           </div>
-          <Card className="bg-white/90">
+          <Card className="bg-surface/90">
             <div className="grid gap-2 sm:grid-cols-2">
               {domainChecklist.map((item) => (
                 <div
@@ -316,16 +316,16 @@ export default function RecommendationsPage() {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-          <Card className="space-y-4 bg-white/90">
+          <Card className="space-y-4 bg-surface/90">
             <CardTitle>Regla rápida de decisión</CardTitle>
             <div className="grid gap-3">
               {decisionRules.map((rule) => (
                 <div
                   key={rule.label}
-                  className="grid gap-2 rounded-[8px] border-2 border-border bg-white/75 p-3 sm:grid-cols-[1fr_0.8fr]"
+                  className="grid gap-2 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:grid-cols-[1fr_0.8fr]"
                 >
                   <p className="text-sm font-bold">{rule.label}</p>
-                  <Badge className="w-fit bg-[#fde68a]">
+                  <Badge className="w-fit bg-amber-200 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/15 dark:text-amber-100">
                     {rule.recommendation}
                   </Badge>
                 </div>
@@ -347,7 +347,7 @@ export default function RecommendationsPage() {
         </section>
 
         <section className="grid gap-4 lg:grid-cols-3">
-          <Card className="space-y-3 bg-white/90">
+          <Card className="space-y-3 bg-surface/90">
             <Database className="h-7 w-7" aria-hidden />
             <CardTitle>Copias y mantenimiento</CardTitle>
             <CardDescription>
@@ -355,7 +355,7 @@ export default function RecommendationsPage() {
               forma sencilla de restaurar si algo falla.
             </CardDescription>
           </Card>
-          <Card className="space-y-3 bg-white/90">
+          <Card className="space-y-3 bg-surface/90">
             <ShieldCheck className="h-7 w-7" aria-hidden />
             <CardTitle>Seguridad básica</CardTitle>
             <CardDescription>
@@ -363,7 +363,7 @@ export default function RecommendationsPage() {
               y actualizaciones controladas si usas WordPress.
             </CardDescription>
           </Card>
-          <Card className="space-y-3 bg-white/90">
+          <Card className="space-y-3 bg-surface/90">
             <Code2 className="h-7 w-7" aria-hidden />
             <CardTitle>Propiedad del proyecto</CardTitle>
             <CardDescription>
@@ -373,7 +373,7 @@ export default function RecommendationsPage() {
           </Card>
         </section>
 
-        <Card className="space-y-4 bg-white/90">
+        <Card className="space-y-4 bg-surface/90">
           <CardTitle>Fuentes revisadas</CardTitle>
           <CardDescription>
             Referencias oficiales usadas para mantener esta recomendación

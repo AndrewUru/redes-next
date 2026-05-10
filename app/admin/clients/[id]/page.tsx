@@ -64,7 +64,8 @@ export default async function AdminClientDetailPage({
       };
     })
   );
-  const intakeData = (summary.intake?.data ?? null) as Partial<IntakeData> | null;
+  const intakeData = (summary.intake?.data ??
+    null) as Partial<IntakeData> | null;
 
   return (
     <div className="space-y-4">

@@ -446,7 +446,7 @@ export function OnboardingWizard({
   return (
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-3">
-        <Card className="space-y-2 bg-white/90">
+        <Card className="space-y-2 bg-surface/90">
           <p className="text-xs font-bold uppercase text-muted-foreground">
             Progreso
           </p>
@@ -457,7 +457,7 @@ export function OnboardingWizard({
             Se actualiza automáticamente mientras completas cada bloque.
           </p>
         </Card>
-        <Card className="space-y-2 bg-white/90">
+        <Card className="space-y-2 bg-surface/90">
           <p className="text-xs font-bold uppercase text-muted-foreground">
             Bloque actual
           </p>
@@ -468,7 +468,7 @@ export function OnboardingWizard({
             Paso {stepIndex + 1} de {intakeStepOrder.length}
           </p>
         </Card>
-        <Card className="space-y-2 bg-white/90">
+        <Card className="space-y-2 bg-surface/90">
           <p className="text-xs font-bold uppercase text-muted-foreground">
             Estado
           </p>
@@ -526,7 +526,7 @@ export function OnboardingWizard({
         </form>
       </StepLayout>
 
-      <div className="rounded-[8px] border-2 border-border bg-white/85 px-3 py-2 text-sm font-medium text-muted-foreground">
+      <div className="rounded-[8px] border-2 border-border bg-surface/85 px-3 py-2 text-sm font-medium text-muted-foreground">
         <p aria-live="polite">
           {saving ? "Guardando…" : "Guardado automático activo"} · Progreso:{" "}
           {completionPct}% · Estado:{" "}
@@ -558,7 +558,7 @@ export function OnboardingWizard({
             <a
               href={brandbookDownloadUrl}
               download
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-white px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-emerald-100 hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-surface px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-emerald-100 hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
             >
               <Download className="h-4 w-4" aria-hidden />
               Descargar PDF
@@ -568,7 +568,7 @@ export function OnboardingWizard({
                 href={brandbookUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-emerald-100 px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-white hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-emerald-100 px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-surface hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
               >
                 <ExternalLink className="h-4 w-4" aria-hidden />
                 Abrir PDF

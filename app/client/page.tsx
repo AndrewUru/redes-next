@@ -22,7 +22,7 @@ import { getClientSummary } from "@/lib/db/server";
 import { createClient } from "@/lib/supabase/server";
 
 const actionLinkClass =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 const primaryActionLinkClass =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
@@ -181,7 +181,7 @@ export default async function ClientHomePage() {
           const externalHref =
             "externalHref" in item ? item.externalHref : null;
           const cardClassName =
-            "group rounded-2xl border border-border bg-white p-5 shadow-sm transition-colors hover:bg-muted/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+            "group rounded-2xl border border-border bg-surface p-5 shadow-sm transition-colors hover:bg-muted/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
           const cardContent = (
             <>
               <div className="flex items-start justify-between gap-4">
@@ -194,9 +194,7 @@ export default async function ClientHomePage() {
                   aria-hidden="true"
                 />
               </div>
-              <p className="mt-5 text-sm text-muted-foreground">
-                {item.title}
-              </p>
+              <p className="mt-5 text-sm text-muted-foreground">{item.title}</p>
               <p className="mt-1 text-2xl font-semibold">{item.value}</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 {item.description}
@@ -219,11 +217,7 @@ export default async function ClientHomePage() {
           }
 
           return (
-            <Link
-              key={item.title}
-              href={item.href}
-              className={cardClassName}
-            >
+            <Link key={item.title} href={item.href} className={cardClassName}>
               {cardContent}
             </Link>
           );
@@ -239,7 +233,10 @@ export default async function ClientHomePage() {
                 Acciones recomendadas para mantener el proyecto desbloqueado.
               </CardDescription>
             </div>
-            <FileText className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+            <FileText
+              className="h-5 w-5 text-muted-foreground"
+              aria-hidden="true"
+            />
           </div>
           <div className="divide-y divide-border rounded-2xl border border-border">
             {nextSteps.map((step, index) => (
@@ -287,7 +284,7 @@ export default async function ClientHomePage() {
       />
 
       {brandbookUrl ? (
-        <section className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <section className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="font-semibold">Guía de marca disponible</p>
             <p className="mt-1 text-sm text-muted-foreground">

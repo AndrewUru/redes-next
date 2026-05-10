@@ -5,13 +5,7 @@ import {
   ChartTooltipContent,
   type ChartConfig
 } from "@/components/ui/chart";
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  XAxis,
-  YAxis
-} from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { formatMetric } from "./utils";
 
 type MiniLineChartProps = {
@@ -44,7 +38,7 @@ export function MiniLineChart({
   } satisfies ChartConfig;
 
   return (
-    <div className="rounded-2xl border border-border bg-white/95 p-4 shadow-sm">
+    <div className="rounded-2xl border border-border bg-surface/95 p-4 shadow-sm">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-bold">{title}</p>
@@ -90,7 +84,9 @@ export function MiniLineChart({
                 content={
                   <ChartTooltipContent
                     formatter={(value) =>
-                      typeof value === "number" ? formatter(value) : String(value)
+                      typeof value === "number"
+                        ? formatter(value)
+                        : String(value)
                     }
                   />
                 }

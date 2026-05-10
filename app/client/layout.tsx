@@ -64,7 +64,7 @@ export default async function ClientLayout({
   return (
     <div className="w-full bg-[radial-gradient(circle_at_top_left,hsl(199_89%_96%),transparent_34rem)] px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto grid w-full max-w-[96rem] gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <aside className="hidden rounded-2xl border border-border bg-white/95 p-5 shadow-[0_24px_70px_hsl(222_47%_11%/0.08)] lg:sticky lg:top-24 lg:block lg:self-start">
+        <aside className="hidden rounded-2xl border border-border bg-surface/95 p-5 shadow-[0_24px_70px_hsl(222_47%_11%/0.08)] lg:sticky lg:top-24 lg:block lg:self-start">
           <div className="border-b border-border pb-5">
             <p className="text-xs font-semibold uppercase text-muted-foreground">
               Area cliente
@@ -145,7 +145,7 @@ export default async function ClientLayout({
         </aside>
 
         <section className="space-y-4">
-          <header className="space-y-3 rounded-2xl border border-border bg-white/95 p-4 shadow-sm lg:hidden">
+          <header className="space-y-3 rounded-2xl border border-border bg-surface/95 p-4 shadow-sm lg:hidden">
             <p className="text-xs font-semibold uppercase text-muted-foreground">
               Navegacion
             </p>
@@ -162,7 +162,7 @@ export default async function ClientLayout({
                     className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 py-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       isActive
                         ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-white hover:bg-muted/80"
+                        : "border-border bg-surface hover:bg-muted/80"
                     }`}
                   >
                     <Icon className="h-5 w-5 shrink-0" aria-hidden />

@@ -39,7 +39,10 @@ function formatDate(value: string) {
   return dateFormatter.format(date);
 }
 
-function joinList(value: readonly string[] | undefined, fallback = "Sin datos") {
+function joinList(
+  value: readonly string[] | undefined,
+  fallback = "Sin datos"
+) {
   return value && value.length > 0 ? value.join(", ") : fallback;
 }
 
@@ -82,7 +85,7 @@ export function AdminDecisionSnapshot({
   ];
 
   return (
-    <Card className="space-y-4 bg-white/90">
+    <Card className="space-y-4 bg-surface/90">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <CardTitle>Vista de decision</CardTitle>
@@ -102,7 +105,7 @@ export function AdminDecisionSnapshot({
           return (
             <div
               key={signal.label}
-              className="rounded-[8px] border-2 border-border bg-white/75 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              className="rounded-[8px] border-2 border-border bg-surface/75 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
             >
               <div className="mb-3 flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-[8px] border-2 border-border bg-[#a8e6df]">
@@ -156,7 +159,7 @@ export function AdminIntakeSummary({
   ];
 
   return (
-    <Card className="space-y-4 bg-white/90">
+    <Card className="space-y-4 bg-surface/90">
       <div>
         <CardTitle>Brief del usuario</CardTitle>
         <CardDescription className="mt-1">
@@ -165,7 +168,7 @@ export function AdminIntakeSummary({
         </CardDescription>
       </div>
       {!intake ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
           El usuario todavia no ha enviado informacion suficiente.
         </div>
       ) : (
@@ -173,7 +176,7 @@ export function AdminIntakeSummary({
           {rows.map((row) => (
             <div
               key={row.label}
-              className="rounded-[8px] border-2 border-border bg-white/75 p-3"
+              className="rounded-[8px] border-2 border-border bg-surface/75 p-3"
             >
               <p className="text-xs font-bold uppercase text-muted-foreground">
                 {row.label}
@@ -191,7 +194,7 @@ export function AdminIntakeSummary({
 
 export function AdminAssetsGallery({ assets }: { assets: AdminAssetItem[] }) {
   return (
-    <Card className="space-y-4 bg-white/90">
+    <Card className="space-y-4 bg-surface/90">
       <div>
         <CardTitle>Materiales subidos</CardTitle>
         <CardDescription className="mt-1">
@@ -200,7 +203,7 @@ export function AdminAssetsGallery({ assets }: { assets: AdminAssetItem[] }) {
         </CardDescription>
       </div>
       {assets.length === 0 ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
           Todavia no hay materiales subidos por el usuario.
         </div>
       ) : (
@@ -208,12 +211,16 @@ export function AdminAssetsGallery({ assets }: { assets: AdminAssetItem[] }) {
           {assets.map((asset) => (
             <article
               key={asset.id}
-              className="overflow-hidden rounded-[8px] border-2 border-border bg-white/75 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              className="overflow-hidden rounded-[8px] border-2 border-border bg-surface/75 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
             >
               {asset.previewUrl ? (
                 <Image
                   src={asset.previewUrl}
-                  alt={asset.originalName ?? assetTypeLabels[asset.type] ?? "Material"}
+                  alt={
+                    asset.originalName ??
+                    assetTypeLabels[asset.type] ??
+                    "Material"
+                  }
                   width={640}
                   height={420}
                   unoptimized
@@ -261,7 +268,7 @@ export function AdminSocialAccountsSummary({
   accounts: SocialAccountRow[];
 }) {
   return (
-    <Card className="space-y-4 bg-white/90">
+    <Card className="space-y-4 bg-surface/90">
       <div>
         <CardTitle>Cuentas sociales</CardTitle>
         <CardDescription className="mt-1">
@@ -269,7 +276,7 @@ export function AdminSocialAccountsSummary({
         </CardDescription>
       </div>
       {accounts.length === 0 ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
           No hay cuentas conectadas todavia.
         </div>
       ) : (
@@ -277,15 +284,15 @@ export function AdminSocialAccountsSummary({
           {accounts.map((account) => (
             <li
               key={account.id}
-              className="flex flex-col gap-2 rounded-[8px] border-2 border-border bg-white/75 p-3 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-2 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
                 <p className="text-sm font-black">
                   {account.platform}: {account.account_name}
                 </p>
                 <p className="text-xs font-medium text-muted-foreground">
-                  {account.account_handle || "Sin usuario visible"} · Actualizada{" "}
-                  {formatDate(account.updated_at)}
+                  {account.account_handle || "Sin usuario visible"} ·
+                  Actualizada {formatDate(account.updated_at)}
                 </p>
               </div>
               <span className="inline-flex w-fit items-center gap-2 rounded-full border-2 border-border bg-background px-3 py-1 text-xs font-bold">

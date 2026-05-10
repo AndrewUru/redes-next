@@ -21,7 +21,7 @@ export function WebProjectOverview({
 }) {
   return (
     <div className="space-y-4">
-      <Card className="space-y-4 bg-white/90">
+      <Card className="space-y-4 bg-surface/90">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <CardDescription className="uppercase">
@@ -43,7 +43,7 @@ export function WebProjectOverview({
       </Card>
 
       <div className="grid gap-4 xl:grid-cols-[1fr_0.9fr]">
-        <Card className="space-y-4 bg-white/90">
+        <Card className="space-y-4 bg-surface/90">
           <CardTitle>Ruta del proyecto</CardTitle>
           <div className="grid gap-3 md:grid-cols-2">
             {webProjectSteps.map((step) => {
@@ -52,7 +52,7 @@ export function WebProjectOverview({
               return (
                 <div
                   key={step.title}
-                  className="rounded-[8px] border-2 border-border bg-white/75 p-3"
+                  className="rounded-[8px] border-2 border-border bg-surface/75 p-3"
                 >
                   <Icon className="mb-3 h-5 w-5" aria-hidden />
                   <p className="text-sm font-black">{step.title}</p>
@@ -65,7 +65,7 @@ export function WebProjectOverview({
           </div>
         </Card>
 
-        <Card className="space-y-4 bg-white/90">
+        <Card className="space-y-4 bg-surface/90">
           <CardTitle>Acciones rapidas</CardTitle>
           <div className="grid gap-3">
             <ActionLink href="/client/web/brief" title="Completar brief web" />
@@ -84,7 +84,7 @@ export function WebProjectOverview({
 export function WebBriefGuide() {
   return (
     <div className="space-y-4">
-      <Card className="space-y-4 bg-white/90">
+      <Card className="space-y-4 bg-surface/90">
         <div>
           <CardDescription className="uppercase">Brief web</CardDescription>
           <CardTitle className="mt-1">
@@ -99,7 +99,7 @@ export function WebBriefGuide() {
           {webBriefQuestions.map((question, index) => (
             <div
               key={question}
-              className="flex gap-3 rounded-[8px] border-2 border-border bg-white/75 p-3"
+              className="flex gap-3 rounded-[8px] border-2 border-border bg-surface/75 p-3"
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border bg-[#fde68a] text-sm font-black">
                 {index + 1}
@@ -112,7 +112,7 @@ export function WebBriefGuide() {
         </div>
       </Card>
 
-      <Card className="space-y-4 bg-white/90">
+      <Card className="space-y-4 bg-surface/90">
         <CardTitle>Entregables esperados</CardTitle>
         <div className="grid gap-2 sm:grid-cols-2">
           {webProjectDeliverables.map((item) => (
@@ -132,7 +132,7 @@ export function WebBriefGuide() {
 export function WebProgressBoard() {
   return (
     <div className="space-y-4">
-      <Card className="space-y-4 bg-white/90">
+      <Card className="space-y-4 bg-surface/90">
         <div>
           <CardDescription className="uppercase">Avances</CardDescription>
           <CardTitle className="mt-1">Estado del proyecto web</CardTitle>
@@ -148,7 +148,7 @@ export function WebProgressBoard() {
             return (
               <div
                 key={signal.label}
-                className="rounded-[8px] border-2 border-border bg-white/75 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+                className="rounded-[8px] border-2 border-border bg-surface/75 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
               >
                 <Icon className="mb-3 h-5 w-5" aria-hidden />
                 <p className="text-xs font-bold uppercase text-muted-foreground">
@@ -163,22 +163,20 @@ export function WebProgressBoard() {
 
       <div className="grid gap-3">
         {webProjectMilestones.map((milestone, index) => (
-          <Card key={milestone.title} className="bg-white/90">
+          <Card key={milestone.title} className="bg-surface/90">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-border bg-[#fde68a] text-sm font-black">
                   {index + 1}
                 </span>
                 <div>
-                  <CardTitle className="text-2xl">
-                    {milestone.title}
-                  </CardTitle>
+                  <CardTitle className="text-2xl">{milestone.title}</CardTitle>
                   <CardDescription className="mt-1">
                     {milestone.detail}
                   </CardDescription>
                 </div>
               </div>
-              <Badge className="w-fit bg-white">{milestone.status}</Badge>
+              <Badge className="w-fit bg-surface">{milestone.status}</Badge>
             </div>
           </Card>
         ))}
@@ -208,7 +206,7 @@ function ActionLink({ href, title }: { href: ClientWebRoute; title: string }) {
   return (
     <Link
       href={href}
-      className="group flex items-center justify-between gap-3 rounded-[8px] border-2 border-border bg-white/80 px-3 py-3 text-sm font-black shadow-[3px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,transform,box-shadow] hover:-translate-y-0.5 hover:bg-[#eff6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="group flex items-center justify-between gap-3 rounded-[8px] border-2 border-border bg-surface/80 px-3 py-3 text-sm font-black shadow-[3px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,transform,box-shadow] hover:-translate-y-0.5 hover:bg-[#eff6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       {title}
       <ArrowRight

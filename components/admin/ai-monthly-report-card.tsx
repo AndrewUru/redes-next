@@ -96,7 +96,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
 
       {report ? (
         <div className="grid gap-4">
-          <div className="rounded-2xl border border-violet-100 bg-white p-4 shadow-sm">
+          <div className="rounded-2xl border border-violet-100 bg-surface p-4 shadow-sm">
             <p className="text-xs font-bold uppercase text-muted-foreground">
               Resumen ejecutivo
             </p>
@@ -107,8 +107,14 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <InfoBlock title="Contexto del cliente" text={report.clientContext} />
-            <InfoBlock title="Lectura de rendimiento" text={report.performanceRead} />
+            <InfoBlock
+              title="Contexto del cliente"
+              text={report.clientContext}
+            />
+            <InfoBlock
+              title="Lectura de rendimiento"
+              text={report.performanceRead}
+            />
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
@@ -116,7 +122,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
             <ListBlock title="Riesgos" items={report.risks} />
           </div>
 
-          <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+          <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
             <p className="text-sm font-bold">Proximas acciones</p>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {report.nextActions.map((action) => (
@@ -124,7 +130,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
                   key={action.title}
                   className="rounded-xl border border-border bg-slate-50 p-3"
                 >
-                  <span className="rounded-full bg-white px-2 py-1 text-[11px] font-bold uppercase text-muted-foreground">
+                  <span className="rounded-full bg-surface px-2 py-1 text-[11px] font-bold uppercase text-muted-foreground">
                     {action.priority} · {action.owner}
                   </span>
                   <p className="mt-3 text-sm font-bold">{action.title}</p>
@@ -136,7 +142,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+          <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
             <p className="text-sm font-bold">Recomendaciones de contenido</p>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {report.contentRecommendations.map((item) => (
@@ -156,7 +162,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+          <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
             <p className="text-sm font-bold">Mensaje para cliente</p>
             <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
               {report.clientMessageDraft}
@@ -170,7 +176,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
 
 function InfoBlock({ title, text }: { title: string; text: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
       <p className="text-sm font-bold">{title}</p>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p>
     </div>
@@ -179,7 +185,7 @@ function InfoBlock({ title, text }: { title: string; text: string }) {
 
 function ListBlock({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
       <p className="text-sm font-bold">{title}</p>
       <ul className="mt-3 space-y-2 text-sm leading-6 text-foreground">
         {items.map((item) => (

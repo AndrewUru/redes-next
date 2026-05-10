@@ -11,12 +11,12 @@ export function MetricCard({
   label,
   value,
   helper,
-  accent = "bg-white/85"
+  accent = "bg-surface/85"
 }: MetricCardProps) {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border/80 p-4 shadow-sm ring-1 ring-white/70",
+        "rounded-2xl border border-border/80 p-4 shadow-sm ring-1 ring-border/50",
         accent
       )}
     >

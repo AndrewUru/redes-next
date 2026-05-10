@@ -44,7 +44,8 @@ export function LoginForm() {
       <div className="space-y-2">
         <CardTitle>Entrar</CardTitle>
         <CardDescription>
-          Usa las credenciales que recibiste para acceder a tu dashboard privado.
+          Usa las credenciales que recibiste para acceder a tu dashboard
+          privado.
         </CardDescription>
       </div>
 

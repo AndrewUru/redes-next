@@ -15,7 +15,7 @@ export function ComparisonBars({
   const maxValue = Math.max(...validValues, 1);
 
   return (
-    <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
       <p className="text-sm font-bold">{title}</p>
       <div className="mt-4 space-y-3.5">
         {points.map((point) => (

@@ -27,9 +27,7 @@ export function AiSummaryPanel({
         <div className="max-w-3xl space-y-1">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-violet-700" aria-hidden />
-            <p className="text-sm font-bold text-violet-950">
-              Lectura con IA
-            </p>
+            <p className="text-sm font-bold text-violet-950">Lectura con IA</p>
           </div>
           <p className="text-sm leading-6 text-muted-foreground">
             Genera una interpretacion ejecutiva con oportunidades, riesgos,
@@ -57,7 +55,7 @@ export function AiSummaryPanel({
 
       {summary ? (
         <div className="mt-4 grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-2xl border border-violet-100 bg-white p-4 shadow-sm">
+          <div className="rounded-2xl border border-violet-100 bg-surface p-4 shadow-sm">
             <p className="text-xs font-bold uppercase text-muted-foreground">
               Resumen
             </p>
@@ -70,7 +68,7 @@ export function AiSummaryPanel({
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+            <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
               <p className="text-sm font-bold">Oportunidades</p>
               <ul className="mt-3 space-y-2 text-sm leading-6 text-foreground">
                 {summary.opportunities.map((item) => (
@@ -78,7 +76,7 @@ export function AiSummaryPanel({
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+            <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
               <p className="text-sm font-bold">Riesgos</p>
               <ul className="mt-3 space-y-2 text-sm leading-6 text-foreground">
                 {summary.risks.map((item) => (
@@ -88,7 +86,7 @@ export function AiSummaryPanel({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-white p-4 shadow-sm xl:col-span-2">
+          <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm xl:col-span-2">
             <p className="text-sm font-bold">Proximas acciones</p>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {summary.nextActions.map((action) => (
@@ -96,7 +94,7 @@ export function AiSummaryPanel({
                   key={action.title}
                   className="rounded-xl border border-border bg-slate-50 p-3"
                 >
-                  <span className="rounded-full bg-white px-2 py-1 text-[11px] font-bold uppercase text-muted-foreground">
+                  <span className="rounded-full bg-surface px-2 py-1 text-[11px] font-bold uppercase text-muted-foreground">
                     {action.priority}
                   </span>
                   <p className="mt-3 text-sm font-bold">{action.title}</p>
@@ -108,7 +106,7 @@ export function AiSummaryPanel({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-white p-4 shadow-sm xl:col-span-2">
+          <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm xl:col-span-2">
             <p className="text-sm font-bold">Ideas de contenido</p>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {summary.contentIdeas.map((idea) => (

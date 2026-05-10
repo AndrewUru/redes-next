@@ -65,11 +65,12 @@ export default async function AdminClientWebProjectPage({
       })
     )
   ]);
-  const intakeData = (summary.intake?.data ?? null) as Partial<IntakeData> | null;
+  const intakeData = (summary.intake?.data ??
+    null) as Partial<IntakeData> | null;
 
   return (
     <div className="space-y-4">
-      <Card className="bg-white/90">
+      <Card className="bg-surface/90">
         <Link
           href={`/admin/clients/${summary.client.id}`}
           className="mb-4 inline-flex items-center gap-2 text-sm font-black underline"

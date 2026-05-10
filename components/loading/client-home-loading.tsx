@@ -54,7 +54,7 @@ export function ClientHomeLoading() {
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={index}
-            className="rounded-2xl border border-border bg-white p-5 shadow-sm"
+            className="rounded-2xl border border-border bg-surface p-5 shadow-sm"
           >
             <div className="flex items-start justify-between gap-4">
               <Skeleton className="h-5 w-5" />

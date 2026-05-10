@@ -12,7 +12,7 @@ export default function DataDeletionPage() {
   return (
     <div className="min-h-screen">
       <section className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
-        <Card className="space-y-4 bg-white/90">
+        <Card className="space-y-4 bg-surface/90">
           <CardTitle>Eliminacion de datos de usuario</CardTitle>
           <CardDescription>
             Ultima actualizacion: 21 de febrero de 2026

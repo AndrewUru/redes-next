@@ -112,7 +112,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
             return (
               <div
                 key={type}
-                className="rounded-[8px] border-2 border-border bg-white/70 p-3"
+                className="rounded-[8px] border-2 border-border bg-surface/70 p-3"
               >
                 <div className="mb-3 flex items-start gap-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a]">
@@ -127,7 +127,11 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                     </p>
                   </div>
                 </div>
-                <FileUploader clientId={clientId} type={type} onUploaded={load} />
+                <FileUploader
+                  clientId={clientId}
+                  type={type}
+                  onUploaded={load}
+                />
               </div>
             );
           })}
@@ -143,11 +147,11 @@ export function AssetsManager({ clientId }: { clientId: string }) {
           </CardDescription>
         </div>
         {loading ? (
-          <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+          <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
             Cargando archivos...
           </div>
         ) : assets.length === 0 ? (
-          <div className="rounded-[8px] border-2 border-dashed border-border bg-white/60 p-4 text-sm font-medium text-muted-foreground">
+          <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
             Aun no hay archivos. Empieza por el logo o por algunas fotos del
             proyecto.
           </div>
@@ -156,7 +160,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
             {assets.map((asset) => (
               <li
                 key={asset.id}
-                className="flex flex-col gap-3 rounded-[8px] border-2 border-border bg-white/75 p-3 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex min-w-0 gap-3">
                   {asset.preview_url ? (

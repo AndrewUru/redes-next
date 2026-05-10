@@ -85,7 +85,7 @@ export function SocialAccountsManager() {
     <div className="space-y-4">
       <Card
         id="conectar-redes"
-        className="space-y-5 overflow-hidden border-border/80 bg-white/95 shadow-[0_20px_60px_hsl(222_47%_11%/0.06)]"
+        className="space-y-5 overflow-hidden border-border/80 bg-surface/95 shadow-[0_20px_60px_hsl(222_47%_11%/0.06)]"
       >
         <div className="grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="space-y-3">
@@ -134,7 +134,7 @@ export function SocialAccountsManager() {
                 : "Conecta Instagram para activar el analisis completo."}
             </p>
             <div className="mt-4 space-y-3">
-              <div className="rounded-xl border border-border bg-white/95 p-3">
+              <div className="rounded-xl border border-border bg-surface/95 p-3">
                 <div className="flex items-end gap-2">
                   {[28, 34, 47, 53, 61, 74].map((bar, index) => (
                     <div
@@ -148,7 +148,7 @@ export function SocialAccountsManager() {
                   Seguidores y alcance
                 </p>
               </div>
-              <div className="rounded-xl border border-border bg-white/95 p-3">
+              <div className="rounded-xl border border-border bg-surface/95 p-3">
                 <div className="flex items-center justify-between text-xs font-medium text-muted-foreground">
                   <span>Engagement</span>
                   <span>Top posts</span>
@@ -204,7 +204,8 @@ export function SocialAccountsManager() {
           {oauthState === "error" ? (
             <p className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
               <AlertCircle className="h-4 w-4" aria-hidden />
-              No se pudo conectar Instagram{oauthReason ? ` (${oauthReason})` : ""}.
+              No se pudo conectar Instagram
+              {oauthReason ? ` (${oauthReason})` : ""}.
             </p>
           ) : null}
           {statusMessage ? (
@@ -222,7 +223,7 @@ export function SocialAccountsManager() {
         </div>
       </Card>
 
-      <Card id="insights" className="border-border/80 bg-white/95 shadow-sm">
+      <Card id="insights" className="border-border/80 bg-surface/95 shadow-sm">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle>Cuentas conectadas</CardTitle>
@@ -232,18 +233,18 @@ export function SocialAccountsManager() {
           </div>
           <Link
             href="/client/accounts"
-            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-border bg-white px-4 py-2 text-sm font-bold shadow-sm transition-[background-color,border-color,box-shadow] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-bold shadow-sm transition-[background-color,border-color,box-shadow] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <ExternalLink className="h-4 w-4" aria-hidden />
             Ver metricas
           </Link>
         </div>
         {loading ? (
-          <p className="rounded-xl border border-dashed border-border bg-white/70 p-4 text-sm font-medium text-muted-foreground">
+          <p className="rounded-xl border border-dashed border-border bg-surface/70 p-4 text-sm font-medium text-muted-foreground">
             Cargando cuentas...
           </p>
         ) : accounts.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border bg-white/70 p-4 text-sm font-medium text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-border bg-surface/70 p-4 text-sm font-medium text-muted-foreground">
             Aun no hay cuentas conectadas. Conecta Instagram para activar las
             metricas.
           </div>
@@ -252,7 +253,7 @@ export function SocialAccountsManager() {
             {accounts.map((account) => (
               <li
                 key={account.id}
-                className="flex flex-col gap-3 rounded-xl border border-border bg-white/85 p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-xl border border-border bg-surface/85 p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="min-w-0">
                   <p className="text-sm font-bold">

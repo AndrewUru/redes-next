@@ -7,10 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { AccountInsightsCard } from "./social-performance/account-insights-card";
 import { AiSummaryPanel } from "./social-performance/ai-summary-panel";
-import { useAiSocialSummary, useSocialInsights } from "./social-performance/hooks";
+import {
+  useAiSocialSummary,
+  useSocialInsights
+} from "./social-performance/hooks";
 import { MetricCard } from "./social-performance/metric-card";
 import type { HistoryRange, SocialOverview } from "./social-performance/types";
-import { buildOverview, formatMetric, formatPercent } from "./social-performance/utils";
+import {
+  buildOverview,
+  formatMetric,
+  formatPercent
+} from "./social-performance/utils";
 
 type SocialPerformancePanelProps = {
   apiPath?: string;
@@ -72,7 +79,7 @@ export function SocialPerformancePanel({
   const hasInsights = insights.length > 0;
 
   return (
-    <Card className="space-y-6 overflow-hidden border-border/80 bg-white/95 shadow-[0_24px_70px_hsl(222_47%_11%/0.07)]">
+    <Card className="space-y-6 overflow-hidden border-border/80 bg-surface/95 shadow-[0_24px_70px_hsl(222_47%_11%/0.07)]">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-2">
           <Badge className="w-fit border-sky-200 bg-sky-50 text-sky-900">
@@ -89,7 +96,7 @@ export function SocialPerformancePanel({
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div
-            className="inline-flex w-fit rounded-full border border-border bg-white p-1 shadow-sm"
+            className="inline-flex w-fit rounded-full border border-border bg-surface p-1 shadow-sm"
             aria-label="Rango de historial"
           >
             {historyRanges.map((range) => {
@@ -117,7 +124,7 @@ export function SocialPerformancePanel({
             variant="outline"
             onClick={() => void reload()}
             disabled={loading}
-            className="w-fit bg-white"
+            className="w-fit bg-surface"
           >
             <RefreshCw
               className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
@@ -137,7 +144,7 @@ export function SocialPerformancePanel({
       </div>
 
       {!loading && !hasInsights ? (
-        <p className="rounded-xl border border-dashed border-border bg-white/70 p-4 text-sm font-medium text-muted-foreground">
+        <p className="rounded-xl border border-dashed border-border bg-surface/70 p-4 text-sm font-medium text-muted-foreground">
           No hay cuentas de Instagram conectadas con OAuth para mostrar
           analisis.
         </p>

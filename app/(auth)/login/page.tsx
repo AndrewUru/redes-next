@@ -25,7 +25,7 @@ export default function LoginPage() {
       <section className="grid w-full gap-10 lg:grid-cols-[0.9fr_0.72fr] lg:items-center">
         <div className="space-y-8">
           <div className="space-y-5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1 text-sm font-medium text-muted-foreground shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-sm font-medium text-muted-foreground shadow-sm">
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
               Espacio privado para clientes
             </div>
@@ -47,7 +47,7 @@ export default function LoginPage() {
               return (
                 <div
                   key={item.title}
-                  className="rounded-2xl border border-border bg-white p-4 shadow-sm"
+                  className="rounded-2xl border border-border bg-surface p-4 shadow-sm"
                 >
                   <Icon
                     className="mb-4 h-5 w-5 text-muted-foreground"

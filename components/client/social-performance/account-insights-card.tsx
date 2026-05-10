@@ -14,11 +14,7 @@ import {
   getSeries
 } from "./utils";
 
-export function AccountInsightsCard({
-  account
-}: {
-  account: AccountInsights;
-}) {
+export function AccountInsightsCard({ account }: { account: AccountInsights }) {
   const analysis = analyzeAccount(account);
   const accountName = account.accountHandle
     ? `${account.accountName} (${account.accountHandle})`
@@ -30,8 +26,8 @@ export function AccountInsightsCard({
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-xl font-bold text-foreground">{accountName}</p>
-            <Badge className="bg-white text-foreground">7d</Badge>
-            <Badge className="bg-white text-foreground">
+            <Badge className="bg-surface text-foreground">7d</Badge>
+            <Badge className="bg-surface text-foreground">
               {account.platform}
             </Badge>
           </div>
@@ -42,10 +38,7 @@ export function AccountInsightsCard({
 
         <div className="grid gap-2 sm:grid-cols-2">
           <TrendBadge delta={analysis.comparisons.followers.delta} />
-          <TrendBadge
-            delta={analysis.comparisons.engagement.delta}
-            isPercent
-          />
+          <TrendBadge delta={analysis.comparisons.engagement.delta} isPercent />
         </div>
       </div>
 
@@ -149,7 +142,7 @@ export function AccountInsightsCard({
             ]}
           />
 
-          <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+          <div className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
             <p className="text-sm font-bold">Lectura rapida</p>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               <div>
