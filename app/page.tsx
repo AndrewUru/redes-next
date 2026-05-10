@@ -143,7 +143,7 @@ export default function HomePage() {
                   Panel de crecimiento
                 </h2>
               </div>
-              <Badge className="bg-white">Activo</Badge>
+              <Badge className="bg-surface">Activo</Badge>
             </div>
           </div>
           <div className="space-y-6 p-5 sm:p-6">
@@ -167,7 +167,10 @@ export default function HomePage() {
               <div className="rounded-2xl border border-border p-4">
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <p className="font-semibold">Ruta del proyecto</p>
-                  <FileText className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                  <FileText
+                    className="h-5 w-5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
                 </div>
                 <div className="space-y-3">
                   {timeline.map((step, index) => (
@@ -216,7 +219,10 @@ export default function HomePage() {
 
           return (
             <Card key={module.title}>
-              <Icon className="mb-5 h-5 w-5 text-muted-foreground" aria-hidden="true" />
+              <Icon
+                className="mb-5 h-5 w-5 text-muted-foreground"
+                aria-hidden="true"
+              />
               <CardTitle>{module.title}</CardTitle>
               <CardDescription className="mt-2">
                 {module.description}
@@ -241,7 +247,7 @@ export default function HomePage() {
           {timeline.map((step, index) => (
             <div
               key={step}
-              className="flex items-center gap-4 rounded-2xl border border-border bg-white p-4"
+              className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4 shadow-sm"
             >
               <span className="text-sm font-semibold text-muted-foreground tabular-nums">
                 0{index + 1}
@@ -254,7 +260,7 @@ export default function HomePage() {
 
       <section
         id="solicitud"
-        className="grid scroll-mt-24 gap-8 rounded-3xl border border-border bg-white p-5 shadow-sm sm:p-8 lg:grid-cols-[0.85fr_1.15fr]"
+        className="grid scroll-mt-24 gap-8 rounded-3xl border border-border bg-surface p-5 shadow-sm sm:p-8 lg:grid-cols-[0.85fr_1.15fr]"
       >
         <div className="space-y-4">
           <Badge>Primer paso</Badge>
@@ -342,13 +348,13 @@ export default function HomePage() {
 
           <div aria-live="polite">
             {result?.ok === true ? (
-              <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-                He recibido tu solicitud. Te escribiré pronto con los
-                siguientes pasos. Ref: {result.id}
+              <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 dark:border-emerald-300/30 dark:bg-emerald-300/10 dark:text-emerald-100">
+                He recibido tu solicitud. Te escribiré pronto con los siguientes
+                pasos. Ref: {result.id}
               </p>
             ) : null}
             {result?.ok === false ? (
-              <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
+              <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-300/30 dark:bg-red-300/10 dark:text-red-100">
                 {result.error}
               </p>
             ) : null}
@@ -358,9 +364,7 @@ export default function HomePage() {
 
       <section className="flex flex-col items-start justify-between gap-4 rounded-3xl bg-primary p-6 text-primary-foreground sm:flex-row sm:items-center sm:p-8">
         <div>
-          <h2 className="text-2xl font-semibold">
-            ¿Ya tienes acceso privado?
-          </h2>
+          <h2 className="text-2xl font-semibold">¿Ya tienes acceso privado?</h2>
           <p className="mt-1 text-sm text-primary-foreground/70">
             Entra para revisar briefing, materiales, guías y métricas.
           </p>
@@ -369,7 +373,7 @@ export default function HomePage() {
           href="/login"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "border-white/20 bg-white text-foreground hover:bg-white/90"
+            "border-border bg-surface text-foreground hover:bg-muted"
           )}
         >
           Entrar al dashboard
