@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LayoutDashboard, LogIn, Menu, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const publicLinks = [
@@ -90,66 +91,74 @@ export function AppHeader() {
               </Link>
             );
           })}
-          <Link
-            href={ctaHref}
-            className="ml-2 inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          >
-            <CtaIcon className="h-4 w-4" aria-hidden="true" />
-            {ctaLabel}
-          </Link>
-        </nav>
-
-        <div className="relative sm:hidden">
-          <button
-            type="button"
-            aria-label={mobileMenuOpen ? "Cerrar navegación" : "Abrir navegación"}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-main-nav"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-5 w-5" aria-hidden="true" />
-            ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            )}
-          </button>
-
-          <nav
-            id="mobile-main-nav"
-            className={cn(
-              "absolute right-0 top-12 z-40 w-[min(86vw,20rem)] rounded-2xl border border-border bg-white p-2 text-sm font-medium shadow-xl",
-              mobileMenuOpen ? "grid gap-1" : "hidden"
-            )}
-            aria-label="Principal móvil"
-          >
-            {publicLinks.map((item) => {
-              const isActive = isCurrentPath(pathname, item.href);
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "rounded-xl px-3 py-3 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
-                    isActive && "bg-muted text-foreground"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+          <div className="ml-2 flex items-center gap-2">
+            <ThemeToggle />
             <Link
               href={ctaHref}
-              className="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-4 font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              onClick={() => setMobileMenuOpen(false)}
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             >
               <CtaIcon className="h-4 w-4" aria-hidden="true" />
               {ctaLabel}
             </Link>
-          </nav>
+          </div>
+        </nav>
+
+        <div className="flex items-center gap-2 sm:hidden">
+          <ThemeToggle />
+          <div className="relative">
+            <button
+              type="button"
+              aria-label={
+                mobileMenuOpen ? "Cerrar navegación" : "Abrir navegación"
+              }
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-main-nav"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border bg-surface shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
+            </button>
+
+            <nav
+              id="mobile-main-nav"
+              className={cn(
+                "absolute right-0 top-12 z-40 w-[min(86vw,20rem)] rounded-2xl border border-border bg-surface p-2 text-sm font-medium shadow-xl",
+                mobileMenuOpen ? "grid gap-1" : "hidden"
+              )}
+              aria-label="Principal móvil"
+            >
+              {publicLinks.map((item) => {
+                const isActive = isCurrentPath(pathname, item.href);
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={isActive ? "page" : undefined}
+                    className={cn(
+                      "rounded-xl px-3 py-3 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                      isActive && "bg-muted text-foreground"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <Link
+                href={ctaHref}
+                className="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-primary px-4 font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <CtaIcon className="h-4 w-4" aria-hidden="true" />
+                {ctaLabel}
+              </Link>
+            </nav>
+          </div>
         </div>
       </div>
     </header>

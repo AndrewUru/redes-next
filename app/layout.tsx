@@ -17,7 +17,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f8fafc"
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f141f" }
+  ]
 };
 
 export default function RootLayout({
@@ -26,13 +29,19 @@ export default function RootLayout({
   const currentYear = new Date().getFullYear();
 
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body
         className={`${publicSans.variable} min-h-screen overflow-x-hidden text-foreground antialiased`}
       >
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              '(() => {try {const stored = localStorage.getItem("theme"); const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches; const theme = stored === "light" || stored === "dark" ? stored : prefersDark ? "dark" : "light"; document.documentElement.classList.toggle("dark", theme === "dark"); document.documentElement.classList.toggle("light", theme === "light"); document.documentElement.style.colorScheme = theme;} catch (_) {}})();'
+          }}
+        />
         <a
           href="#main-content"
-          className="sr-only fixed left-4 top-4 z-50 rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold shadow-sm focus:not-sr-only focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="sr-only fixed left-4 top-4 z-50 rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold shadow-sm focus:not-sr-only focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           Saltar al contenido
         </a>

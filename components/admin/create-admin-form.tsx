@@ -48,7 +48,7 @@ export function CreateAdminForm() {
   return (
     <form
       action={onSubmit}
-      className="space-y-3 rounded-[8px] border-2 border-border bg-white/70 p-4"
+      className="space-y-3 rounded-[8px] border-2 border-border bg-surface p-4 shadow-sm"
     >
       <h3 className="text-lg font-black">Alta de administrador</h3>
       <div className="grid gap-3 md:grid-cols-2">
@@ -81,7 +81,9 @@ export function CreateAdminForm() {
           <p className="text-sm font-medium text-red-700">{error}</p>
         ) : null}
         {done ? (
-          <p className="text-sm font-medium text-emerald-800">{done}</p>
+          <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+            {done}
+          </p>
         ) : null}
       </div>
       <Button disabled={loading}>

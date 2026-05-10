@@ -25,10 +25,13 @@ const statusLabels: Record<ClientStatus, string> = {
 };
 
 const statusStyles: Record<ClientStatus, string> = {
-  lead: "bg-[#bfdbfe]",
-  onboarding: "bg-[#fde68a]",
-  activo: "bg-[#bbf7d0]",
-  pausado: "bg-[#fecaca]"
+  lead: "bg-blue-100 text-blue-950 dark:border-blue-400/30 dark:bg-blue-400/15 dark:text-blue-100",
+  onboarding:
+    "bg-amber-100 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/15 dark:text-amber-100",
+  activo:
+    "bg-emerald-100 text-emerald-950 dark:border-emerald-300/30 dark:bg-emerald-300/15 dark:text-emerald-100",
+  pausado:
+    "bg-red-100 text-red-950 dark:border-red-300/30 dark:bg-red-300/15 dark:text-red-100"
 };
 
 export default async function AdminClientsPage({
@@ -48,18 +51,18 @@ export default async function AdminClientsPage({
   return (
     <div className="space-y-5">
       <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <Card className="bg-[#fef3c7]">
+        <Card className="bg-amber-100 text-slate-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-foreground">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <CardDescription className="uppercase tracking-[0.08em]">
+              <CardDescription className="uppercase tracking-[0.08em] text-slate-600 dark:text-amber-100/70">
                 Operación comercial
               </CardDescription>
               <h2 className="mt-2 text-3xl font-black leading-tight text-pretty sm:text-4xl">
                 Pipeline de cuentas
               </h2>
-              <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
-                Prioriza onboarding, readiness y seguimiento de cada marca
-                desde una vista rápida.
+              <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-slate-700 dark:text-amber-50/75 sm:text-base">
+                Prioriza onboarding, readiness y seguimiento de cada marca desde
+                una vista rápida.
               </p>
             </div>
             <form className="w-full lg:max-w-md">
@@ -78,7 +81,7 @@ export default async function AdminClientsPage({
                     defaultValue={query}
                     autoComplete="off"
                     placeholder="Ej. Estudio Norte…"
-                    className="bg-white/95 pl-9"
+                    className="bg-surface/95 pl-9"
                   />
                 </div>
                 <Button type="submit" variant="outline" className="sm:w-auto">
@@ -98,7 +101,7 @@ export default async function AdminClientsPage({
         </Card>
 
         <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-          <div className="rounded-[8px] border-2 border-border bg-white/80 p-4 shadow-[4px_5px_0_0_rgba(0,0,0,1)]">
+          <div className="rounded-[8px] border-2 border-border bg-surface p-4 shadow-[4px_5px_0_0_hsl(var(--foreground))] dark:shadow-[4px_5px_0_0_hsl(0_0%_0%/0.6)]">
             <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
               <UsersRound className="h-4 w-4" aria-hidden="true" />
               Cuentas
@@ -107,8 +110,8 @@ export default async function AdminClientsPage({
               {clients.length}
             </p>
           </div>
-          <div className="rounded-[8px] border-2 border-border bg-[#dcfce7] p-4 shadow-[4px_5px_0_0_rgba(0,0,0,1)]">
-            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+          <div className="rounded-[8px] border-2 border-border bg-emerald-100 p-4 text-emerald-950 shadow-[4px_5px_0_0_hsl(var(--foreground))] dark:border-emerald-300/30 dark:bg-emerald-300/10 dark:text-emerald-50 dark:shadow-[4px_5px_0_0_hsl(0_0%_0%/0.6)]">
+            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-900/75 dark:text-emerald-100/70">
               <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
               Activas
             </div>
@@ -116,8 +119,8 @@ export default async function AdminClientsPage({
               {activeClients.length}
             </p>
           </div>
-          <div className="rounded-[8px] border-2 border-border bg-[#dbeafe] p-4 shadow-[4px_5px_0_0_rgba(0,0,0,1)]">
-            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+          <div className="rounded-[8px] border-2 border-border bg-blue-100 p-4 text-blue-950 shadow-[4px_5px_0_0_hsl(var(--foreground))] dark:border-blue-300/30 dark:bg-blue-300/10 dark:text-blue-50 dark:shadow-[4px_5px_0_0_hsl(0_0%_0%/0.6)]">
+            <div className="flex items-center gap-2 text-sm font-semibold text-blue-900/75 dark:text-blue-100/70">
               <CalendarDays className="h-4 w-4" aria-hidden="true" />
               Onboarding
             </div>
@@ -150,7 +153,7 @@ export default async function AdminClientsPage({
           ) : null}
         </div>
         {clients.length === 0 ? (
-          <div className="rounded-[8px] border-2 border-dashed border-border bg-white/70 p-6 text-sm font-medium text-muted-foreground">
+          <div className="rounded-[8px] border-2 border-dashed border-border bg-muted/45 p-6 text-sm font-medium text-muted-foreground">
             <p className="text-base font-black text-foreground">
               {query ? "Sin resultados" : "Aún no hay cuentas en pipeline"}
             </p>
@@ -161,7 +164,7 @@ export default async function AdminClientsPage({
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-[8px] border-2 border-border bg-white/75">
+          <div className="overflow-x-auto rounded-[8px] border-2 border-border bg-surface">
             <table className="min-w-[640px] w-full text-left text-sm">
               <thead className="border-b-2 border-border bg-muted text-muted-foreground">
                 <tr>
@@ -182,7 +185,7 @@ export default async function AdminClientsPage({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y-2 divide-black/10">
+              <tbody className="divide-y-2 divide-border">
                 {clients.map((client) => (
                   <tr
                     key={client.id}
@@ -209,7 +212,7 @@ export default async function AdminClientsPage({
                     </td>
                     <td className="px-4 py-4">
                       <Link
-                        className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-muted px-3 py-1.5 text-xs font-black uppercase shadow-[2px_3px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] duration-150 hover:translate-y-[1px] hover:bg-white hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-muted px-3 py-1.5 text-xs font-black uppercase shadow-[2px_3px_0_0_hsl(var(--foreground))] transition-[background-color,box-shadow,transform] duration-150 hover:translate-y-[1px] hover:bg-surface hover:shadow-[2px_2px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:shadow-[2px_3px_0_0_hsl(0_0%_0%/0.6)] dark:hover:shadow-[2px_2px_0_0_hsl(0_0%_0%/0.6)]"
                         href={`/admin/clients/${client.id}`}
                       >
                         Ver detalle
