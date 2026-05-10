@@ -10,6 +10,7 @@
   --muted: 210 40% 96%;
   --muted-foreground: 215 16% 38%;
   --border: 214 32% 88%;
+  --surface: 0 0% 100%;
 }
 
 html {
@@ -42,6 +43,39 @@ body {
   color: hsl(var(--foreground));
   -webkit-tap-highlight-color: hsl(222 47% 11% / 0.08);
   text-rendering: optimizeLegibility;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 222 22% 9%;
+    --foreground: 42 24% 92%;
+    --primary: 44 93% 64%;
+    --primary-foreground: 222 28% 9%;
+    --muted: 222 16% 16%;
+    --muted-foreground: 220 10% 72%;
+    --border: 220 13% 28%;
+    --surface: 222 18% 13%;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background:
+      linear-gradient(180deg, hsl(222 24% 8%) 0%, hsl(var(--background)) 48%),
+      hsl(var(--background));
+  }
+
+  ::selection {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .neo-box {
+    background-color: hsl(var(--surface) / 0.94);
+    box-shadow: 0 18px 45px hsl(0 0% 0% / 0.25);
+  }
 }
 
 h1,

@@ -11,8 +11,7 @@ const buttonVariants = cva(
       variant: {
         default:
           "border-primary bg-primary text-primary-foreground hover:bg-foreground/90",
-        outline:
-          "border-border bg-white text-foreground hover:bg-muted",
+        outline: "border-border bg-surface text-foreground hover:bg-muted",
         ghost:
           "border-transparent bg-transparent text-foreground hover:bg-muted"
       }
