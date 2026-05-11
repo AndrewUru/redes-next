@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Download, ExternalLink } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock3,
+  Download,
+  ExternalLink,
+  Loader2
+} from "lucide-react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { StepLayout } from "@/components/step-layout";
 import { Button } from "@/components/ui/button";
@@ -161,6 +167,26 @@ export function OnboardingWizard({
     () => calculateCompletionPct(liveDraft),
     [liveDraft]
   );
+  const statusView =
+    status === "submitted"
+      ? {
+          label: "Enviado",
+          detail: "Onboarding recibido. Ya puedes descargar tu guia.",
+          Icon: CheckCircle2,
+          iconClass: "text-emerald-700",
+          badgeClass: "border-emerald-500 bg-emerald-50"
+        }
+      : {
+          label: "Borrador",
+          detail: saving
+            ? "Guardando los ultimos cambios..."
+            : "Puedes salir y volver sin perder el avance.",
+          Icon: saving ? Loader2 : Clock3,
+          iconClass: saving ? "animate-spin text-amber-700" : "text-primary",
+          badgeClass: saving
+            ? "border-amber-400 bg-amber-50"
+            : "border-border bg-primary/10"
+        };
 
   useEffect(() => {
     if (status === "submitted") return;
@@ -468,19 +494,25 @@ export function OnboardingWizard({
             Paso {stepIndex + 1} de {intakeStepOrder.length}
           </p>
         </Card>
-        <Card className="space-y-2 bg-surface/90">
-          <p className="text-xs font-bold uppercase text-muted-foreground">
-            Estado
-          </p>
-          <p className="text-lg font-black text-foreground">
-            {saving
-              ? "Guardando…"
-              : status === "submitted"
-                ? "Enviado"
-                : "Borrador activo"}
-          </p>
-          <p className="text-xs font-medium text-muted-foreground">
-            Puedes salir y volver sin perder el avance.
+        <Card className="flex min-h-[132px] flex-col justify-between gap-4 bg-surface/90">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 space-y-2">
+              <p className="text-xs font-bold uppercase text-muted-foreground">
+                Estado
+              </p>
+              <p className="text-lg font-black text-foreground">
+                {statusView.label}
+              </p>
+            </div>
+            <span
+              className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-2 ${statusView.badgeClass}`}
+              aria-hidden
+            >
+              <statusView.Icon className={`h-5 w-5 ${statusView.iconClass}`} />
+            </span>
+          </div>
+          <p className="text-xs font-medium leading-relaxed text-muted-foreground">
+            {statusView.detail}
           </p>
         </Card>
       </div>

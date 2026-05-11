@@ -13,14 +13,14 @@ export default async function ClientAccountsPage() {
       <Card className="overflow-hidden border-border/80 bg-surface/95 shadow-[0_20px_60px_hsl(222_47%_11%/0.06)]">
         <div className="flex flex-col gap-2 lg:max-w-4xl">
           <p className="text-xs font-bold uppercase text-muted-foreground">
-            Analitica de cliente
+            Analítica de cliente
           </p>
           <CardTitle className="text-2xl">
-            Centro de cuentas y anal�tica
+            Centro de cuentas y analítica
           </CardTitle>
           <CardDescription>
-            Conecta perfiles y revisa la evoluci�n de seguidores, likes,
-            interacciones y se�ales de rendimiento en un panel claro.
+            Conecta perfiles y revisa la evolución de seguidores, likes,
+            interacciones y señales de rendimiento en un panel claro.
           </CardDescription>
         </div>
       </Card>
