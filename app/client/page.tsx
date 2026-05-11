@@ -281,6 +281,7 @@ export default async function ClientHomePage() {
         brandbooks={brandbookLinks}
         title="Tus guías de marca"
         description="Aquí puedes consultar todas las versiones PDF que ya están listas."
+        allowDelete
       />
 
       {brandbookUrl ? (

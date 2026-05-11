@@ -1,4 +1,5 @@
 import { FileText } from "lucide-react";
+import { DeleteBrandbookButton } from "@/components/client/delete-brandbook-button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import type { BrandbookRow } from "@/lib/db/types";
 
@@ -18,11 +19,13 @@ export type BrandbookListItem = Pick<
 export function BrandbookList({
   brandbooks,
   title = "Guias de marca creadas",
-  description = "Consulta las versiones PDF que ya estan disponibles."
+  description = "Consulta las versiones PDF que ya estan disponibles.",
+  allowDelete = false
 }: {
   brandbooks: BrandbookListItem[];
   title?: string;
   description?: string;
+  allowDelete?: boolean;
 }) {
   return (
     <Card className="space-y-4 bg-surface/90">
@@ -57,25 +60,37 @@ export function BrandbookList({
                 </div>
               </div>
 
-              {brandbook.signedUrl ? (
-                <div className="flex flex-wrap gap-3 text-sm font-semibold">
-                  <a
-                    href={brandbook.signedUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline"
-                  >
-                    Ver PDF
-                  </a>
-                  <a href={brandbook.signedUrl} download className="underline">
-                    Descargar
-                  </a>
-                </div>
-              ) : (
-                <p className="text-xs font-medium text-muted-foreground">
-                  Enlace no disponible ahora.
-                </p>
-              )}
+              <div className="flex flex-col gap-3 sm:items-end">
+                {brandbook.signedUrl ? (
+                  <div className="flex flex-wrap gap-3 text-sm font-semibold">
+                    <a
+                      href={brandbook.signedUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline"
+                    >
+                      Ver PDF
+                    </a>
+                    <a
+                      href={brandbook.signedUrl}
+                      download
+                      className="underline"
+                    >
+                      Descargar
+                    </a>
+                  </div>
+                ) : (
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Enlace no disponible ahora.
+                  </p>
+                )}
+                {allowDelete ? (
+                  <DeleteBrandbookButton
+                    brandbookId={brandbook.id}
+                    version={brandbook.version}
+                  />
+                ) : null}
+              </div>
             </li>
           ))}
         </ul>
