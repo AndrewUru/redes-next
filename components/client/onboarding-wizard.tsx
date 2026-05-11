@@ -156,6 +156,7 @@ export function OnboardingWizard({
   }, [form, defaultValues]);
 
   const watched = form.watch();
+  const watchedSignature = useMemo(() => JSON.stringify(watched), [watched]);
   const liveDraft = useMemo(
     () => ({
       ...draft,
@@ -192,7 +193,7 @@ export function OnboardingWizard({
     if (status === "submitted") return;
 
     const timeout = setTimeout(async () => {
-      const section = inflateStep(currentStep, watched);
+      const section = inflateStep(currentStep, form.getValues());
       const nextDraft = { ...draft, [currentStep]: section };
       const pct = calculateCompletionPct(nextDraft);
       setSaving(true);
@@ -209,7 +210,7 @@ export function OnboardingWizard({
       setSaving(false);
     }, 700);
     return () => clearTimeout(timeout);
-  }, [watched, currentStep, status]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [watchedSignature, currentStep, status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function goNext() {
     const section = inflateStep(currentStep, form.getValues());
