@@ -40,6 +40,7 @@ export interface BrandbookRow {
   template_id: string | null;
   pdf_path: string;
   created_at: string;
+  approved_at: string | null;
 }
 
 export interface AssetRow {

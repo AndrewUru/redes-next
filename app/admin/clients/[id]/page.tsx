@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BrandbookList } from "@/components/brandbook-list";
+import { ProjectActionChecklist } from "@/components/project-action-checklist";
 import {
   AdminAssetsGallery,
   AdminDecisionSnapshot,
@@ -39,6 +40,7 @@ export default async function AdminClientDetailPage({
         version: brandbook.version,
         pdf_path: brandbook.pdf_path,
         created_at: brandbook.created_at,
+        approved_at: brandbook.approved_at,
         signedUrl: signed?.signedUrl ?? null
       };
     })
@@ -136,6 +138,16 @@ export default async function AdminClientDetailPage({
         assetsCount={summary.assetsCount}
         brandbooksCount={summary.brandbooks.length}
         socialAccounts={summary.socialAccounts}
+      />
+
+      <ProjectActionChecklist
+        audience="admin"
+        onboardingPct={summary.intake?.completion_pct ?? 0}
+        intakeStatus={summary.intake?.status}
+        assets={summary.assets}
+        brandbooks={summary.brandbooks}
+        socialAccounts={summary.socialAccounts}
+        adminClientPath={`/admin/clients/${summary.client.id}`}
       />
 
       <AiMonthlyReportCard clientId={id} />

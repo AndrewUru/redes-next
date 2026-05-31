@@ -9,6 +9,7 @@ import {
   ListChecks
 } from "lucide-react";
 import { BrandbookList } from "@/components/brandbook-list";
+import { ProjectActionChecklist } from "@/components/project-action-checklist";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -49,6 +50,7 @@ export default async function ClientHomePage() {
         version: brandbook.version,
         pdf_path: brandbook.pdf_path,
         created_at: brandbook.created_at,
+        approved_at: brandbook.approved_at,
         signedUrl: signed?.signedUrl ?? null
       };
     })
@@ -250,31 +252,14 @@ export default async function ClientHomePage() {
           </div>
         </Card>
 
-        <Card className="space-y-3">
-          <CardTitle>Estado rápido</CardTitle>
-          <div className="space-y-3 text-sm">
-            <p className="flex justify-between gap-3">
-              <span className="text-muted-foreground">Formulario</span>
-              <span className="font-medium">
-                {onboardingDone ? "Completo" : "En progreso"}
-              </span>
-            </p>
-            <p className="flex justify-between gap-3">
-              <span className="text-muted-foreground">Materiales</span>
-              <span className="font-medium">
-                {assetsCount > 0 ? `${assetsCount} cargados` : "Sin archivos"}
-              </span>
-            </p>
-            <p className="flex justify-between gap-3">
-              <span className="text-muted-foreground">Guía</span>
-              <span className="font-medium">
-                {summary.latestBrandbook
-                  ? `v${summary.latestBrandbook.version}`
-                  : "No generada"}
-              </span>
-            </p>
-          </div>
-        </Card>
+        <ProjectActionChecklist
+          audience="client"
+          onboardingPct={onboardingPct}
+          intakeStatus={summary.intake?.status}
+          assets={summary.assets}
+          brandbooks={summary.brandbooks}
+          socialAccounts={summary.socialAccounts}
+        />
       </section>
 
       <BrandbookList
@@ -282,6 +267,7 @@ export default async function ClientHomePage() {
         title="Tus guías de marca"
         description="Aquí puedes consultar todas las versiones PDF que ya están listas."
         allowDelete
+        allowApprove
       />
 
       {brandbookUrl ? (

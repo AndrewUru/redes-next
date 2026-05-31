@@ -1,5 +1,7 @@
 import { FileText } from "lucide-react";
+import { ApproveBrandbookButton } from "@/components/client/approve-brandbook-button";
 import { DeleteBrandbookButton } from "@/components/client/delete-brandbook-button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import type { BrandbookRow } from "@/lib/db/types";
 
@@ -11,7 +13,7 @@ const dateFormatter = new Intl.DateTimeFormat("es-ES", {
 
 export type BrandbookListItem = Pick<
   BrandbookRow,
-  "id" | "version" | "pdf_path" | "created_at"
+  "id" | "version" | "pdf_path" | "created_at" | "approved_at"
 > & {
   signedUrl: string | null;
 };
@@ -20,12 +22,14 @@ export function BrandbookList({
   brandbooks,
   title = "Guias de marca creadas",
   description = "Consulta las versiones PDF que ya estan disponibles.",
-  allowDelete = false
+  allowDelete = false,
+  allowApprove = false
 }: {
   brandbooks: BrandbookListItem[];
   title?: string;
   description?: string;
   allowDelete?: boolean;
+  allowApprove?: boolean;
 }) {
   return (
     <Card className="space-y-4 bg-surface/90">
@@ -53,10 +57,27 @@ export function BrandbookList({
                   <p className="text-sm font-black">
                     Guia de marca v{brandbook.version}
                   </p>
-                  <p className="text-xs font-medium text-muted-foreground">
-                    Creada el{" "}
-                    {dateFormatter.format(new Date(brandbook.created_at))}
-                  </p>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Creada el{" "}
+                      {dateFormatter.format(new Date(brandbook.created_at))}
+                    </p>
+                    {brandbook.approved_at ? (
+                      <Badge className="bg-emerald-50 text-emerald-950 dark:border-emerald-300/30 dark:bg-emerald-300/10 dark:text-emerald-100">
+                        Aprobada
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-amber-50 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100">
+                        Pendiente de aprobacion
+                      </Badge>
+                    )}
+                  </div>
+                  {brandbook.approved_at ? (
+                    <p className="mt-1 text-xs font-medium text-muted-foreground">
+                      Aprobada el{" "}
+                      {dateFormatter.format(new Date(brandbook.approved_at))}
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
@@ -86,6 +107,12 @@ export function BrandbookList({
                 )}
                 {allowDelete ? (
                   <DeleteBrandbookButton
+                    brandbookId={brandbook.id}
+                    version={brandbook.version}
+                  />
+                ) : null}
+                {allowApprove && !brandbook.approved_at ? (
+                  <ApproveBrandbookButton
                     brandbookId={brandbook.id}
                     version={brandbook.version}
                   />

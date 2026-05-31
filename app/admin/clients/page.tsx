@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { ArrowUpRight, CalendarDays, Search, UsersRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { CreateAdminForm } from "@/components/admin/create-admin-form";
 import { CreateClientForm } from "@/components/admin/create-client-form";
 import { DeleteClientButton } from "@/components/admin/delete-client-button";
-import { getAdminClients } from "@/lib/db/server";
+import { getAdminClients, getAdminClientsReadiness } from "@/lib/db/server";
 import type { ClientRow, ClientStatus } from "@/lib/db/types";
 
 const dateFormatter = new Intl.DateTimeFormat("es-ES", {
@@ -37,16 +38,67 @@ const statusStyles: Record<ClientStatus, string> = {
 export default async function AdminClientsPage({
   searchParams
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; view?: string }>;
 }) {
-  const { q } = await searchParams;
+  const { q, view } = await searchParams;
   const query = q?.trim() ?? "";
+  const activeView = ["all", "blocked", "ready", "onboarding", "active"].includes(
+    view ?? ""
+  )
+    ? (view as "all" | "blocked" | "ready" | "onboarding" | "active")
+    : "all";
   const clients = (await getAdminClients(query)) as ClientRow[];
+  const readinessByClient = await getAdminClientsReadiness(
+    clients.map((client) => client.id)
+  );
   const activeClients = clients.filter((client) => client.status === "activo");
   const onboardingClients = clients.filter(
     (client) => client.status === "onboarding"
   );
+  const blockedClients = clients.filter((client) => {
+    const readiness = readinessByClient.get(client.id);
+    return readiness ? readiness.pendingCount > 1 : true;
+  });
+  const readyClients = clients.filter((client) => {
+    const readiness = readinessByClient.get(client.id);
+    return readiness ? readiness.pendingCount === 0 : false;
+  });
+  const visibleClients = clients.filter((client) => {
+    const readiness = readinessByClient.get(client.id);
+    if (activeView === "blocked") return (readiness?.pendingCount ?? 4) > 1;
+    if (activeView === "ready") return readiness?.pendingCount === 0;
+    if (activeView === "onboarding") return client.status === "onboarding";
+    if (activeView === "active") return client.status === "activo";
+    return true;
+  });
   const latestClient = clients[0];
+  const viewItems = [
+    { view: "all", href: "/admin/clients", label: "Todos", count: clients.length },
+    {
+      view: "blocked",
+      href: "/admin/clients?view=blocked",
+      label: "Bloqueos",
+      count: blockedClients.length
+    },
+    {
+      view: "ready",
+      href: "/admin/clients?view=ready",
+      label: "Listos",
+      count: readyClients.length
+    },
+    {
+      view: "onboarding",
+      href: "/admin/clients?view=onboarding",
+      label: "Onboarding",
+      count: onboardingClients.length
+    },
+    {
+      view: "active",
+      href: "/admin/clients?view=active",
+      label: "Activos",
+      count: activeClients.length
+    }
+  ] as const;
 
   return (
     <div className="space-y-5">
@@ -122,14 +174,50 @@ export default async function AdminClientsPage({
           <div className="rounded-[8px] border-2 border-border bg-blue-100 p-4 text-blue-950 shadow-[4px_5px_0_0_hsl(var(--foreground))] dark:border-blue-300/30 dark:bg-blue-300/10 dark:text-blue-50 dark:shadow-[4px_5px_0_0_hsl(0_0%_0%/0.6)]">
             <div className="flex items-center gap-2 text-sm font-semibold text-blue-900/75 dark:text-blue-100/70">
               <CalendarDays className="h-4 w-4" aria-hidden="true" />
-              Onboarding
+              Con bloqueos
             </div>
             <p className="mt-2 text-3xl font-black tabular-nums">
-              {onboardingClients.length}
+              {blockedClients.length}
+            </p>
+            <p className="mt-1 text-xs font-semibold text-blue-900/70 dark:text-blue-100/70">
+              {onboardingClients.length} en onboarding
             </p>
           </div>
         </div>
       </section>
+
+      <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <CardTitle className="text-lg">Filtros operativos</CardTitle>
+          <CardDescription className="mt-1">
+            Cambia la vista segun lo que toca resolver ahora.
+          </CardDescription>
+        </div>
+        <nav className="flex flex-wrap gap-2" aria-label="Vistas de pipeline">
+          {viewItems.map((item) => {
+            const isActive = activeView === item.view;
+            const href = query
+              ? `${item.href}${item.href.includes("?") ? "&" : "?"}q=${encodeURIComponent(query)}`
+              : item.href;
+
+            return (
+              <Link
+                key={item.view}
+                href={href as Route}
+                aria-current={isActive ? "page" : undefined}
+                className={`inline-flex min-h-10 items-center gap-2 rounded-full border px-3 py-2 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  isActive
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-surface hover:bg-muted"
+                }`}
+              >
+                {item.label}
+                <span className="tabular-nums">{item.count}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </Card>
 
       <div className="grid gap-4 xl:grid-cols-2">
         <CreateAdminForm />
@@ -152,20 +240,24 @@ export default async function AdminClientsPage({
             </p>
           ) : null}
         </div>
-        {clients.length === 0 ? (
+        {visibleClients.length === 0 ? (
           <div className="rounded-[8px] border-2 border-dashed border-border bg-muted/45 p-6 text-sm font-medium text-muted-foreground">
             <p className="text-base font-black text-foreground">
-              {query ? "Sin resultados" : "Aún no hay cuentas en pipeline"}
+              {query || activeView !== "all"
+                ? "Sin resultados"
+                : "Aún no hay cuentas en pipeline"}
             </p>
             <p className="mt-1 max-w-xl">
               {query
                 ? `No hay coincidencias para "${query}". Prueba con el nombre de marca o limpia la búsqueda.`
+                : activeView !== "all"
+                  ? "No hay clientes en esta vista operativa."
                 : "Crea la primera cuenta de cliente para activar su onboarding y seguimiento."}
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto rounded-[8px] border-2 border-border bg-surface">
-            <table className="min-w-[640px] w-full text-left text-sm">
+            <table className="min-w-[760px] w-full text-left text-sm">
               <thead className="border-b-2 border-border bg-muted text-muted-foreground">
                 <tr>
                   <th scope="col" className="px-4 py-3">
@@ -178,6 +270,9 @@ export default async function AdminClientsPage({
                     Creado
                   </th>
                   <th scope="col" className="px-4 py-3">
+                    Readiness
+                  </th>
+                  <th scope="col" className="px-4 py-3">
                     Strategy View
                   </th>
                   <th scope="col" className="px-4 py-3">
@@ -186,50 +281,87 @@ export default async function AdminClientsPage({
                 </tr>
               </thead>
               <tbody className="divide-y-2 divide-border">
-                {clients.map((client) => (
-                  <tr
-                    key={client.id}
-                    className="group transition-colors duration-150 hover:bg-primary/15"
-                  >
-                    <td className="max-w-[280px] px-4 py-4">
-                      <p
-                        className="truncate font-black"
-                        title={client.display_name}
-                      >
-                        {client.display_name}
-                      </p>
-                      <p className="mt-1 text-xs font-medium text-muted-foreground">
-                        ID: <span translate="no">{client.id.slice(0, 8)}</span>
-                      </p>
-                    </td>
-                    <td className="px-4 py-4">
-                      <Badge className={statusStyles[client.status]}>
-                        {statusLabels[client.status]}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-4 font-semibold tabular-nums">
-                      {dateFormatter.format(new Date(client.created_at))}
-                    </td>
-                    <td className="px-4 py-4">
-                      <Link
-                        className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-muted px-3 py-1.5 text-xs font-black uppercase shadow-[2px_3px_0_0_hsl(var(--foreground))] transition-[background-color,box-shadow,transform] duration-150 hover:translate-y-[1px] hover:bg-surface hover:shadow-[2px_2px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:shadow-[2px_3px_0_0_hsl(0_0%_0%/0.6)] dark:hover:shadow-[2px_2px_0_0_hsl(0_0%_0%/0.6)]"
-                        href={`/admin/clients/${client.id}`}
-                      >
-                        Ver detalle
-                        <ArrowUpRight
-                          className="h-3.5 w-3.5"
-                          aria-hidden="true"
+                {visibleClients.map((client) => {
+                  const readiness = readinessByClient.get(client.id);
+                  const pendingCount = readiness?.pendingCount ?? 4;
+                  const isReady = pendingCount === 0;
+
+                  return (
+                    <tr
+                      key={client.id}
+                      className="group transition-colors duration-150 hover:bg-primary/15"
+                    >
+                      <td className="max-w-[280px] px-4 py-4">
+                        <p
+                          className="truncate font-black"
+                          title={client.display_name}
+                        >
+                          {client.display_name}
+                        </p>
+                        <p className="mt-1 text-xs font-medium text-muted-foreground">
+                          ID:{" "}
+                          <span translate="no">{client.id.slice(0, 8)}</span>
+                        </p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <Badge className={statusStyles[client.status]}>
+                          {statusLabels[client.status]}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-4 font-semibold tabular-nums">
+                        {dateFormatter.format(new Date(client.created_at))}
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="min-w-40 space-y-2">
+                          <div className="flex items-center justify-between gap-3 text-xs font-bold">
+                            <span>
+                              {isReady
+                                ? "Listo"
+                                : `${pendingCount} pendientes`}
+                            </span>
+                            <span className="tabular-nums">
+                              {readiness?.completionPct ?? 0}%
+                            </span>
+                          </div>
+                          <div
+                            className="h-2 rounded-full bg-muted"
+                            aria-hidden="true"
+                          >
+                            <div
+                              className={`h-full rounded-full ${
+                                isReady ? "bg-emerald-500" : "bg-amber-500"
+                              }`}
+                              style={{
+                                width: `${Math.max(
+                                  8,
+                                  readiness?.completionPct ?? 0
+                                )}%`
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <Link
+                          className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-muted px-3 py-1.5 text-xs font-black uppercase shadow-[2px_3px_0_0_hsl(var(--foreground))] transition-[background-color,box-shadow,transform] duration-150 hover:translate-y-[1px] hover:bg-surface hover:shadow-[2px_2px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:shadow-[2px_3px_0_0_hsl(0_0%_0%/0.6)] dark:hover:shadow-[2px_2px_0_0_hsl(0_0%_0%/0.6)]"
+                          href={`/admin/clients/${client.id}`}
+                        >
+                          Ver detalle
+                          <ArrowUpRight
+                            className="h-3.5 w-3.5"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </td>
+                      <td className="px-4 py-4">
+                        <DeleteClientButton
+                          clientId={client.id}
+                          clientName={client.display_name}
                         />
-                      </Link>
-                    </td>
-                    <td className="px-4 py-4">
-                      <DeleteClientButton
-                        clientId={client.id}
-                        clientName={client.display_name}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

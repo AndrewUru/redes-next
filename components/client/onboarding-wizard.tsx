@@ -122,6 +122,17 @@ function inflateStep(step: IntakeStepKey, values: FlatStepData) {
   return inflated;
 }
 
+function asList(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+function summaryValue(value: unknown, fallback = "Pendiente") {
+  if (Array.isArray(value)) return asList(value).join(", ") || fallback;
+  return typeof value === "string" && value.trim() ? value : fallback;
+}
+
 export function OnboardingWizard({
   clientId,
   initialData,
@@ -470,6 +481,33 @@ export function OnboardingWizard({
     }
   }
 
+  const reviewRows = [
+    {
+      label: "Marca",
+      value: summaryValue(liveDraft.identity?.brandName)
+    },
+    {
+      label: "Objetivos",
+      value: summaryValue(liveDraft.goals?.businessGoals)
+    },
+    {
+      label: "Audiencia",
+      value: summaryValue(liveDraft.audience?.primaryAudience)
+    },
+    {
+      label: "Tono",
+      value: summaryValue(liveDraft.tone?.voiceAttributes)
+    },
+    {
+      label: "Temas",
+      value: summaryValue(liveDraft.pillars?.contentPillars)
+    },
+    {
+      label: "CTA",
+      value: summaryValue(liveDraft.ctas?.primaryCTA)
+    }
+  ];
+
   return (
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-3">
@@ -526,6 +564,37 @@ export function OnboardingWizard({
       >
         <form className="space-y-4">
           {renderFields()}
+          {isLastStep ? (
+            <section className="rounded-[8px] border-2 border-border bg-surface/80 p-4">
+              <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-base font-black">Revision final</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Antes de enviar, comprueba que estas senales representan
+                    bien tu proyecto.
+                  </p>
+                </div>
+                <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-xs font-bold">
+                  {completionPct}% completo
+                </span>
+              </div>
+              <div className="grid gap-2 md:grid-cols-2">
+                {reviewRows.map((row) => (
+                  <div
+                    key={row.label}
+                    className="rounded-[8px] border border-border bg-background/70 p-3"
+                  >
+                    <p className="text-xs font-bold uppercase text-muted-foreground">
+                      {row.label}
+                    </p>
+                    <p className="mt-1 line-clamp-3 text-sm font-semibold leading-6">
+                      {row.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <Button
               type="button"

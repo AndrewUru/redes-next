@@ -40,6 +40,7 @@ export default async function AdminClientWebProjectPage({
           version: brandbook.version,
           pdf_path: brandbook.pdf_path,
           created_at: brandbook.created_at,
+          approved_at: brandbook.approved_at,
           signedUrl: signed?.signedUrl ?? null
         };
       })

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { RefreshCw } from "lucide-react";
+import { Printer, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -29,6 +29,12 @@ const historyRanges: Array<{ value: HistoryRange; label: string }> = [
   { value: "12m", label: "1 año" },
   { value: "all", label: "Desde inicio" }
 ];
+
+const rangeLabels: Record<HistoryRange, string> = {
+  "6m": "Ultimos 6 meses",
+  "12m": "Ultimo ano",
+  all: "Desde inicio"
+};
 
 function OverviewMetrics({ overview }: { overview: SocialOverview }) {
   return (
@@ -77,6 +83,15 @@ export function SocialPerformancePanel({
   const ai = useAiSocialSummary(aiSummaryApiPath);
   const overview = useMemo(() => buildOverview(insights), [insights]);
   const hasInsights = insights.length > 0;
+  const generatedAt = useMemo(
+    () =>
+      new Intl.DateTimeFormat("es-ES", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).format(new Date()),
+    []
+  );
 
   return (
     <Card className="space-y-6 overflow-hidden border-border/80 bg-surface/95 shadow-[0_24px_70px_hsl(222_47%_11%/0.07)]">
@@ -132,8 +147,47 @@ export function SocialPerformancePanel({
             />
             {loading ? "Actualizando..." : "Actualizar metricas"}
           </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => window.print()}
+            disabled={!hasInsights}
+            className="w-fit bg-surface"
+          >
+            <Printer className="h-4 w-4" aria-hidden />
+            Imprimir informe
+          </Button>
         </div>
       </div>
+
+      {hasInsights ? (
+        <section className="rounded-xl border border-border bg-muted/35 p-4">
+          <div className="grid gap-3 md:grid-cols-3">
+            <div>
+              <p className="text-xs font-bold uppercase text-muted-foreground">
+                Informe
+              </p>
+              <p className="mt-1 text-sm font-semibold">
+                Rendimiento social
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-muted-foreground">
+                Periodo
+              </p>
+              <p className="mt-1 text-sm font-semibold">
+                {rangeLabels[historyRange]}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase text-muted-foreground">
+                Generado
+              </p>
+              <p className="mt-1 text-sm font-semibold">{generatedAt}</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <div aria-live="polite">
         {error ? (
