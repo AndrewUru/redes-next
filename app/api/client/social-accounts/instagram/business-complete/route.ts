@@ -43,7 +43,9 @@ type InstagramMedia = {
 };
 
 function asRecord(value: unknown) {
-  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 async function getClientContext() {
@@ -51,14 +53,20 @@ async function getClientContext() {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  if (!user)
+    return {
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    };
 
   const { data: link } = await supabase
     .from("client_users")
     .select("client_id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!link?.client_id) return { error: NextResponse.json({ error: "No client" }, { status: 400 }) };
+  if (!link?.client_id)
+    return {
+      error: NextResponse.json({ error: "No client" }, { status: 400 })
+    };
   return { supabase, clientId: link.client_id };
 }
 
@@ -77,27 +85,46 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid state" }, { status: 400 });
   }
   if (!cookieState.startsWith(`${ctx.clientId}:`)) {
-    return NextResponse.json({ error: "Invalid client state" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid client state" },
+      { status: 400 }
+    );
   }
 
   const userAccessToken = body.data.longLivedToken ?? body.data.accessToken;
   if (!userAccessToken) {
-    return NextResponse.json({ error: "Missing token from login fragment" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing token from login fragment" },
+      { status: 400 }
+    );
   }
 
   const pagesRes = await fetch(
     `https://graph.facebook.com/v22.0/me/accounts?fields=id,name,access_token,instagram_business_account{id,username,name}&access_token=${encodeURIComponent(userAccessToken)}`
   );
   if (!pagesRes.ok) {
-    return NextResponse.json({ error: "Failed to read pages from Graph API" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Failed to read pages from Graph API" },
+      { status: 400 }
+    );
   }
-  const pagesJson = (await pagesRes.json()) as { data?: FacebookPageWithInstagram[] };
-  const page = (pagesJson.data ?? []).find((candidate) => candidate.instagram_business_account?.id);
+  const pagesJson = (await pagesRes.json()) as {
+    data?: FacebookPageWithInstagram[];
+  };
+  const page = (pagesJson.data ?? []).find(
+    (candidate) => candidate.instagram_business_account?.id
+  );
   if (!page?.instagram_business_account?.id) {
-    return NextResponse.json({ error: "No Instagram Business account linked to available pages" }, { status: 400 });
+    return NextResponse.json(
+      { error: "No Instagram Business account linked to available pages" },
+      { status: 400 }
+    );
   }
   if (!page.access_token) {
-    return NextResponse.json({ error: "Missing page access token" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing page access token" },
+      { status: 400 }
+    );
   }
 
   const igAccountId = page.instagram_business_account.id;
@@ -106,10 +133,17 @@ export async function POST(request: Request) {
   const profileRes = await fetch(
     `https://graph.facebook.com/v22.0/${igAccountId}?fields=id,username,name,profile_picture_url,biography,media_count&access_token=${encodeURIComponent(pageAccessToken)}`
   );
-  if (!profileRes.ok) return NextResponse.json({ error: "Failed to read Instagram profile" }, { status: 400 });
+  if (!profileRes.ok)
+    return NextResponse.json(
+      { error: "Failed to read Instagram profile" },
+      { status: 400 }
+    );
   const profile = (await profileRes.json()) as InstagramProfile;
   if (!profile.id || !profile.username) {
-    return NextResponse.json({ error: "Invalid Instagram profile payload" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid Instagram profile payload" },
+      { status: 400 }
+    );
   }
 
   const mediaRes = await fetch(
@@ -178,17 +212,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: updateError.message }, { status: 400 });
     }
   } else {
-    const { error: insertError } = await ctx.supabase.from("social_accounts").insert({
-      client_id: ctx.clientId,
-      platform: "instagram",
-      account_name: profile.username,
-      account_handle: `@${profile.username}`,
-      external_account_id: profile.id,
-      status: "connected",
-      metadata: {
-        oauth: oauthMetadata
-      }
-    });
+    const { error: insertError } = await ctx.supabase
+      .from("social_accounts")
+      .insert({
+        client_id: ctx.clientId,
+        platform: "instagram",
+        account_name: profile.username,
+        account_handle: `@${profile.username}`,
+        external_account_id: profile.id,
+        status: "connected",
+        metadata: {
+          oauth: oauthMetadata
+        }
+      });
     if (insertError) {
       return NextResponse.json({ error: insertError.message }, { status: 400 });
     }

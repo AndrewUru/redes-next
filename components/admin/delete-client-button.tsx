@@ -49,14 +49,16 @@ export function DeleteClientButton({
         variant="outline"
         onClick={() => void removeClient()}
         disabled={loading}
-        className="w-full border-red-700 text-red-700 hover:bg-red-50 sm:w-auto"
+        className="w-full text-danger hover:bg-danger/10 sm:w-auto"
       >
         <Trash2 className="h-4 w-4" aria-hidden />
         {loading ? "Eliminando…" : "Eliminar"}
       </Button>
       <div aria-live="polite">
         {error ? (
-          <p className="text-xs font-medium text-red-700">{error}</p>
+          <p className="text-xs font-medium text-danger" role="alert">
+            {error}
+          </p>
         ) : null}
       </div>
     </div>

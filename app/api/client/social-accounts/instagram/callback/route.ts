@@ -72,7 +72,9 @@ function redirectToAccounts(request: Request, reason: string) {
 }
 
 function asRecord(value: unknown) {
-  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 export async function GET(request: Request) {
@@ -92,38 +94,48 @@ export async function GET(request: Request) {
     }
 
     const ctx = await getClientContext();
-    if ("error" in ctx) return redirectToAccounts(request, ctx.error ?? "auth_failed");
-    if (!state.startsWith(`${ctx.clientId}:`)) return redirectToAccounts(request, "invalid_client");
+    if ("error" in ctx)
+      return redirectToAccounts(request, ctx.error ?? "auth_failed");
+    if (!state.startsWith(`${ctx.clientId}:`))
+      return redirectToAccounts(request, "invalid_client");
 
     const appId = process.env.INSTAGRAM_APP_ID;
-    const appSecret = process.env.META_APP_SECRET ?? process.env.INSTAGRAM_APP_SECRET;
+    const appSecret =
+      process.env.META_APP_SECRET ?? process.env.INSTAGRAM_APP_SECRET;
     const effectiveAppId = process.env.META_APP_ID ?? appId;
     const redirectUri =
-      process.env.META_BUSINESS_REDIRECT_URI ?? process.env.INSTAGRAM_REDIRECT_URI;
+      process.env.META_BUSINESS_REDIRECT_URI ??
+      process.env.INSTAGRAM_REDIRECT_URI;
     if (!effectiveAppId || !appSecret || !redirectUri) {
       return redirectToAccounts(request, "missing_env");
     }
 
-    const tokenUrl = new URL("https://graph.facebook.com/v22.0/oauth/access_token");
+    const tokenUrl = new URL(
+      "https://graph.facebook.com/v22.0/oauth/access_token"
+    );
     tokenUrl.searchParams.set("client_id", effectiveAppId);
     tokenUrl.searchParams.set("client_secret", appSecret);
     tokenUrl.searchParams.set("redirect_uri", redirectUri);
     tokenUrl.searchParams.set("code", code);
     const tokenRes = await fetch(tokenUrl);
 
-    if (!tokenRes.ok) return redirectToAccounts(request, "token_exchange_failed");
+    if (!tokenRes.ok)
+      return redirectToAccounts(request, "token_exchange_failed");
 
     const tokenJson = (await tokenRes.json()) as {
       access_token?: string;
       token_type?: string;
       expires_in?: number;
     };
-    if (!tokenJson.access_token) return redirectToAccounts(request, "missing_access_token");
+    if (!tokenJson.access_token)
+      return redirectToAccounts(request, "missing_access_token");
 
     let userAccessToken = tokenJson.access_token;
     let expiresIn: number | null = null;
 
-    const longLivedUrl = new URL("https://graph.facebook.com/v22.0/oauth/access_token");
+    const longLivedUrl = new URL(
+      "https://graph.facebook.com/v22.0/oauth/access_token"
+    );
     longLivedUrl.searchParams.set("grant_type", "fb_exchange_token");
     longLivedUrl.searchParams.set("client_id", effectiveAppId);
     longLivedUrl.searchParams.set("client_secret", appSecret);
@@ -144,12 +156,17 @@ export async function GET(request: Request) {
       `https://graph.facebook.com/v22.0/me/accounts?fields=id,name,access_token,instagram_business_account{id,username,name}&access_token=${encodeURIComponent(userAccessToken)}`
     );
     if (!pagesRes.ok) return redirectToAccounts(request, "pages_read_failed");
-    const pagesJson = (await pagesRes.json()) as { data?: FacebookPageWithInstagram[] };
-    const page = (pagesJson.data ?? []).find((candidate) => candidate.instagram_business_account?.id);
+    const pagesJson = (await pagesRes.json()) as {
+      data?: FacebookPageWithInstagram[];
+    };
+    const page = (pagesJson.data ?? []).find(
+      (candidate) => candidate.instagram_business_account?.id
+    );
     if (!page?.instagram_business_account?.id) {
       return redirectToAccounts(request, "no_instagram_business_account");
     }
-    if (!page.access_token) return redirectToAccounts(request, "missing_page_access_token");
+    if (!page.access_token)
+      return redirectToAccounts(request, "missing_page_access_token");
 
     const igAccountId = page.instagram_business_account.id;
     const pageAccessToken = page.access_token;
@@ -157,9 +174,11 @@ export async function GET(request: Request) {
     const profileRes = await fetch(
       `https://graph.facebook.com/v22.0/${igAccountId}?fields=id,username,name,profile_picture_url,biography,media_count&access_token=${encodeURIComponent(pageAccessToken)}`
     );
-    if (!profileRes.ok) return redirectToAccounts(request, "profile_read_failed");
+    if (!profileRes.ok)
+      return redirectToAccounts(request, "profile_read_failed");
     const profile = (await profileRes.json()) as InstagramProfile;
-    if (!profile.id || !profile.username) return redirectToAccounts(request, "invalid_profile");
+    if (!profile.id || !profile.username)
+      return redirectToAccounts(request, "invalid_profile");
 
     const mediaRes = await fetch(
       `https://graph.facebook.com/v22.0/${igAccountId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=3&access_token=${encodeURIComponent(pageAccessToken)}`
@@ -234,17 +253,19 @@ export async function GET(request: Request) {
 
       if (updateError) return redirectToAccounts(request, "db_update_failed");
     } else {
-      const { error: insertError } = await ctx.supabase.from("social_accounts").insert({
-        client_id: ctx.clientId,
-        platform: "instagram",
-        account_name: profile.username,
-        account_handle: `@${profile.username}`,
-        external_account_id: profile.id,
-        status: "connected",
-        metadata: {
-          oauth: oauthMetadata
-        }
-      });
+      const { error: insertError } = await ctx.supabase
+        .from("social_accounts")
+        .insert({
+          client_id: ctx.clientId,
+          platform: "instagram",
+          account_name: profile.username,
+          account_handle: `@${profile.username}`,
+          external_account_id: profile.id,
+          status: "connected",
+          metadata: {
+            oauth: oauthMetadata
+          }
+        });
       if (insertError) return redirectToAccounts(request, "db_insert_failed");
     }
 

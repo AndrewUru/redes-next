@@ -213,7 +213,10 @@ export async function POST() {
       );
     }
 
-    return NextResponse.json({ summary, generatedAt: new Date().toISOString() });
+    return NextResponse.json({
+      summary,
+      generatedAt: new Date().toISOString()
+    });
   } catch (error) {
     const message =
       error instanceof Error

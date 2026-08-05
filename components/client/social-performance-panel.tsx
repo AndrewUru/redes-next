@@ -94,24 +94,24 @@ export function SocialPerformancePanel({
   );
 
   return (
-    <Card className="space-y-6 overflow-hidden border-border/80 bg-surface/95 shadow-[0_24px_70px_hsl(222_47%_11%/0.07)]">
+    <Card className="space-y-6 overflow-hidden">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-2">
-          <Badge className="w-fit border-sky-200 bg-sky-50 text-sky-900">
+          <Badge className="w-fit border-primary/20 bg-accent text-accent-foreground">
             Instagram analytics
           </Badge>
           <CardTitle className="text-2xl">
-            Analisis completo de evolucion y rendimiento
+            Análisis completo de evolución y rendimiento
           </CardTitle>
           <CardDescription>
-            Seguimos la evolucion de seguidores, alcance, impresiones, visitas
-            al perfil y engagement para convertir metricas sueltas en decisiones
-            mas claras.
+            Seguimos la evolución de seguidores, alcance, impresiones, visitas
+            al perfil e interacción para convertir métricas sueltas en
+            decisiones mas claras.
           </CardDescription>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div
-            className="inline-flex w-fit rounded-full border border-border bg-surface p-1 shadow-sm"
+            className="inline-flex w-fit rounded-lg border border-border bg-surface p-1 shadow-xs"
             aria-label="Rango de historial"
           >
             {historyRanges.map((range) => {
@@ -121,7 +121,7 @@ export function SocialPerformancePanel({
                 <button
                   key={range.value}
                   type="button"
-                  className={`min-h-9 rounded-full px-3 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                  className={`min-h-9 rounded-md px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -145,7 +145,7 @@ export function SocialPerformancePanel({
               className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
               aria-hidden
             />
-            {loading ? "Actualizando..." : "Actualizar metricas"}
+            {loading ? "Actualizando…" : "Actualizar métricas"}
           </Button>
           <Button
             type="button"
@@ -167,9 +167,7 @@ export function SocialPerformancePanel({
               <p className="text-xs font-bold uppercase text-muted-foreground">
                 Informe
               </p>
-              <p className="mt-1 text-sm font-semibold">
-                Rendimiento social
-              </p>
+              <p className="mt-1 text-sm font-semibold">Rendimiento social</p>
             </div>
             <div>
               <p className="text-xs font-bold uppercase text-muted-foreground">
@@ -191,7 +189,10 @@ export function SocialPerformancePanel({
 
       <div aria-live="polite">
         {error ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-800">
+          <div
+            className="rounded-lg border border-danger/25 bg-danger/10 p-3 text-sm font-medium text-foreground"
+            role="alert"
+          >
             {error}
           </div>
         ) : null}

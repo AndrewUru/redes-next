@@ -10,14 +10,15 @@ export function LogoutButton() {
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
+      className="w-full justify-start text-muted-foreground hover:text-danger"
       onClick={async () => {
         await supabase.auth.signOut();
         router.replace("/login");
         router.refresh();
       }}
     >
-      Cerrar sesion
+      Cerrar sesión
     </Button>
   );
 }

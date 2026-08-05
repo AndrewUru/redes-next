@@ -122,13 +122,15 @@ export async function POST(
   }
 
   const connectedInstagram = summary.socialAccounts.filter(
-    (account) => account.platform === "instagram" && account.status === "connected"
+    (account) =>
+      account.platform === "instagram" && account.status === "connected"
   );
   const socialInsights = await Promise.all(
     connectedInstagram.map((account) => fetchInstagramInsights(account))
   );
 
-  const intakeData = (summary.intake?.data ?? null) as Partial<IntakeData> | null;
+  const intakeData = (summary.intake?.data ??
+    null) as Partial<IntakeData> | null;
   const openai = getOpenAIClient();
 
   try {

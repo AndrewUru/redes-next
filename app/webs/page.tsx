@@ -155,7 +155,7 @@ export default function WebCreationServicePage() {
           </div>
 
           <div className="neo-box overflow-hidden bg-surface/90 p-0">
-            <div className="border-b-2 border-border bg-[#111] px-4 py-3 text-white">
+            <div className="border-b border-border bg-foreground px-4 py-3 text-background">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs font-semibold uppercase text-white/60">
@@ -163,7 +163,7 @@ export default function WebCreationServicePage() {
                   </p>
                   <h2 className="text-2xl text-white">Webbook de proyecto</h2>
                 </div>
-                <Badge className="border-border bg-[#a8e6df] text-foreground">
+                <Badge className="border-border bg-surface text-foreground">
                   En preparación
                 </Badge>
               </div>
@@ -174,7 +174,7 @@ export default function WebCreationServicePage() {
                 {previewItems.map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-[8px] border-2 border-border bg-background p-3 shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
+                    className="rounded-lg border border-border bg-background p-3 shadow-xs"
                   >
                     <p className="text-xs font-bold uppercase text-muted-foreground">
                       {item.label}
@@ -184,7 +184,7 @@ export default function WebCreationServicePage() {
                 ))}
               </div>
 
-              <div className="rounded-[8px] border-2 border-border bg-[#f8f0ff] p-4">
+              <div className="rounded-lg border border-border bg-accent/50 p-4">
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-bold uppercase text-muted-foreground">
@@ -198,10 +198,10 @@ export default function WebCreationServicePage() {
                   {["Hero", "Prueba social", "Servicios", "Contacto"].map(
                     (section, index) => (
                       <div key={section} className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border bg-surface text-xs font-black">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-xs font-semibold">
                           {index + 1}
                         </span>
-                        <div className="min-w-0 flex-1 rounded-[8px] border-2 border-border bg-surface px-3 py-2 text-sm font-bold">
+                        <div className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-semibold">
                           {section}
                         </div>
                       </div>
@@ -219,7 +219,7 @@ export default function WebCreationServicePage() {
 
             return (
               <Card key={step.title} className="bg-surface/88">
-                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a] shadow-[2px_3px_0_0_rgba(0,0,0,1)]">
+                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
                   <Icon className="h-5 w-5" aria-hidden />
                 </span>
                 <CardTitle>{step.title}</CardTitle>
@@ -244,7 +244,7 @@ export default function WebCreationServicePage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <Card className="bg-[#111] text-white">
+            <Card className="bg-foreground text-background">
               <Palette className="mb-5 h-7 w-7" aria-hidden />
               <CardTitle className="text-white">Identidad aplicada</CardTitle>
               <p className="mt-2 text-sm font-medium leading-relaxed text-white/70">
@@ -263,9 +263,9 @@ export default function WebCreationServicePage() {
           </div>
         </div>
 
-        <section className="grid gap-6 rounded-[8px] border-2 border-border bg-surface/90 p-4 shadow-[7px_10px_0_3px_rgba(0,0,0,1)] sm:p-6 lg:grid-cols-[0.82fr_1.18fr]">
+        <section className="grid gap-6 rounded-xl border border-border bg-surface p-4 shadow-sm sm:p-6 lg:grid-cols-[0.82fr_1.18fr]">
           <div className="space-y-4">
-            <Badge className="bg-[#f2d048]">
+            <Badge className="border-warning/25 bg-warning/10">
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
               Incluye
             </Badge>
@@ -276,7 +276,7 @@ export default function WebCreationServicePage() {
               {webDeliverables.map((item) => (
                 <div
                   key={item}
-                  className="flex items-center gap-3 rounded-[8px] border-2 border-border bg-background px-3 py-2"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-background px-3 py-2"
                 >
                   <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden />
                   <p className="text-sm font-bold">{item}</p>
@@ -353,7 +353,7 @@ export default function WebCreationServicePage() {
                 name="message"
                 required
                 rows={5}
-                placeholder="Ej. explicar mis servicios, conseguir reservas, vender un producto, mostrar trabajos, captar leads..."
+                placeholder="Ej. explicar mis servicios, conseguir reservas, vender un producto, mostrar trabajos, captar leads…"
               />
             </div>
 
@@ -366,18 +366,21 @@ export default function WebCreationServicePage() {
             />
 
             <Button disabled={loading} className="w-full">
-              {loading ? "Enviando..." : "Solicitar propuesta web"}
+              {loading ? "Enviando…" : "Solicitar propuesta web"}
             </Button>
 
             <div aria-live="polite">
               {result?.ok === true ? (
-                <p className="rounded-[8px] border-2 border-emerald-700 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
+                <p className="rounded-lg border border-success/25 bg-success/10 px-3 py-2 text-sm font-medium text-foreground">
                   He recibido tu solicitud web. Te escribire pronto con los
                   siguientes pasos. (ref: {result.id})
                 </p>
               ) : null}
               {result?.ok === false ? (
-                <p className="rounded-[8px] border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
+                <p
+                  className="rounded-lg border border-danger/25 bg-danger/10 px-3 py-2 text-sm font-medium text-foreground"
+                  role="alert"
+                >
                   {result.error}
                 </p>
               ) : null}

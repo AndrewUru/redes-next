@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Public_Sans } from "next/font/google";
+import { headers } from "next/headers";
 import { AppHeader } from "@/components/app-header";
 import "./globals.css";
 
@@ -23,10 +24,13 @@ export const viewport: Viewport = {
   ]
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
   const currentYear = new Date().getFullYear();
+  const pathname = (await headers()).get("x-current-path") ?? "/";
+  const isWorkspace =
+    pathname.startsWith("/client") || pathname.startsWith("/admin");
 
   return (
     <html lang="es" suppressHydrationWarning>
@@ -46,7 +50,7 @@ export default function RootLayout({
           Saltar al contenido
         </a>
 
-        <AppHeader />
+        {isWorkspace ? null : <AppHeader />}
 
         <main
           id="main-content"
@@ -56,12 +60,14 @@ export default function RootLayout({
           {children}
         </main>
 
-        <footer className="mx-auto mt-8 w-full max-w-7xl border-t border-border px-4 py-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] text-sm sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>© {currentYear} ElSaltoWeb</p>
-            <p>Sistema de marca y crecimiento</p>
-          </div>
-        </footer>
+        {isWorkspace ? null : (
+          <footer className="mx-auto mt-8 w-full max-w-7xl border-t border-border px-4 py-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] text-sm sm:px-6 lg:px-8">
+            <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+              <p>© {currentYear} ElSaltoWeb</p>
+              <p>Sistema de marca y crecimiento</p>
+            </div>
+          </footer>
+        )}
       </body>
     </html>
   );

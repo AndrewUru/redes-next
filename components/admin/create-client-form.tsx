@@ -49,9 +49,9 @@ export function CreateClientForm() {
   return (
     <form
       action={onSubmit}
-      className="space-y-3 rounded-[8px] border-2 border-border bg-surface p-4 shadow-sm"
+      className="space-y-4 rounded-xl border border-border bg-surface p-4 shadow-xs sm:p-5"
     >
-      <h3 className="text-lg font-black">
+      <h3 className="text-base font-semibold">
         Alta de cliente y posicionamiento inicial
       </h3>
       <div className="grid gap-3 md:grid-cols-3">
@@ -91,12 +91,12 @@ export function CreateClientForm() {
       </div>
       <div aria-live="polite" className="space-y-2">
         {error ? (
-          <p className="text-sm font-medium text-red-700">{error}</p>
+          <p className="text-sm font-medium text-danger" role="alert">
+            {error}
+          </p>
         ) : null}
         {done ? (
-          <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
-            {done}
-          </p>
+          <p className="text-sm font-medium text-success">{done}</p>
         ) : null}
       </div>
       <Button disabled={loading}>

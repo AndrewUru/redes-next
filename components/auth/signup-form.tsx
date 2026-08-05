@@ -34,7 +34,9 @@ export function SignupForm() {
 
     setLoading(false);
     if (signUpError) {
-      setError(signUpError.message);
+      setError(
+        "No pudimos crear la cuenta. Revisa los datos o prueba con otro correo."
+      );
       return;
     }
 
@@ -45,12 +47,12 @@ export function SignupForm() {
   }
 
   return (
-    <Card className="w-full space-y-5 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(239,246,255,0.92))]">
+    <Card className="w-full space-y-5 p-5 shadow-md sm:p-6">
       <div>
         <CardTitle>Crea tu dashboard privado</CardTitle>
         <CardDescription>
           Tendras un espacio para gestionar el trabajo conmigo: formularios,
-          materiales, guias, avances y proximos pasos en un solo lugar.
+          materiales, guías, avances y próximos pasos en un solo lugar.
         </CardDescription>
       </div>
       <form action={onSubmit} className="space-y-3">
@@ -93,7 +95,7 @@ export function SignupForm() {
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center justify-center rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute right-0.5 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-controls="password"
               aria-pressed={showPassword}
               aria-label={
@@ -113,14 +115,17 @@ export function SignupForm() {
         </div>
         <div aria-live="polite">
           {error ? (
-            <p className="rounded-[8px] border-2 border-red-700 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
+            <p
+              className="rounded-lg border border-danger/25 bg-danger/10 px-3 py-2 text-sm font-medium text-foreground"
+              role="alert"
+            >
               {error}
             </p>
           ) : null}
         </div>
         <Button className="w-full" disabled={loading}>
           <UserPlus className="h-4 w-4" aria-hidden />
-          {loading ? "Creando..." : "Crear mi dashboard"}
+          {loading ? "Creando…" : "Crear mi dashboard"}
         </Button>
       </form>
       <p className="text-sm text-muted-foreground">

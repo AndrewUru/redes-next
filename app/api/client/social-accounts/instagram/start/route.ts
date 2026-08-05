@@ -9,14 +9,20 @@ async function getClientContext() {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  if (!user)
+    return {
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    };
 
   const { data: link } = await supabase
     .from("client_users")
     .select("client_id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!link?.client_id) return { error: NextResponse.json({ error: "No client" }, { status: 400 }) };
+  if (!link?.client_id)
+    return {
+      error: NextResponse.json({ error: "No client" }, { status: 400 })
+    };
   return { clientId: link.client_id };
 }
 
@@ -26,7 +32,8 @@ export async function GET() {
 
   const clientId = process.env.META_APP_ID ?? process.env.INSTAGRAM_APP_ID;
   const redirectUri =
-    process.env.META_BUSINESS_REDIRECT_URI ?? process.env.INSTAGRAM_REDIRECT_URI;
+    process.env.META_BUSINESS_REDIRECT_URI ??
+    process.env.INSTAGRAM_REDIRECT_URI;
   const configId = process.env.META_BUSINESS_CONFIG_ID ?? "3088902101297110";
   if (!clientId || !redirectUri) {
     return NextResponse.json(
@@ -48,7 +55,9 @@ export async function GET() {
   ];
   const allowedScopes = new Set(defaultScopes);
   const scopesFromEnv =
-    process.env.META_OAUTH_SCOPES?.split(",").map((scope) => scope.trim()).filter(Boolean) ?? [];
+    process.env.META_OAUTH_SCOPES?.split(",")
+      .map((scope) => scope.trim())
+      .filter(Boolean) ?? [];
   const scopes = (scopesFromEnv.length > 0 ? scopesFromEnv : defaultScopes)
     .filter((scope) => allowedScopes.has(scope))
     .join(",");

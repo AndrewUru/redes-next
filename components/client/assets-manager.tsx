@@ -125,7 +125,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
 
   async function removeAsset(id: string) {
     const shouldDelete = window.confirm(
-      "Quieres quitar este archivo de la biblioteca?"
+      "¿Quieres quitar este archivo de la biblioteca?"
     );
     if (!shouldDelete) return;
 
@@ -143,16 +143,16 @@ export function AssetsManager({ clientId }: { clientId: string }) {
   }, []);
 
   return (
-    <div className="space-y-4">
+    <div className="page-container">
       <Card>
         <div className="mb-4">
           <CardTitle>Sube tus archivos de marca</CardTitle>
           <CardDescription className="mt-1">
-            No necesitas preparar nada tecnico. Sube el logo, fotos y ejemplos
+            No necesitas preparar nada técnico. Sube el logo, fotos y ejemplos
             visuales que ayuden a entender tu estilo.
           </CardDescription>
         </div>
-        <div className="mb-4 rounded-[8px] border-2 border-border bg-[#eff6ff] p-3 text-sm font-medium text-muted-foreground">
+        <div className="mb-4 rounded-lg border border-primary/15 bg-accent/60 p-3 text-sm text-muted-foreground">
           Si no tienes logo o fotos profesionales, no pasa nada: sube lo que
           tengas ahora. El objetivo es darnos contexto, no entregar una carpeta
           perfecta.
@@ -164,10 +164,10 @@ export function AssetsManager({ clientId }: { clientId: string }) {
             return (
               <div
                 key={type}
-                className="rounded-[8px] border-2 border-border bg-surface/70 p-3"
+                className="rounded-lg border border-border bg-surface p-3"
               >
                 <div className="mb-3 flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a]">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
                   <div>
@@ -195,7 +195,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
           <div>
             <CardTitle>Material recibido</CardTitle>
             <CardDescription className="mt-1">
-              Aqui veras las imagenes que ya tenemos para preparar tu guia de
+              Aquí verás las imágenes que ya tenemos para preparar tu guía de
               marca y tus contenidos.
             </CardDescription>
           </div>
@@ -217,14 +217,14 @@ export function AssetsManager({ clientId }: { clientId: string }) {
               ))}
             </div>
             <div
-              className="flex w-fit rounded-full border border-border bg-surface p-1"
+              className="flex w-fit rounded-lg border border-border bg-surface p-1"
               aria-label="Cambiar vista"
             >
               <Button
                 type="button"
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 onClick={() => setViewMode("grid")}
-                className="min-h-9 rounded-full px-3"
+                className="min-h-9 rounded-md px-3"
                 aria-label="Vista en cuadricula"
               >
                 <Grid2X2 className="h-4 w-4" aria-hidden />
@@ -233,7 +233,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                 type="button"
                 variant={viewMode === "list" ? "default" : "ghost"}
                 onClick={() => setViewMode("list")}
-                className="min-h-9 rounded-full px-3"
+                className="min-h-9 rounded-md px-3"
                 aria-label="Vista en lista"
               >
                 <List className="h-4 w-4" aria-hidden />
@@ -242,17 +242,17 @@ export function AssetsManager({ clientId }: { clientId: string }) {
           </div>
         </div>
         {loading ? (
-          <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
-            Cargando archivos...
+          <div className="rounded-lg border border-dashed border-border-strong bg-muted/30 p-6 text-sm text-muted-foreground">
+            Cargando archivos…
           </div>
         ) : assets.length === 0 ? (
-          <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
-            Aun no hay archivos. Empieza por el logo o por algunas fotos del
+          <div className="rounded-lg border border-dashed border-border-strong bg-muted/30 p-6 text-sm text-muted-foreground">
+            Aún no hay archivos. Empieza por el logo o por algunas fotos del
             proyecto.
           </div>
         ) : visibleAssets.length === 0 ? (
-          <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
-            No hay archivos en este filtro. Prueba otra categoria o sube un
+          <div className="rounded-lg border border-dashed border-border-strong bg-muted/30 p-6 text-sm text-muted-foreground">
+            No hay archivos en este filtro. Prueba otra categoría o sube un
             nuevo material.
           </div>
         ) : viewMode === "grid" ? (
@@ -260,7 +260,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
             {visibleAssets.map((asset) => (
               <article
                 key={asset.id}
-                className="overflow-hidden rounded-[8px] border-2 border-border bg-surface/75 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+                className="overflow-hidden rounded-lg border border-border bg-surface shadow-xs"
               >
                 {asset.preview_url ? (
                   <a href={asset.preview_url} target="_blank" rel="noreferrer">
@@ -270,17 +270,17 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                       width={640}
                       height={420}
                       unoptimized
-                      className="h-48 w-full border-b-2 border-border object-cover"
+                      className="h-48 w-full border-b border-border object-cover"
                     />
                   </a>
                 ) : (
-                  <div className="flex h-48 items-center justify-center border-b-2 border-border bg-muted">
+                  <div className="flex h-48 items-center justify-center border-b border-border bg-muted">
                     <FileImage className="h-10 w-10" aria-hidden />
                   </div>
                 )}
                 <div className="space-y-3 p-3">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="bg-[#fde68a]">
+                    <Badge className="border-primary/15 bg-accent text-accent-foreground">
                       {getAssetLabel(asset.type)}
                     </Badge>
                     <p className="text-xs font-medium text-muted-foreground">
@@ -291,7 +291,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                     {getAssetName(asset)}
                   </p>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     onClick={() => void removeAsset(asset.id)}
                     disabled={deletingId === asset.id}
                     className="w-full"
@@ -308,7 +308,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
             {visibleAssets.map((asset) => (
               <li
                 key={asset.id}
-                className="flex flex-col gap-3 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex min-w-0 gap-3">
                   {asset.preview_url ? (
@@ -318,7 +318,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                       width={120}
                       height={120}
                       unoptimized
-                      className="h-16 w-16 shrink-0 rounded-[8px] border border-border object-cover"
+                      className="h-16 w-16 shrink-0 rounded-lg border border-border object-cover"
                     />
                   ) : null}
                   <div className="min-w-0">
@@ -326,7 +326,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                       <p className="truncate text-sm font-black">
                         {getAssetName(asset)}
                       </p>
-                      <Badge className="bg-[#fde68a]">
+                      <Badge className="border-primary/15 bg-accent text-accent-foreground">
                         {getAssetLabel(asset.type)}
                       </Badge>
                     </div>
@@ -336,7 +336,7 @@ export function AssetsManager({ clientId }: { clientId: string }) {
                   </div>
                 </div>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => void removeAsset(asset.id)}
                   disabled={deletingId === asset.id}
                   className="w-full sm:w-auto"

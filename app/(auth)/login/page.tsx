@@ -21,8 +21,8 @@ const accessHighlights = [
 
 export default function LoginPage() {
   return (
-    <div className="mx-auto flex min-h-[calc(100dvh-11rem)] w-full max-w-6xl items-center py-8 sm:py-12">
-      <section className="grid w-full gap-10 lg:grid-cols-[0.9fr_0.72fr] lg:items-center">
+    <div className="mx-auto flex min-h-[calc(100dvh-11rem)] w-full max-w-5xl items-center py-8 sm:py-12">
+      <section className="grid w-full gap-8 lg:grid-cols-[1fr_26rem] lg:items-center">
         <div className="space-y-8">
           <div className="space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-sm font-medium text-muted-foreground shadow-sm">
@@ -30,7 +30,7 @@ export default function LoginPage() {
               Espacio privado para clientes
             </div>
             <div className="space-y-4">
-              <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
+              <h1 className="max-w-2xl text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
                 Accede a tu espacio de trabajo.
               </h1>
               <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
@@ -47,7 +47,7 @@ export default function LoginPage() {
               return (
                 <div
                   key={item.title}
-                  className="rounded-2xl border border-border bg-surface p-4 shadow-sm"
+                  className="rounded-xl border border-border bg-surface p-4 shadow-xs"
                 >
                   <Icon
                     className="mb-4 h-5 w-5 text-muted-foreground"

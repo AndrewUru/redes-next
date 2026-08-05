@@ -13,6 +13,8 @@ import { ProjectActionChecklist } from "@/components/project-action-checklist";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { PageHeader, SectionHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
 import {
   getClientIdForCurrentUser,
   getProfile,
@@ -112,21 +114,72 @@ export default async function ClientHomePage() {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-6">
-      <section className="grid gap-6 lg:grid-cols-[1fr_0.36fr]">
+    <div className="page-container">
+      <PageHeader
+        eyebrow="Panel de cliente"
+        title={`Hola, ${userDisplayName}`}
+        description="Consulta el estado del proyecto, completa las tareas pendientes y accede a tus recursos."
+        actions={
+          <Badge className="border-primary/20 bg-accent text-accent-foreground">
+            {stageLabel}
+          </Badge>
+        }
+      />
+
+      <section
+        className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+        aria-label="Estado general"
+      >
+        <StatCard
+          label="Onboarding"
+          value={`${onboardingPct}%`}
+          detail={
+            onboardingDone
+              ? "Información completa"
+              : "Continúa donde lo dejaste"
+          }
+          icon={ListChecks}
+        />
+        <StatCard
+          label="Materiales"
+          value={String(assetsCount)}
+          detail={
+            assetsCount > 0 ? "Archivos disponibles" : "Aún no hay archivos"
+          }
+          icon={FolderOpen}
+        />
+        <StatCard
+          label="Guía de marca"
+          value={
+            summary.latestBrandbook
+              ? `v${summary.latestBrandbook.version}`
+              : "Pendiente"
+          }
+          detail={brandbookUrl ? "Documento disponible" : "En preparación"}
+          icon={BookOpen}
+        />
+        <StatCard
+          label="Conexiones"
+          value={String(summary.socialAccounts.length)}
+          detail="Cuentas sociales conectadas"
+          icon={BarChart3}
+        />
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <Card className="space-y-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="max-w-2xl">
               <Badge>Panel de cliente</Badge>
-              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">
+              <h2 className="mt-4 text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">
                 Hola, {userDisplayName}
-              </h1>
+              </h2>
               <p className="mt-3 leading-7 text-muted-foreground">
                 Este es tu espacio para centralizar briefing, materiales, guías
                 y métricas del proyecto.
               </p>
             </div>
-            <div className="rounded-2xl border border-border bg-muted/45 px-4 py-3 text-sm">
+            <div className="rounded-lg border border-border bg-muted/45 px-4 py-3 text-sm">
               <p className="text-muted-foreground">Etapa actual</p>
               <p className="mt-1 font-semibold">{stageLabel}</p>
             </div>
@@ -177,53 +230,61 @@ export default async function ClientHomePage() {
         </Card>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {essentials.map((item) => {
-          const Icon = item.icon;
-          const externalHref =
-            "externalHref" in item ? item.externalHref : null;
-          const cardClassName =
-            "group rounded-2xl border border-border bg-surface p-5 shadow-sm transition-colors hover:bg-muted/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
-          const cardContent = (
-            <>
-              <div className="flex items-start justify-between gap-4">
-                <Icon
-                  className="h-5 w-5 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <ArrowRight
-                  className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </div>
-              <p className="mt-5 text-sm text-muted-foreground">{item.title}</p>
-              <p className="mt-1 text-2xl font-semibold">{item.value}</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {item.description}
-              </p>
-            </>
-          );
-
-          if (externalHref) {
-            return (
-              <a
-                key={item.title}
-                href={externalHref}
-                target="_blank"
-                rel="noreferrer"
-                className={cardClassName}
-              >
-                {cardContent}
-              </a>
+      <section className="space-y-3">
+        <SectionHeader
+          title="Accesos rápidos"
+          description="Las funciones que más utilizarás durante el proyecto."
+        />
+        <div className="grid gap-3 md:grid-cols-3">
+          {essentials.map((item) => {
+            const Icon = item.icon;
+            const externalHref =
+              "externalHref" in item ? item.externalHref : null;
+            const cardClassName =
+              "group rounded-xl border border-border bg-surface p-4 shadow-xs transition-colors hover:border-border-strong hover:bg-muted/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+            const cardContent = (
+              <>
+                <div className="flex items-start justify-between gap-4">
+                  <Icon
+                    className="h-5 w-5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                  <ArrowRight
+                    className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </div>
+                <p className="mt-5 text-sm text-muted-foreground">
+                  {item.title}
+                </p>
+                <p className="mt-1 text-2xl font-semibold">{item.value}</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {item.description}
+                </p>
+              </>
             );
-          }
 
-          return (
-            <Link key={item.title} href={item.href} className={cardClassName}>
-              {cardContent}
-            </Link>
-          );
-        })}
+            if (externalHref) {
+              return (
+                <a
+                  key={item.title}
+                  href={externalHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={cardClassName}
+                >
+                  {cardContent}
+                </a>
+              );
+            }
+
+            return (
+              <Link key={item.title} href={item.href} className={cardClassName}>
+                {cardContent}
+              </Link>
+            );
+          })}
+        </div>
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[0.72fr_0.28fr]">

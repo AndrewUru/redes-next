@@ -17,9 +17,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 const primaryActionClass =
-  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-primary px-4 py-2 text-center text-sm font-semibold leading-tight text-primary-foreground shadow-[2px_5px_0_0_hsl(var(--foreground))] transition-[background-color,border-color,color,box-shadow,transform] hover:translate-y-[1px] hover:bg-primary/90 hover:shadow-[2px_4px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-[2px_5px_0_0_hsl(0_0%_0%/0.65)] dark:hover:shadow-[2px_4px_0_0_hsl(0_0%_0%/0.65)]";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 const secondaryActionClass =
-  "inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-surface px-4 py-2 text-center text-sm font-semibold leading-tight text-foreground shadow-[2px_5px_0_0_hsl(var(--foreground))] transition-[background-color,border-color,color,box-shadow,transform] hover:translate-y-[1px] hover:bg-muted hover:shadow-[2px_4px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-[2px_5px_0_0_hsl(0_0%_0%/0.65)] dark:hover:shadow-[2px_4px_0_0_hsl(0_0%_0%/0.65)]";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-center text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
 export const metadata: Metadata = {
   title: "Recomendaciones web | ElSaltoWeb",
@@ -185,7 +185,7 @@ export default function RecommendationsPage() {
 
           <div className="neo-box bg-surface/90">
             <div className="flex flex-col gap-4">
-              <div className="rounded-[8px] border-2 border-border bg-[#111] p-4 text-white">
+              <div className="rounded-xl border border-border bg-foreground p-4 text-background">
                 <p className="text-xs font-bold uppercase text-white/60">
                   Mi punto de partida
                 </p>
@@ -200,7 +200,7 @@ export default function RecommendationsPage() {
                 {hostingReasons.map((reason) => (
                   <div
                     key={reason}
-                    className="rounded-[8px] border-2 border-border bg-background p-3 text-sm font-bold"
+                    className="rounded-lg border border-border bg-background p-3 text-sm font-semibold"
                   >
                     {reason}
                   </div>
@@ -249,7 +249,7 @@ export default function RecommendationsPage() {
               return (
                 <Card key={option.title} className="space-y-4 bg-surface/90">
                   <span
-                    className={`flex h-11 w-11 items-center justify-center rounded-[8px] border-2 border-border shadow-[2px_3px_0_0_hsl(var(--foreground))] dark:shadow-[2px_3px_0_0_hsl(0_0%_0%/0.65)] ${option.tone}`}
+                    className={`flex h-11 w-11 items-center justify-center rounded-lg border border-border ${option.tone}`}
                   >
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
@@ -305,7 +305,7 @@ export default function RecommendationsPage() {
               {domainChecklist.map((item) => (
                 <div
                   key={item}
-                  className="flex gap-3 rounded-[8px] border-2 border-border bg-background px-3 py-2"
+                  className="flex gap-3 rounded-lg border border-border bg-background px-3 py-2"
                 >
                   <Globe2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
                   <p className="text-sm font-bold">{item}</p>
@@ -322,7 +322,7 @@ export default function RecommendationsPage() {
               {decisionRules.map((rule) => (
                 <div
                   key={rule.label}
-                  className="grid gap-2 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:grid-cols-[1fr_0.8fr]"
+                  className="grid gap-2 rounded-lg border border-border bg-surface p-3 sm:grid-cols-[1fr_0.8fr]"
                 >
                   <p className="text-sm font-bold">{rule.label}</p>
                   <Badge className="w-fit bg-amber-200 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/15 dark:text-amber-100">
@@ -333,7 +333,7 @@ export default function RecommendationsPage() {
             </div>
           </Card>
 
-          <Card className="space-y-4 bg-[#111] text-white">
+          <Card className="space-y-4 bg-foreground text-background">
             <ShoppingCart className="h-7 w-7" aria-hidden />
             <CardTitle className="text-white">
               Qué evitar al contratar
@@ -386,7 +386,7 @@ export default function RecommendationsPage() {
                 href={source.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-[8px] border-2 border-border bg-background px-3 py-2 text-sm font-bold underline"
+                className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold underline"
               >
                 {source.label}
               </a>

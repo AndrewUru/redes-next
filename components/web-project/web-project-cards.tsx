@@ -20,7 +20,7 @@ export function WebProjectOverview({
   intakeCompletionPct: number;
 }) {
   return (
-    <div className="space-y-4">
+    <div className="page-container">
       <Card className="space-y-4 bg-surface/90">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -29,16 +29,18 @@ export function WebProjectOverview({
             </CardDescription>
             <CardTitle className="mt-1">Dashboard de creacion web</CardTitle>
             <p className="mt-2 max-w-3xl text-sm font-medium text-muted-foreground">
-              Aqui reunimos brief, materiales, direccion visual y avances de la
+              Aquí reunimos brief, materiales, dirección visual y avances de la
               web para trabajar con orden.
             </p>
           </div>
-          <Badge className="w-fit bg-[#fde68a]">En preparacion</Badge>
+          <Badge className="w-fit border-warning/25 bg-warning/10">
+            En preparación
+          </Badge>
         </div>
         <div className="grid gap-3 md:grid-cols-3">
           <StatCard label="Brief base" value={`${intakeCompletionPct}%`} />
           <StatCard label="Materiales" value={String(assetsCount)} />
-          <StatCard label="Guias" value={String(brandbooksCount)} />
+          <StatCard label="Guías" value={String(brandbooksCount)} />
         </div>
       </Card>
 
@@ -52,7 +54,7 @@ export function WebProjectOverview({
               return (
                 <div
                   key={step.title}
-                  className="rounded-[8px] border-2 border-border bg-surface/75 p-3"
+                  className="rounded-lg border border-border bg-surface p-3"
                 >
                   <Icon className="mb-3 h-5 w-5" aria-hidden />
                   <p className="text-sm font-black">{step.title}</p>
@@ -83,7 +85,7 @@ export function WebProjectOverview({
 
 export function WebBriefGuide() {
   return (
-    <div className="space-y-4">
+    <div className="page-container">
       <Card className="space-y-4 bg-surface/90">
         <div>
           <CardDescription className="uppercase">Brief web</CardDescription>
@@ -99,9 +101,9 @@ export function WebBriefGuide() {
           {webBriefQuestions.map((question, index) => (
             <div
               key={question}
-              className="flex gap-3 rounded-[8px] border-2 border-border bg-surface/75 p-3"
+              className="flex gap-3 rounded-lg border border-border bg-surface p-3"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border bg-[#fde68a] text-sm font-black">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-secondary-foreground">
                 {index + 1}
               </span>
               <p className="text-sm font-semibold leading-relaxed">
@@ -118,7 +120,7 @@ export function WebBriefGuide() {
           {webProjectDeliverables.map((item) => (
             <div
               key={item}
-              className="rounded-[8px] border-2 border-border bg-background px-3 py-2 text-sm font-bold"
+              className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold"
             >
               {item}
             </div>
@@ -131,7 +133,7 @@ export function WebBriefGuide() {
 
 export function WebProgressBoard() {
   return (
-    <div className="space-y-4">
+    <div className="page-container">
       <Card className="space-y-4 bg-surface/90">
         <div>
           <CardDescription className="uppercase">Avances</CardDescription>
@@ -148,7 +150,7 @@ export function WebProgressBoard() {
             return (
               <div
                 key={signal.label}
-                className="rounded-[8px] border-2 border-border bg-surface/75 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+                className="rounded-lg border border-border bg-surface p-3 shadow-xs"
               >
                 <Icon className="mb-3 h-5 w-5" aria-hidden />
                 <p className="text-xs font-bold uppercase text-muted-foreground">
@@ -166,7 +168,7 @@ export function WebProgressBoard() {
           <Card key={milestone.title} className="bg-surface/90">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-border bg-[#fde68a] text-sm font-black">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-secondary-foreground">
                   {index + 1}
                 </span>
                 <div>
@@ -187,7 +189,7 @@ export function WebProgressBoard() {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[8px] border-2 border-border bg-background p-3 shadow-[3px_4px_0_0_rgba(0,0,0,1)]">
+    <div className="rounded-lg border border-border bg-background p-3 shadow-xs">
       <p className="text-xs font-bold uppercase text-muted-foreground">
         {label}
       </p>
@@ -206,7 +208,7 @@ function ActionLink({ href, title }: { href: ClientWebRoute; title: string }) {
   return (
     <Link
       href={href}
-      className="group flex items-center justify-between gap-3 rounded-[8px] border-2 border-border bg-surface/80 px-3 py-3 text-sm font-black shadow-[3px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,transform,box-shadow] hover:-translate-y-0.5 hover:bg-[#eff6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="group flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border bg-surface px-3 py-3 text-sm font-semibold shadow-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       {title}
       <ArrowRight

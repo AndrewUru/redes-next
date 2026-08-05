@@ -101,7 +101,9 @@ export function analyzeAccount(account: AccountInsights) {
     );
   }
   if (risks.length === 0) {
-    risks.push("No se detectan caidas fuertes en el ultimo tramo del historico.");
+    risks.push(
+      "No se detectan caidas fuertes en el ultimo tramo del historico."
+    );
   }
 
   return {

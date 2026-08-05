@@ -36,10 +36,9 @@ type ChecklistItem = {
 };
 
 const priorityStyles: Record<ChecklistItem["priority"], string> = {
-  alta: "bg-red-50 text-red-900 dark:border-red-300/30 dark:bg-red-300/10 dark:text-red-100",
-  media:
-    "bg-amber-50 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100",
-  baja: "bg-emerald-50 text-emerald-950 dark:border-emerald-300/30 dark:bg-emerald-300/10 dark:text-emerald-100"
+  alta: "border-danger/25 bg-danger/10 text-foreground",
+  media: "border-warning/25 bg-warning/10 text-foreground",
+  baja: "border-success/25 bg-success/10 text-foreground"
 };
 
 function hasAssetType(assets: AssetRow[], type: string) {
@@ -146,7 +145,7 @@ export function ProjectActionChecklist({
               : "La base operativa esta completa; toca revisar calidad y siguiente entrega."}
           </CardDescription>
         </div>
-        <Badge className="w-fit bg-sky-50 text-sky-950 dark:border-sky-300/30 dark:bg-sky-300/10 dark:text-sky-100">
+        <Badge className="w-fit border-primary/20 bg-accent text-accent-foreground">
           {completedCount}/{items.length} listas
         </Badge>
       </div>
@@ -160,9 +159,9 @@ export function ProjectActionChecklist({
             <Link
               key={item.title}
               href={item.href as Route}
-              className="group grid gap-3 rounded-xl border border-border bg-surface/80 p-3 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
+              className="group grid gap-3 rounded-lg border border-border bg-surface p-3 transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-muted">
+              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>
               <span className="min-w-0">
@@ -180,7 +179,7 @@ export function ProjectActionChecklist({
                 <StatusIcon
                   className={
                     item.done
-                      ? "h-5 w-5 text-emerald-700"
+                      ? "h-5 w-5 text-success"
                       : "h-5 w-5 text-muted-foreground"
                   }
                   aria-hidden
@@ -196,7 +195,7 @@ export function ProjectActionChecklist({
       </div>
 
       {pendingItems.length === 0 ? (
-        <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-950 dark:border-emerald-300/30 dark:bg-emerald-300/10 dark:text-emerald-100">
+        <div className="flex items-start gap-3 rounded-lg border border-success/25 bg-success/10 p-3 text-sm text-foreground">
           <MessageSquareText className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           <p>
             Siguiente mejora natural: pedir feedback o aprobar la siguiente

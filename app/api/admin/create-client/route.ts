@@ -15,7 +15,8 @@ export async function POST(request: Request) {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -33,12 +34,13 @@ export async function POST(request: Request) {
   }
 
   const tempPassword = randomBytes(9).toString("base64url");
-  const { data: createdUser, error: userError } = await supabaseAdmin.auth.admin.createUser({
-    email: parsed.data.email,
-    password: tempPassword,
-    email_confirm: true,
-    user_metadata: { full_name: parsed.data.fullName }
-  });
+  const { data: createdUser, error: userError } =
+    await supabaseAdmin.auth.admin.createUser({
+      email: parsed.data.email,
+      password: tempPassword,
+      email_confirm: true,
+      user_metadata: { full_name: parsed.data.fullName }
+    });
   if (userError || !createdUser.user) {
     return NextResponse.json(
       { error: userError?.message ?? "No se pudo crear usuario cliente" },

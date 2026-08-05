@@ -82,13 +82,16 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
           className="w-fit bg-violet-700 text-white hover:bg-violet-800"
         >
           <Sparkles className="h-4 w-4" aria-hidden />
-          {loading ? "Generando..." : "Generar informe"}
+          {loading ? "Generando…" : "Generar informe"}
         </Button>
       </div>
 
       <div aria-live="polite">
         {error ? (
-          <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-800">
+          <p
+            className="rounded-lg border border-danger/25 bg-danger/10 p-3 text-sm font-medium text-foreground"
+            role="alert"
+          >
             {error}
           </p>
         ) : null}

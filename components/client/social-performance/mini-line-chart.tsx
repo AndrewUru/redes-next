@@ -38,16 +38,16 @@ export function MiniLineChart({
   } satisfies ChartConfig;
 
   return (
-    <div className="rounded-2xl border border-border bg-surface/95 p-4 shadow-sm">
+    <div className="rounded-xl border border-border bg-surface p-4 shadow-xs">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <p className="text-sm font-bold">{title}</p>
+          <p className="text-sm font-semibold">{title}</p>
           <p className="text-xs font-medium text-muted-foreground">
             {subtitle}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-sm font-bold tabular-nums">
+          <p className="text-sm font-semibold tabular-nums">
             {formatter(validPoints.at(-1)?.value ?? null)}
           </p>
           <p className="text-[11px] font-medium text-muted-foreground">
@@ -95,9 +95,9 @@ export function MiniLineChart({
                 dataKey="value"
                 type="monotone"
                 stroke="var(--color-value)"
-                strokeWidth={3}
-                dot={{ r: 3, fill: "var(--color-value)" }}
-                activeDot={{ r: 5 }}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4 }}
               />
             </LineChart>
           </ChartContainer>

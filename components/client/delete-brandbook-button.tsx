@@ -18,7 +18,7 @@ export function DeleteBrandbookButton({
 
   async function removeBrandbook() {
     const confirmed = window.confirm(
-      `Quieres eliminar la guia de marca v${version}? Esta accion no se puede deshacer.`
+      `¿Quieres eliminar la guía de marca v${version}? Esta acción no se puede deshacer.`
     );
     if (!confirmed) return;
 
@@ -32,7 +32,7 @@ export function DeleteBrandbookButton({
       const json = (await res.json().catch(() => ({}))) as { error?: string };
 
       if (!res.ok) {
-        setError(json.error ?? "No se pudo eliminar esta guia.");
+        setError(json.error ?? "No se pudo eliminar esta guía.");
         return;
       }
 
@@ -49,14 +49,16 @@ export function DeleteBrandbookButton({
         variant="outline"
         onClick={() => void removeBrandbook()}
         disabled={loading}
-        className="min-h-10 border-red-700 text-red-700 hover:bg-red-50"
+        className="min-h-10 text-danger hover:bg-danger/10"
       >
         <Trash2 className="h-4 w-4" aria-hidden />
-        {loading ? "Eliminando..." : "Eliminar"}
+        {loading ? "Eliminando…" : "Eliminar"}
       </Button>
       <div aria-live="polite">
         {error ? (
-          <p className="text-xs font-medium text-red-700">{error}</p>
+          <p className="text-xs font-medium text-danger" role="alert">
+            {error}
+          </p>
         ) : null}
       </div>
     </div>

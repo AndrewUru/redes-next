@@ -70,7 +70,7 @@ export default async function AdminClientDetailPage({
     null) as Partial<IntakeData> | null;
 
   return (
-    <div className="space-y-4">
+    <div className="page-container">
       <Card>
         <CardTitle>{summary.client.display_name}</CardTitle>
         <CardDescription className="mt-2">
@@ -81,7 +81,7 @@ export default async function AdminClientDetailPage({
           <Badge>{summary.client.status}</Badge>
           <Link
             href={`/admin/clients/${summary.client.id}/web`}
-            className="inline-flex min-h-10 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a] px-4 py-2 text-sm font-black shadow-[2px_5px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-[#f2d048] hover:shadow-[2px_4px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition-colors hover:bg-secondary/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             Ver proyecto web
           </Link>
@@ -166,10 +166,11 @@ export default async function AdminClientDetailPage({
       />
 
       <Card>
-        <CardTitle>Publicaciones y metricas sociales</CardTitle>
+        <CardTitle>Publicaciones y métricas sociales</CardTitle>
         <CardDescription className="mb-4">
-          Visualiza el desempeno de Instagram, publicaciones recientes, top
-          contenidos y ultimos snapshots para preparar informes y propuestas.
+          Visualiza el desempeño de Instagram, publicaciones recientes,
+          contenidos destacados y últimos snapshots para preparar informes y
+          propuestas.
         </CardDescription>
         <SocialPerformancePanel
           apiPath={`/api/admin/clients/${summary.client.id}/insights`}

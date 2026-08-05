@@ -1,11 +1,20 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { ArrowUpRight, CalendarDays, Search, UsersRound } from "lucide-react";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  Search,
+  UserRoundCheck,
+  UsersRound
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PageHeader, SectionHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
 import { CreateAdminForm } from "@/components/admin/create-admin-form";
 import { CreateClientForm } from "@/components/admin/create-client-form";
 import { DeleteClientButton } from "@/components/admin/delete-client-button";
@@ -17,22 +26,17 @@ const dateFormatter = new Intl.DateTimeFormat("es-ES", {
   month: "short",
   year: "numeric"
 });
-
 const statusLabels: Record<ClientStatus, string> = {
   lead: "Lead",
   onboarding: "Onboarding",
   activo: "Activo",
   pausado: "Pausado"
 };
-
 const statusStyles: Record<ClientStatus, string> = {
-  lead: "bg-blue-100 text-blue-950 dark:border-blue-400/30 dark:bg-blue-400/15 dark:text-blue-100",
-  onboarding:
-    "bg-amber-100 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/15 dark:text-amber-100",
-  activo:
-    "bg-emerald-100 text-emerald-950 dark:border-emerald-300/30 dark:bg-emerald-300/15 dark:text-emerald-100",
-  pausado:
-    "bg-red-100 text-red-950 dark:border-red-300/30 dark:bg-red-300/15 dark:text-red-100"
+  lead: "border-primary/20 bg-accent text-accent-foreground",
+  onboarding: "border-warning/25 bg-warning/10 text-foreground",
+  activo: "border-success/25 bg-success/10 text-foreground",
+  pausado: "border-danger/25 bg-danger/10 text-foreground"
 };
 
 export default async function AdminClientsPage({
@@ -42,10 +46,17 @@ export default async function AdminClientsPage({
 }) {
   const { q, view } = await searchParams;
   const query = q?.trim() ?? "";
-  const activeView = ["all", "blocked", "ready", "onboarding", "active"].includes(
-    view ?? ""
+  const allowedViews = [
+    "all",
+    "blocked",
+    "ready",
+    "onboarding",
+    "active"
+  ] as const;
+  const activeView = allowedViews.includes(
+    view as (typeof allowedViews)[number]
   )
-    ? (view as "all" | "blocked" | "ready" | "onboarding" | "active")
+    ? (view as (typeof allowedViews)[number])
     : "all";
   const clients = (await getAdminClients(query)) as ClientRow[];
   const readinessByClient = await getAdminClientsReadiness(
@@ -55,14 +66,12 @@ export default async function AdminClientsPage({
   const onboardingClients = clients.filter(
     (client) => client.status === "onboarding"
   );
-  const blockedClients = clients.filter((client) => {
-    const readiness = readinessByClient.get(client.id);
-    return readiness ? readiness.pendingCount > 1 : true;
-  });
-  const readyClients = clients.filter((client) => {
-    const readiness = readinessByClient.get(client.id);
-    return readiness ? readiness.pendingCount === 0 : false;
-  });
+  const blockedClients = clients.filter(
+    (client) => (readinessByClient.get(client.id)?.pendingCount ?? 4) > 1
+  );
+  const readyClients = clients.filter(
+    (client) => readinessByClient.get(client.id)?.pendingCount === 0
+  );
   const visibleClients = clients.filter((client) => {
     const readiness = readinessByClient.get(client.id);
     if (activeView === "blocked") return (readiness?.pendingCount ?? 4) > 1;
@@ -71,9 +80,13 @@ export default async function AdminClientsPage({
     if (activeView === "active") return client.status === "activo";
     return true;
   });
-  const latestClient = clients[0];
   const viewItems = [
-    { view: "all", href: "/admin/clients", label: "Todos", count: clients.length },
+    {
+      view: "all",
+      href: "/admin/clients",
+      label: "Todos",
+      count: clients.length
+    },
     {
       view: "blocked",
       href: "/admin/clients?view=blocked",
@@ -101,270 +114,291 @@ export default async function AdminClientsPage({
   ] as const;
 
   return (
-    <div className="space-y-5">
-      <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <Card className="bg-amber-100 text-slate-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-foreground">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <CardDescription className="uppercase tracking-[0.08em] text-slate-600 dark:text-amber-100/70">
-                Operación comercial
-              </CardDescription>
-              <h2 className="mt-2 text-3xl font-black leading-tight text-pretty sm:text-4xl">
-                Pipeline de cuentas
-              </h2>
-              <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-slate-700 dark:text-amber-50/75 sm:text-base">
-                Prioriza onboarding, readiness y seguimiento de cada marca desde
-                una vista rápida.
-              </p>
-            </div>
-            <form className="w-full lg:max-w-md">
-              <Label htmlFor="client-search" className="sr-only">
-                Buscar cliente o marca
-              </Label>
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <div className="relative min-w-0 flex-1">
-                  <Search
-                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                    aria-hidden="true"
-                  />
-                  <Input
-                    id="client-search"
-                    name="q"
-                    defaultValue={query}
-                    autoComplete="off"
-                    placeholder="Ej. Estudio Norte…"
-                    className="bg-surface/95 pl-9"
-                  />
-                </div>
-                <Button type="submit" variant="outline" className="sm:w-auto">
-                  Buscar
-                </Button>
-              </div>
-              {query ? (
-                <Link
-                  href="/admin/clients"
-                  className="mt-2 inline-flex text-sm font-semibold underline decoration-2 underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                >
-                  Limpiar búsqueda
-                </Link>
-              ) : null}
-            </form>
-          </div>
-        </Card>
+    <div className="page-container">
+      <PageHeader
+        eyebrow="Operaciones"
+        title="Clientes"
+        description="Controla el estado de cada cuenta, detecta bloqueos y mantén el onboarding en movimiento."
+      />
 
-        <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-          <div className="rounded-[8px] border-2 border-border bg-surface p-4 shadow-[4px_5px_0_0_hsl(var(--foreground))] dark:shadow-[4px_5px_0_0_hsl(0_0%_0%/0.6)]">
-            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-              <UsersRound className="h-4 w-4" aria-hidden="true" />
-              Cuentas
-            </div>
-            <p className="mt-2 text-3xl font-black tabular-nums">
-              {clients.length}
-            </p>
-          </div>
-          <div className="rounded-[8px] border-2 border-border bg-emerald-100 p-4 text-emerald-950 shadow-[4px_5px_0_0_hsl(var(--foreground))] dark:border-emerald-300/30 dark:bg-emerald-300/10 dark:text-emerald-50 dark:shadow-[4px_5px_0_0_hsl(0_0%_0%/0.6)]">
-            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-900/75 dark:text-emerald-100/70">
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-              Activas
-            </div>
-            <p className="mt-2 text-3xl font-black tabular-nums">
-              {activeClients.length}
-            </p>
-          </div>
-          <div className="rounded-[8px] border-2 border-border bg-blue-100 p-4 text-blue-950 shadow-[4px_5px_0_0_hsl(var(--foreground))] dark:border-blue-300/30 dark:bg-blue-300/10 dark:text-blue-50 dark:shadow-[4px_5px_0_0_hsl(0_0%_0%/0.6)]">
-            <div className="flex items-center gap-2 text-sm font-semibold text-blue-900/75 dark:text-blue-100/70">
-              <CalendarDays className="h-4 w-4" aria-hidden="true" />
-              Con bloqueos
-            </div>
-            <p className="mt-2 text-3xl font-black tabular-nums">
-              {blockedClients.length}
-            </p>
-            <p className="mt-1 text-xs font-semibold text-blue-900/70 dark:text-blue-100/70">
-              {onboardingClients.length} en onboarding
-            </p>
-          </div>
-        </div>
+      <section
+        className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+        aria-label="Resumen de clientes"
+      >
+        <StatCard
+          label="Cuentas totales"
+          value={String(clients.length)}
+          detail="Clientes visibles con los filtros actuales"
+          icon={UsersRound}
+        />
+        <StatCard
+          label="Cuentas activas"
+          value={String(activeClients.length)}
+          detail="Proyectos actualmente en ejecución"
+          icon={UserRoundCheck}
+        />
+        <StatCard
+          label="En onboarding"
+          value={String(onboardingClients.length)}
+          detail="Pendientes de completar información"
+          icon={CalendarDays}
+        />
+        <StatCard
+          label="Con bloqueos"
+          value={String(blockedClients.length)}
+          detail="Requieren más de una acción"
+          icon={ArrowUpRight}
+        />
       </section>
 
-      <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <CardTitle className="text-lg">Filtros operativos</CardTitle>
-          <CardDescription className="mt-1">
-            Cambia la vista segun lo que toca resolver ahora.
-          </CardDescription>
-        </div>
-        <nav className="flex flex-wrap gap-2" aria-label="Vistas de pipeline">
+      <Card className="space-y-4">
+        <SectionHeader
+          title="Buscar y filtrar"
+          description={`${visibleClients.length} ${visibleClients.length === 1 ? "resultado" : "resultados"}`}
+        />
+        <form className="flex flex-col gap-2 md:flex-row">
+          <Label htmlFor="client-search" className="sr-only">
+            Buscar cliente o marca
+          </Label>
+          <div className="relative min-w-0 flex-1">
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <Input
+              id="client-search"
+              name="q"
+              defaultValue={query}
+              autoComplete="off"
+              placeholder="Buscar por marca o contacto…"
+              className="pl-9"
+            />
+          </div>
+          {activeView !== "all" ? (
+            <input type="hidden" name="view" value={activeView} />
+          ) : null}
+          <Button type="submit" variant="secondary">
+            Buscar
+          </Button>
+          {query ? (
+            <Link
+              href="/admin/clients"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              Limpiar
+            </Link>
+          ) : null}
+        </form>
+        <nav
+          className="flex gap-2 overflow-x-auto pb-1"
+          aria-label="Vistas de clientes"
+        >
           {viewItems.map((item) => {
             const isActive = activeView === item.view;
             const href = query
               ? `${item.href}${item.href.includes("?") ? "&" : "?"}q=${encodeURIComponent(query)}`
               : item.href;
-
             return (
               <Link
                 key={item.view}
                 href={href as Route}
                 aria-current={isActive ? "page" : undefined}
-                className={`inline-flex min-h-10 items-center gap-2 rounded-full border px-3 py-2 text-sm font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                className={
                   isActive
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-surface hover:bg-muted"
-                }`}
+                    ? "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground"
+                    : "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-border bg-surface px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                }
               >
                 {item.label}
-                <span className="tabular-nums">{item.count}</span>
+                <span className="rounded bg-black/5 px-1.5 py-0.5 text-xs tabular-nums dark:bg-white/10">
+                  {item.count}
+                </span>
               </Link>
             );
           })}
         </nav>
       </Card>
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        <CreateAdminForm />
-        <CreateClientForm />
-      </div>
-
-      <Card>
-        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <div>
-            <CardTitle>Listado de clientes</CardTitle>
-            <CardDescription className="mt-1">
-              Gestiona posicionamiento, estado de onboarding y readiness para
-              conversión.
-            </CardDescription>
-          </div>
-          {latestClient ? (
-            <p className="rounded-[8px] border-2 border-border bg-muted px-3 py-2 text-xs font-semibold">
-              Última alta:{" "}
-              <span className="font-black">{latestClient.display_name}</span>
-            </p>
-          ) : null}
+      <section className="space-y-4">
+        <SectionHeader
+          title="Alta de cuentas"
+          description="Crea accesos para clientes o incorpora un nuevo administrador."
+        />
+        <div className="grid gap-4 xl:grid-cols-2">
+          <CreateClientForm />
+          <CreateAdminForm />
         </div>
-        {visibleClients.length === 0 ? (
-          <div className="rounded-[8px] border-2 border-dashed border-border bg-muted/45 p-6 text-sm font-medium text-muted-foreground">
-            <p className="text-base font-black text-foreground">
-              {query || activeView !== "all"
-                ? "Sin resultados"
-                : "Aún no hay cuentas en pipeline"}
-            </p>
-            <p className="mt-1 max-w-xl">
-              {query
-                ? `No hay coincidencias para "${query}". Prueba con el nombre de marca o limpia la búsqueda.`
-                : activeView !== "all"
-                  ? "No hay clientes en esta vista operativa."
-                : "Crea la primera cuenta de cliente para activar su onboarding y seguimiento."}
-            </p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto rounded-[8px] border-2 border-border bg-surface">
-            <table className="min-w-[760px] w-full text-left text-sm">
-              <thead className="border-b-2 border-border bg-muted text-muted-foreground">
-                <tr>
-                  <th scope="col" className="px-4 py-3">
-                    Cliente
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Fase
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Creado
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Readiness
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Strategy View
-                  </th>
-                  <th scope="col" className="px-4 py-3">
-                    Acciones
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y-2 divide-border">
-                {visibleClients.map((client) => {
-                  const readiness = readinessByClient.get(client.id);
-                  const pendingCount = readiness?.pendingCount ?? 4;
-                  const isReady = pendingCount === 0;
+      </section>
 
-                  return (
-                    <tr
-                      key={client.id}
-                      className="group transition-colors duration-150 hover:bg-primary/15"
-                    >
-                      <td className="max-w-[280px] px-4 py-4">
-                        <p
-                          className="truncate font-black"
-                          title={client.display_name}
-                        >
+      <Card className="space-y-4">
+        <SectionHeader
+          title="Listado de clientes"
+          description="Estado, readiness y acceso a cada espacio de trabajo."
+        />
+        {visibleClients.length === 0 ? (
+          <EmptyState
+            title={
+              query || activeView !== "all"
+                ? "No hay coincidencias"
+                : "Aún no hay clientes"
+            }
+            description={
+              query
+                ? `No encontramos resultados para “${query}”. Prueba otra búsqueda o limpia los filtros.`
+                : "Crea la primera cuenta para activar su onboarding y seguimiento."
+            }
+            icon={UsersRound}
+          />
+        ) : (
+          <>
+            <div className="grid gap-3 md:hidden">
+              {visibleClients.map((client) => {
+                const readiness = readinessByClient.get(client.id);
+                const pendingCount = readiness?.pendingCount ?? 4;
+                return (
+                  <article
+                    key={client.id}
+                    className="rounded-lg border border-border bg-surface p-4"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h3 className="truncate font-semibold">
                           {client.display_name}
+                        </h3>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Creado el{" "}
+                          {dateFormatter.format(new Date(client.created_at))}
                         </p>
-                        <p className="mt-1 text-xs font-medium text-muted-foreground">
-                          ID:{" "}
-                          <span translate="no">{client.id.slice(0, 8)}</span>
-                        </p>
-                      </td>
-                      <td className="px-4 py-4">
-                        <Badge className={statusStyles[client.status]}>
-                          {statusLabels[client.status]}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-4 font-semibold tabular-nums">
-                        {dateFormatter.format(new Date(client.created_at))}
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="min-w-40 space-y-2">
-                          <div className="flex items-center justify-between gap-3 text-xs font-bold">
-                            <span>
-                              {isReady
-                                ? "Listo"
-                                : `${pendingCount} pendientes`}
-                            </span>
-                            <span className="tabular-nums">
-                              {readiness?.completionPct ?? 0}%
-                            </span>
+                      </div>
+                      <Badge className={statusStyles[client.status]}>
+                        {statusLabels[client.status]}
+                      </Badge>
+                    </div>
+                    <div className="mt-4 space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">Readiness</span>
+                        <span className="font-semibold tabular-nums">
+                          {readiness?.completionPct ?? 0}% ·{" "}
+                          {pendingCount === 0
+                            ? "Listo"
+                            : `${pendingCount} pendientes`}
+                        </span>
+                      </div>
+                      <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
+                        <div
+                          className={
+                            pendingCount === 0
+                              ? "h-full rounded-full bg-success"
+                              : "h-full rounded-full bg-warning"
+                          }
+                          style={{ width: `${readiness?.completionPct ?? 0}%` }}
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4 flex items-center gap-2 border-t border-border pt-3">
+                      <Link
+                        href={`/admin/clients/${client.id}`}
+                        className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground"
+                      >
+                        Ver detalle
+                        <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                      </Link>
+                      <DeleteClientButton
+                        clientId={client.id}
+                        clientName={client.display_name}
+                      />
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+            <div className="hidden overflow-hidden rounded-lg border border-border md:block">
+              <table className="w-full text-left text-sm">
+                <thead className="border-b border-border bg-muted/60">
+                  <tr>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Creado</th>
+                    <th scope="col">Readiness</th>
+                    <th scope="col">
+                      <span className="sr-only">Acciones</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {visibleClients.map((client) => {
+                    const readiness = readinessByClient.get(client.id);
+                    const pendingCount = readiness?.pendingCount ?? 4;
+                    return (
+                      <tr
+                        key={client.id}
+                        className="transition-colors hover:bg-muted/40"
+                      >
+                        <td>
+                          <p className="font-semibold">{client.display_name}</p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            ID {client.id.slice(0, 8)}
+                          </p>
+                        </td>
+                        <td>
+                          <Badge className={statusStyles[client.status]}>
+                            {statusLabels[client.status]}
+                          </Badge>
+                        </td>
+                        <td className="tabular-nums">
+                          {dateFormatter.format(new Date(client.created_at))}
+                        </td>
+                        <td>
+                          <div className="min-w-40 space-y-2">
+                            <div className="flex justify-between text-xs">
+                              <span>
+                                {pendingCount === 0
+                                  ? "Listo"
+                                  : `${pendingCount} pendientes`}
+                              </span>
+                              <span className="font-semibold tabular-nums">
+                                {readiness?.completionPct ?? 0}%
+                              </span>
+                            </div>
+                            <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
+                              <div
+                                className={
+                                  pendingCount === 0
+                                    ? "h-full rounded-full bg-success"
+                                    : "h-full rounded-full bg-warning"
+                                }
+                                style={{
+                                  width: `${readiness?.completionPct ?? 0}%`
+                                }}
+                              />
+                            </div>
                           </div>
-                          <div
-                            className="h-2 rounded-full bg-muted"
-                            aria-hidden="true"
-                          >
-                            <div
-                              className={`h-full rounded-full ${
-                                isReady ? "bg-emerald-500" : "bg-amber-500"
-                              }`}
-                              style={{
-                                width: `${Math.max(
-                                  8,
-                                  readiness?.completionPct ?? 0
-                                )}%`
-                              }}
+                        </td>
+                        <td>
+                          <div className="flex justify-end gap-2">
+                            <Link
+                              href={`/admin/clients/${client.id}`}
+                              className="inline-flex min-h-9 items-center gap-1 rounded-lg px-3 text-sm font-semibold text-primary hover:bg-accent"
+                            >
+                              Ver detalle
+                              <ArrowUpRight
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                              />
+                            </Link>
+                            <DeleteClientButton
+                              clientId={client.id}
+                              clientName={client.display_name}
                             />
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <Link
-                          className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[8px] border-2 border-border bg-muted px-3 py-1.5 text-xs font-black uppercase shadow-[2px_3px_0_0_hsl(var(--foreground))] transition-[background-color,box-shadow,transform] duration-150 hover:translate-y-[1px] hover:bg-surface hover:shadow-[2px_2px_0_0_hsl(var(--foreground))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:shadow-[2px_3px_0_0_hsl(0_0%_0%/0.6)] dark:hover:shadow-[2px_2px_0_0_hsl(0_0%_0%/0.6)]"
-                          href={`/admin/clients/${client.id}`}
-                        >
-                          Ver detalle
-                          <ArrowUpRight
-                            className="h-3.5 w-3.5"
-                            aria-hidden="true"
-                          />
-                        </Link>
-                      </td>
-                      <td className="px-4 py-4">
-                        <DeleteClientButton
-                          clientId={client.id}
-                          clientName={client.display_name}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </Card>
     </div>

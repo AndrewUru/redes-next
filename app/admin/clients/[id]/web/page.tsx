@@ -70,7 +70,7 @@ export default async function AdminClientWebProjectPage({
     null) as Partial<IntakeData> | null;
 
   return (
-    <div className="space-y-4">
+    <div className="page-container">
       <Card className="bg-surface/90">
         <Link
           href={`/admin/clients/${summary.client.id}`}
@@ -82,8 +82,8 @@ export default async function AdminClientWebProjectPage({
         <CardDescription className="uppercase">Proyecto web</CardDescription>
         <CardTitle className="mt-1">{summary.client.display_name}</CardTitle>
         <p className="mt-2 max-w-3xl text-sm font-medium text-muted-foreground">
-          Vista especifica para decidir estructura, materiales, guias y avances
-          de la pagina web de este cliente.
+          Vista específica para decidir estructura, materiales, guías y avances
+          de la página web de este cliente.
         </p>
       </Card>
 
@@ -102,8 +102,8 @@ export default async function AdminClientWebProjectPage({
 
       <BrandbookList
         brandbooks={brandbookLinks}
-        title="Guias disponibles para la web"
-        description="Versiones de marca y direccion que pueden orientar la pagina."
+        title="Guías disponibles para la web"
+        description="Versiones de marca y dirección que pueden orientar la página."
       />
 
       <WebProgressBoard />

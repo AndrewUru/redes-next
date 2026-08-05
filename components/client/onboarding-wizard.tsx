@@ -11,10 +11,12 @@ import {
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { StepLayout } from "@/components/step-layout";
 import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { AutosaveStatus, Stepper } from "@/components/ui/stepper";
 import {
   intakeSchema,
   intakeStepOrder,
@@ -44,7 +46,7 @@ const stepMeta: Record<IntakeStepKey, { title: string; description: string }> =
     tone: {
       title: "Como quieres sonar",
       description:
-        "Elige palabras sencillas para describir tu estilo: cercano, profesional, directo, alegre..."
+        "Elige palabras sencillas para describir tu estilo: cercano, profesional, directo, alegre…"
     },
     pillars: {
       title: "Temas que vas a tratar",
@@ -54,7 +56,7 @@ const stepMeta: Record<IntakeStepKey, { title: string; description: string }> =
     messaging: {
       title: "Que ofreces y por que elegirte",
       description:
-        "Cuentanos que vendes, que te diferencia y que genera confianza."
+        "Cuéntanos qué vendes, qué te diferencia y qué genera confianza."
     },
     ctas: {
       title: "Como te contactan o compran",
@@ -64,7 +66,7 @@ const stepMeta: Record<IntakeStepKey, { title: string; description: string }> =
     visual: {
       title: "Estilo visual",
       description:
-        "Cuentanos colores, ejemplos y cosas que no te gustan. No hace falta saber de diseno."
+        "Cuéntanos colores, ejemplos y cosas que no te gustan. No hace falta saber de diseño."
     },
     references: {
       title: "Referencias y competidores",
@@ -183,7 +185,7 @@ export function OnboardingWizard({
     status === "submitted"
       ? {
           label: "Enviado",
-          detail: "Onboarding recibido. Ya puedes descargar tu guia.",
+          detail: "Onboarding recibido. Ya puedes descargar tu guía.",
           Icon: CheckCircle2,
           iconClass: "text-emerald-700",
           badgeClass: "border-emerald-500 bg-emerald-50"
@@ -191,7 +193,7 @@ export function OnboardingWizard({
       : {
           label: "Borrador",
           detail: saving
-            ? "Guardando los ultimos cambios..."
+            ? "Guardando los últimos cambios…"
             : "Puedes salir y volver sin perder el avance.",
           Icon: saving ? Loader2 : Clock3,
           iconClass: saving ? "animate-spin text-amber-700" : "text-primary",
@@ -288,7 +290,7 @@ export function OnboardingWizard({
     setBrandbookUrl(pdfJson.signedUrl ?? null);
     setBrandbookDownloadUrl(pdfJson.downloadUrl ?? pdfJson.signedUrl ?? null);
     setBrandbookVersion(pdfJson.version ?? null);
-    setMessage("Tu guia de marca esta lista para descargar.");
+    setMessage("Tu guía de marca está lista para descargar.");
   }
 
   function renderFields() {
@@ -313,7 +315,7 @@ export function OnboardingWizard({
               name="mission"
               form={form}
               textarea
-              placeholder="Ej: Ayudo a personas con ... para que ... Mi enfoque es ... y me diferencia ..."
+              placeholder="Ej: Ayudo a personas con… para que… Mi enfoque es… y me diferencia…"
             />
           </>
         );
@@ -325,14 +327,14 @@ export function OnboardingWizard({
               name="businessGoals"
               form={form}
               placeholder="Ej: mas reservas, mas mensajes, vender un servicio, crecer comunidad"
-              helperText="Pon 2-4 objetivos. Esto guia el plan de contenido."
+              helperText="Pon 2-4 objetivos. Esto guía el plan de contenido."
             />
             <Field
               label="Que te gustaria lograr en 30-60 dias (y como lo notarias)"
               name="shortTermGoals"
               form={form}
               textarea
-              placeholder="Ej: 10 consultas por DM al mes, 5 reservas semanales, +500 seguidores reales..."
+              placeholder="Ej: 10 consultas por DM al mes, 5 reservas semanales, +500 seguidores reales…"
             />
           </>
         );
@@ -343,13 +345,13 @@ export function OnboardingWizard({
               label="Tu cliente ideal (quien es y que busca)"
               name="primaryAudience"
               form={form}
-              placeholder="Ej: mujeres 30-45 en Valencia que quieren ..."
+              placeholder="Ej: mujeres 30-45 en Valencia que quieren…"
             />
             <Field
               label="Problemas o dudas tipicas de esa audiencia (separados por coma)"
               name="painPoints"
               form={form}
-              placeholder="Ej: no se por donde empezar, me falta tiempo, miedo a equivocarme..."
+              placeholder="Ej: no sé por dónde empezar, me falta tiempo, miedo a equivocarme…"
             />
           </>
         );
@@ -367,7 +369,7 @@ export function OnboardingWizard({
               label="Palabras/estilos que NO quieres usar (separado por coma)"
               name="forbiddenWords"
               form={form}
-              placeholder="Ej: 'oferton', 'imperdible', 'guru', 'magico'..."
+              placeholder="Ej: “ofertón”, “imperdible”, “gurú”, “mágico”…"
             />
           </>
         );
@@ -423,20 +425,20 @@ export function OnboardingWizard({
               label="Colores que te gustan (separados por coma)"
               name="colorPreferences"
               form={form}
-              placeholder="Ej: azul, blanco, negro / o #1D4ED8, #FFFFFF..."
+              placeholder="Ej: azul, blanco, negro o #1D4ED8, #FFFFFF…"
             />
             <Field
               label="Estilo visual que SI te gusta (ejemplos)"
               name="visualDo"
               form={form}
-              placeholder="Ej: limpio, minimal, tipografia grande, fotos naturales..."
+              placeholder="Ej: limpio, minimal, tipografía grande, fotos naturales…"
               helperText="Puedes describirlo con palabras o ejemplos."
             />
             <Field
               label="Estilo visual que NO quieres (evitar)"
               name="visualDont"
               form={form}
-              placeholder="Ej: demasiado recargado, colores neon, muchos stickers..."
+              placeholder="Ej: demasiado recargado, colores neón, muchos stickers…"
             />
           </>
         );
@@ -453,7 +455,7 @@ export function OnboardingWizard({
               label="Links de inspiracion (URLs separadas por coma)"
               name="inspirationLinks"
               form={form}
-              placeholder="Ej: https://instagram.com/... , https://www.pinterest.com/..."
+              placeholder="Ej: https://instagram.com/… o https://www.pinterest.com/…"
             />
           </>
         );
@@ -465,7 +467,7 @@ export function OnboardingWizard({
               name="approvalsFlow"
               form={form}
               textarea
-              placeholder="Ej: me lo enviais por WhatsApp los lunes, respondo ok/cambios en 24-48h..."
+              placeholder="Ej: me lo enviáis por WhatsApp los lunes; respondo cambios en 24-48 h…"
             />
             <Field
               label="Ritmo ideal de publicaciones"
@@ -510,12 +512,18 @@ export function OnboardingWizard({
 
   return (
     <div className="space-y-4">
+      <Card className="sticky top-20 z-10 bg-surface/95 backdrop-blur">
+        <Stepper
+          steps={intakeStepOrder.map((step) => stepMeta[step].title)}
+          currentStep={stepIndex}
+        />
+      </Card>
       <div className="grid gap-3 md:grid-cols-3">
         <Card className="space-y-2 bg-surface/90">
           <p className="text-xs font-bold uppercase text-muted-foreground">
             Progreso
           </p>
-          <p className="text-3xl font-black text-foreground">
+          <p className="text-2xl font-semibold text-foreground tabular-nums">
             {completionPct}%
           </p>
           <p className="text-xs font-medium text-muted-foreground">
@@ -526,7 +534,7 @@ export function OnboardingWizard({
           <p className="text-xs font-bold uppercase text-muted-foreground">
             Bloque actual
           </p>
-          <p className="text-lg font-black text-foreground">
+          <p className="text-base font-semibold text-foreground">
             {stepMeta[currentStep].title}
           </p>
           <p className="text-xs font-medium text-muted-foreground">
@@ -539,12 +547,12 @@ export function OnboardingWizard({
               <p className="text-xs font-bold uppercase text-muted-foreground">
                 Estado
               </p>
-              <p className="text-lg font-black text-foreground">
+              <p className="text-base font-semibold text-foreground">
                 {statusView.label}
               </p>
             </div>
             <span
-              className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-2 ${statusView.badgeClass}`}
+              className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${statusView.badgeClass}`}
               aria-hidden
             >
               <statusView.Icon className={`h-5 w-5 ${statusView.iconClass}`} />
@@ -565,12 +573,12 @@ export function OnboardingWizard({
         <form className="space-y-4">
           {renderFields()}
           {isLastStep ? (
-            <section className="rounded-[8px] border-2 border-border bg-surface/80 p-4">
+            <section className="rounded-lg border border-border bg-muted/30 p-4">
               <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <h3 className="text-base font-black">Revision final</h3>
+                  <h3 className="text-base font-semibold">Revisión final</h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Antes de enviar, comprueba que estas senales representan
+                    Antes de enviar, comprueba que estas señales representan
                     bien tu proyecto.
                   </p>
                 </div>
@@ -582,7 +590,7 @@ export function OnboardingWizard({
                 {reviewRows.map((row) => (
                   <div
                     key={row.label}
-                    className="rounded-[8px] border border-border bg-background/70 p-3"
+                    className="rounded-lg border border-border bg-surface p-3"
                   >
                     <p className="text-xs font-bold uppercase text-muted-foreground">
                       {row.label}
@@ -595,7 +603,7 @@ export function OnboardingWizard({
               </div>
             </section>
           ) : null}
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="sticky bottom-0 -mx-4 flex flex-col gap-2 border-t border-border bg-surface/95 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:static sm:mx-0 sm:flex-row sm:items-center sm:justify-between sm:border-0 sm:bg-transparent sm:p-0">
             <Button
               type="button"
               variant="outline"
@@ -628,24 +636,17 @@ export function OnboardingWizard({
         </form>
       </StepLayout>
 
-      <div className="rounded-[8px] border-2 border-border bg-surface/85 px-3 py-2 text-sm font-medium text-muted-foreground">
-        <p aria-live="polite">
-          {saving ? "Guardando…" : "Guardado automático activo"} · Progreso:{" "}
-          {completionPct}% · Estado:{" "}
-          {status === "draft" ? "Borrador" : "Enviado"}
-        </p>
+      <div className="rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-muted-foreground">
+        <AutosaveStatus
+          saving={saving}
+          completion={completionPct}
+          submitted={status === "submitted"}
+        />
       </div>
-      {message ? (
-        <p
-          className="rounded-[8px] border-2 border-amber-500 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900"
-          role="status"
-        >
-          {message}
-        </p>
-      ) : null}
+      {message ? <Alert tone="warning">{message}</Alert> : null}
       {brandbookDownloadUrl ? (
         <div
-          className="rounded-[8px] border-2 border-emerald-700 bg-emerald-50 p-4 text-emerald-950 shadow-[4px_5px_0_0_rgba(0,0,0,1)]"
+          className="rounded-xl border border-success/30 bg-success/10 p-4 text-foreground"
           role="status"
         >
           <p className="text-sm font-black">
@@ -653,14 +654,14 @@ export function OnboardingWizard({
             {brandbookVersion ? `: version ${brandbookVersion}` : ""}
           </p>
           <p className="mt-1 text-xs font-medium text-emerald-900">
-            Puedes descargar el PDF ahora. Tambien quedara disponible en tu
+            Puedes descargar el PDF ahora. También quedará disponible en tu
             panel principal.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <a
               href={brandbookDownloadUrl}
               download
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-surface px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-emerald-100 hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-success/30 bg-surface px-4 py-2 text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-success/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
             >
               <Download className="h-4 w-4" aria-hidden />
               Descargar PDF
@@ -670,7 +671,7 @@ export function OnboardingWizard({
                 href={brandbookUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border-2 border-emerald-900 bg-emerald-100 px-4 py-2 text-sm font-black text-emerald-950 shadow-[2px_4px_0_0_rgba(0,0,0,1)] transition-[background-color,box-shadow,transform] hover:translate-y-[1px] hover:bg-surface hover:shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-success/30 bg-success px-4 py-2 text-sm font-semibold text-success-foreground shadow-xs transition-colors hover:bg-success/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success"
               >
                 <ExternalLink className="h-4 w-4" aria-hidden />
                 Abrir PDF

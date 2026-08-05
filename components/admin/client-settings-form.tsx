@@ -46,7 +46,7 @@ export function ClientSettingsForm({
         <select
           id="status"
           name="status"
-          className="mt-1 min-h-10 w-full rounded-[8px] border-2 border-border bg-background px-3 text-sm shadow-[2px_3px_0_0_rgba(0,0,0,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="mt-1 min-h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           value={status}
           onChange={(e) =>
             setStatus(e.target.value as (typeof statuses)[number])

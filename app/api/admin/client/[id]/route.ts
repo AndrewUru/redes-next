@@ -17,7 +17,8 @@ export async function PATCH(
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -29,7 +30,8 @@ export async function PATCH(
   }
 
   const parsed = bodySchema.safeParse(await request.json());
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json({ error: parsed.error.message }, { status: 400 });
 
   const { error } = await supabase
     .from("clients")
@@ -37,7 +39,8 @@ export async function PATCH(
     .eq("id", id)
     .eq("owner_admin_id", user.id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ ok: true });
 }
 
@@ -50,7 +53,8 @@ export async function DELETE(
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -65,7 +69,8 @@ export async function DELETE(
     .from("client_users")
     .select("user_id")
     .eq("client_id", id);
-  if (membersError) return NextResponse.json({ error: membersError.message }, { status: 400 });
+  if (membersError)
+    return NextResponse.json({ error: membersError.message }, { status: 400 });
 
   const userIds = [...new Set((members ?? []).map((member) => member.user_id))];
 
@@ -75,7 +80,10 @@ export async function DELETE(
     .eq("id", id)
     .eq("owner_admin_id", user.id);
   if (deleteClientError) {
-    return NextResponse.json({ error: deleteClientError.message }, { status: 400 });
+    return NextResponse.json(
+      { error: deleteClientError.message },
+      { status: 400 }
+    );
   }
 
   for (const userId of userIds) {
@@ -88,9 +96,13 @@ export async function DELETE(
     }
     if ((count ?? 0) > 0) continue;
 
-    const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+    const { error: deleteUserError } =
+      await supabaseAdmin.auth.admin.deleteUser(userId);
     if (deleteUserError) {
-      return NextResponse.json({ error: deleteUserError.message }, { status: 400 });
+      return NextResponse.json(
+        { error: deleteUserError.message },
+        { status: 400 }
+      );
     }
   }
 

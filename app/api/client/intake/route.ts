@@ -15,7 +15,8 @@ export async function GET() {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: link } = await supabase
     .from("client_users")
@@ -29,7 +30,8 @@ export async function GET() {
     .select("*")
     .eq("client_id", link.client_id)
     .maybeSingle();
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
 
   return NextResponse.json({ data });
 }
@@ -39,14 +41,16 @@ export async function POST(request: Request) {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { data: link } = await supabase
     .from("client_users")
     .select("client_id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!link?.client_id) return NextResponse.json({ error: "No client linked" }, { status: 400 });
+  if (!link?.client_id)
+    return NextResponse.json({ error: "No client linked" }, { status: 400 });
 
   const parsed = saveSchema.safeParse(await request.json());
   if (!parsed.success) {
@@ -64,7 +68,8 @@ export async function POST(request: Request) {
   }
 
   const completionPct =
-    parsed.data.completionPct ?? calculateCompletionPct(parsed.data.data as never);
+    parsed.data.completionPct ??
+    calculateCompletionPct(parsed.data.data as never);
 
   const { error } = await supabase.from("intake_responses").upsert(
     {
@@ -76,7 +81,8 @@ export async function POST(request: Request) {
     },
     { onConflict: "client_id" }
   );
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
 
   return NextResponse.json({ ok: true });
 }

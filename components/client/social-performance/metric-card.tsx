@@ -11,19 +11,14 @@ export function MetricCard({
   label,
   value,
   helper,
-  accent = "bg-surface/85"
+  accent = "bg-surface"
 }: MetricCardProps) {
   return (
     <div
-      className={cn(
-        "rounded-2xl border border-border/80 p-4 shadow-sm ring-1 ring-border/50",
-        accent
-      )}
+      className={cn("rounded-xl border border-border p-4 shadow-xs", accent)}
     >
-      <p className="text-[11px] font-bold uppercase text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-bold tabular-nums text-foreground">
+      <p className="text-xs font-medium text-muted-foreground">{label}</p>
+      <p className="mt-2 text-2xl font-semibold tracking-[-0.02em] tabular-nums text-foreground">
         {value}
       </p>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">{helper}</p>

@@ -23,15 +23,15 @@ export default async function ClientOnboardingPage() {
   const statusLabel = status === "submitted" ? "Enviado" : "En progreso";
 
   return (
-    <div className="space-y-6">
-      <Card className="onboarding-reveal space-y-5 overflow-hidden bg-surface/90">
+    <div className="page-container">
+      <Card className="space-y-5 overflow-hidden">
         <div className="relative flex flex-wrap items-start justify-between gap-3">
           <div className="max-w-3xl">
             <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
               Primer formulario
             </p>
-            <CardTitle className="text-4xl leading-[0.95] sm:text-5xl">
-              Cuentanos lo importante de tu proyecto
+            <CardTitle className="text-2xl leading-tight sm:text-3xl">
+              Cuéntanos lo importante de tu proyecto
             </CardTitle>
             <CardDescription className="mt-2 text-sm leading-relaxed">
               Responde con tus palabras. No buscamos tecnicismos: queremos
@@ -39,12 +39,12 @@ export default async function ClientOnboardingPage() {
               estilo te representa.
             </CardDescription>
           </div>
-          <Badge className="self-start bg-[#f2d048] text-black">
+          <Badge className="self-start border-warning/30 bg-warning/10 text-foreground">
             {statusLabel}
           </Badge>
         </div>
 
-        <div className="onboarding-reveal-delay-1 rounded-[8px] border-2 border-border bg-surface/70 p-3">
+        <div className="rounded-lg border border-border bg-muted/30 p-3">
           <div className="mb-2 flex items-center justify-between text-sm font-semibold">
             <span>Progreso del formulario</span>
             <span className="rounded-md border border-border bg-background px-2 py-0.5">
@@ -66,12 +66,12 @@ export default async function ClientOnboardingPage() {
             },
             {
               title: "Que haremos despues",
-              text: "Ordenaremos tus respuestas para preparar una guia y proximos pasos."
+              text: "Ordenaremos tus respuestas para preparar una guía y próximos pasos."
             }
-          ].map((item, index) => (
+          ].map((item) => (
             <div
               key={item.title}
-              className={`rounded-[8px] border-2 border-border bg-background p-3 onboarding-reveal-delay-${index + 1}`}
+              className="rounded-lg border border-border bg-background p-3"
             >
               <p className="text-sm font-semibold">{item.title}</p>
               <p className="mt-1 text-xs text-muted-foreground">{item.text}</p>
@@ -80,7 +80,7 @@ export default async function ClientOnboardingPage() {
         </section>
       </Card>
 
-      <section className="onboarding-reveal-delay-2">
+      <section>
         <OnboardingWizard
           clientId={clientId}
           initialData={(data?.data ?? null) as Partial<IntakeData> | null}

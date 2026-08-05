@@ -9,13 +9,13 @@ export default async function ClientAccountsPage() {
   if (!clientId) notFound();
 
   return (
-    <div className="space-y-6">
-      <Card className="overflow-hidden border-border/80 bg-surface/95 shadow-[0_20px_60px_hsl(222_47%_11%/0.06)]">
+    <div className="page-container">
+      <Card>
         <div className="flex flex-col gap-2 lg:max-w-4xl">
           <p className="text-xs font-bold uppercase text-muted-foreground">
             Analítica de cliente
           </p>
-          <CardTitle className="text-2xl">
+          <CardTitle className="text-xl sm:text-2xl">
             Centro de cuentas y analítica
           </CardTitle>
           <CardDescription>

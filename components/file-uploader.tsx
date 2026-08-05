@@ -6,8 +6,10 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 
 type UploadType = "logo" | "typography" | "photo" | "reference";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export function FileUploader({
   clientId,
@@ -44,7 +46,13 @@ export function FileUploader({
   async function handleUpload(file?: File) {
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      setError("Solo puedes subir imagenes (JPG, PNG, WEBP, etc.).");
+      setError("Solo puedes subir imágenes JPG, PNG o WEBP.");
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      setError(
+        "El archivo supera el límite de 10 MB. Reduce su tamaño e inténtalo de nuevo."
+      );
       return;
     }
 
@@ -89,8 +97,10 @@ export function FileUploader({
     setSelectedFile(file);
     setError(
       file && !file.type.startsWith("image/")
-        ? "Solo puedes subir imagenes."
-        : null
+        ? "Solo puedes subir imágenes JPG, PNG o WEBP."
+        : file && file.size > MAX_FILE_SIZE
+          ? "El archivo supera el límite de 10 MB."
+          : null
     );
   }
 
@@ -134,9 +144,9 @@ export function FileUploader({
           const file = e.dataTransfer.files?.[0] ?? null;
           setFileCandidate(file);
         }}
-        className={`cursor-pointer rounded-[8px] border-2 border-dashed p-4 text-center transition-[background-color,border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+        className={`cursor-pointer rounded-lg border border-dashed p-4 text-center transition-[background-color,border-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
           isDragging
-            ? "border-primary bg-primary/10 shadow-[3px_4px_0_0_rgba(0,0,0,1)]"
+            ? "border-primary bg-accent shadow-xs"
             : "border-border bg-surface/60 hover:bg-muted/40"
         }`}
       >
@@ -147,7 +157,7 @@ export function FileUploader({
         </p>
       </div>
       <p id={helpId} className="sr-only">
-        Se aceptan imagenes JPG, PNG y WEBP.
+        Se aceptan imágenes JPG, PNG y WEBP de hasta 10 MB.
       </p>
       <Input
         ref={inputRef}
@@ -160,11 +170,13 @@ export function FileUploader({
       />
       <div aria-live="polite">
         {error ? (
-          <p className="text-xs font-medium text-red-700">{error}</p>
+          <p className="text-xs font-medium text-danger" role="alert">
+            {error}
+          </p>
         ) : null}
       </div>
       {selectedFile ? (
-        <div className="rounded-[8px] border-2 border-border bg-surface/75 p-3">
+        <div className="rounded-lg border border-border bg-surface p-3">
           {previewUrl ? (
             <Image
               src={previewUrl}
@@ -172,7 +184,7 @@ export function FileUploader({
               width={1200}
               height={800}
               unoptimized
-              className="mb-3 h-40 w-full rounded-[8px] border border-border object-cover sm:h-48"
+              className="mb-3 h-40 w-full rounded-lg border border-border object-cover sm:h-48"
             />
           ) : null}
           <p className="text-sm font-medium">{selectedFile.name}</p>
@@ -181,6 +193,7 @@ export function FileUploader({
           </p>
         </div>
       ) : null}
+      {loading ? <Progress value={70} className="h-1.5" /> : null}
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button
           type="button"
@@ -190,7 +203,7 @@ export function FileUploader({
           className="w-full sm:w-auto"
         >
           <Upload className="h-4 w-4" aria-hidden />
-          {loading ? "Subiendo..." : "Subir imagen"}
+          {loading ? "Subiendo…" : "Subir imagen"}
         </Button>
         {selectedFile ? (
           <Button

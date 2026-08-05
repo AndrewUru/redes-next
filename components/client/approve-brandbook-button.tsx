@@ -18,7 +18,7 @@ export function ApproveBrandbookButton({
 
   async function approve() {
     const shouldApprove = window.confirm(
-      `Quieres aprobar la guia de marca v${version}?`
+      `¿Quieres aprobar la guía de marca v${version}?`
     );
     if (!shouldApprove) return;
 
@@ -32,7 +32,7 @@ export function ApproveBrandbookButton({
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) {
-        setError(json.error ?? "No se pudo aprobar la guia.");
+        setError(json.error ?? "No se pudo aprobar la guía.");
         return;
       }
       router.refresh();
@@ -55,10 +55,12 @@ export function ApproveBrandbookButton({
         ) : (
           <CheckCircle2 className="h-4 w-4" aria-hidden />
         )}
-        Aprobar guia
+        Aprobar guía
       </Button>
       {error ? (
-        <p className="max-w-xs text-xs font-medium text-red-700">{error}</p>
+        <p className="max-w-xs text-xs font-medium text-danger" role="alert">
+          {error}
+        </p>
       ) : null}
     </div>
   );

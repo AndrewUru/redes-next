@@ -16,7 +16,7 @@ function getReasonFromHash(hashParams: URLSearchParams) {
 export default function InstagramBusinessCallbackPage() {
   const router = useRouter();
   const [message, setMessage] = useState(
-    "Procesando autorizacion de Instagram..."
+    "Procesando autorización de Instagram…"
   );
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function InstagramBusinessCallbackPage() {
         return;
       }
 
-      setMessage("Validando permisos y vinculando cuenta...");
+      setMessage("Validando permisos y vinculando cuenta…");
 
       const res = await fetch(
         "/api/client/social-accounts/instagram/business-complete",

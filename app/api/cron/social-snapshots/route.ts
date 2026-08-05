@@ -52,7 +52,9 @@ type BuildSnapshotResult =
   | { ok: true; snapshot: SnapshotInsert };
 
 function asRecord(value: unknown) {
-  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 function asEncryptedSecret(value: unknown): EncryptedSecret | null {
@@ -74,7 +76,11 @@ function sumLatest7(values: InstagramInsightValue[] | undefined) {
   if (!values || values.length === 0) return null;
   const normalized = values
     .filter((value) => typeof value.value === "number")
-    .sort((a, b) => (new Date(b.end_time ?? 0).getTime() || 0) - (new Date(a.end_time ?? 0).getTime() || 0))
+    .sort(
+      (a, b) =>
+        (new Date(b.end_time ?? 0).getTime() || 0) -
+        (new Date(a.end_time ?? 0).getTime() || 0)
+    )
     .slice(0, 7);
 
   if (normalized.length === 0) return null;
@@ -86,7 +92,9 @@ function isAuthorized(request: Request) {
   if (!secret) return false;
 
   const authHeader = request.headers.get("authorization");
-  const bearer = authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+  const bearer = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice(7).trim()
+    : "";
   const headerSecret = request.headers.get("x-cron-secret") ?? "";
 
   return bearer === secret || headerSecret === secret;
@@ -137,13 +145,20 @@ async function buildSnapshot(
     : { data: [] as InstagramInsightMetric[] };
   const postsJson = (await postsRes.json()) as { data?: InstagramMediaItem[] };
 
-  const reach7d = sumLatest7(insights.data?.find((item) => item.name === "reach")?.values);
-  const impressions7d = sumLatest7(insights.data?.find((item) => item.name === "impressions")?.values);
-  const profileViews7d = sumLatest7(insights.data?.find((item) => item.name === "profile_views")?.values);
+  const reach7d = sumLatest7(
+    insights.data?.find((item) => item.name === "reach")?.values
+  );
+  const impressions7d = sumLatest7(
+    insights.data?.find((item) => item.name === "impressions")?.values
+  );
+  const profileViews7d = sumLatest7(
+    insights.data?.find((item) => item.name === "profile_views")?.values
+  );
 
   const interactionsRecentPosts = (postsJson.data ?? []).reduce((acc, post) => {
     const likes = typeof post.like_count === "number" ? post.like_count : 0;
-    const comments = typeof post.comments_count === "number" ? post.comments_count : 0;
+    const comments =
+      typeof post.comments_count === "number" ? post.comments_count : 0;
     return acc + likes + comments;
   }, 0);
 
@@ -174,12 +189,17 @@ export async function GET(request: Request) {
   }
 
   if (!process.env.INSTAGRAM_TOKEN_ENCRYPTION_KEY) {
-    return NextResponse.json({ error: "Missing INSTAGRAM_TOKEN_ENCRYPTION_KEY" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Missing INSTAGRAM_TOKEN_ENCRYPTION_KEY" },
+      { status: 500 }
+    );
   }
 
   const { data: accounts, error: accountsError } = await supabaseAdmin
     .from("social_accounts")
-    .select("id,client_id,platform,account_name,account_handle,external_account_id,status,metadata")
+    .select(
+      "id,client_id,platform,account_name,account_handle,external_account_id,status,metadata"
+    )
     .eq("platform", "instagram")
     .eq("status", "connected");
 

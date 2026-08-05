@@ -148,7 +148,9 @@ async function getHistoryFromDate(
 }
 
 function asRecord(value: unknown) {
-  return value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : {};
 }
 
 function asEncryptedSecret(value: unknown): EncryptedSecret | null {
@@ -170,7 +172,11 @@ function sumLatest7(values: InstagramInsightValue[] | undefined) {
   if (!values || values.length === 0) return null;
   const normalized = values
     .filter((value) => typeof value.value === "number")
-    .sort((a, b) => (new Date(b.end_time ?? 0).getTime() || 0) - (new Date(a.end_time ?? 0).getTime() || 0))
+    .sort(
+      (a, b) =>
+        (new Date(b.end_time ?? 0).getTime() || 0) -
+        (new Date(a.end_time ?? 0).getTime() || 0)
+    )
     .slice(0, 7);
 
   if (normalized.length === 0) return null;
@@ -205,18 +211,26 @@ async function getClientContext() {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  if (!user)
+    return {
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    };
 
   const { data: link } = await supabase
     .from("client_users")
     .select("client_id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!link?.client_id) return { error: NextResponse.json({ error: "No client" }, { status: 400 }) };
+  if (!link?.client_id)
+    return {
+      error: NextResponse.json({ error: "No client" }, { status: 400 })
+    };
   return { supabase, clientId: link.client_id };
 }
 
-async function fetchInstagramInsights(account: SocialAccountRow): Promise<AccountInsights> {
+async function fetchInstagramInsights(
+  account: SocialAccountRow
+): Promise<AccountInsights> {
   const base: AccountInsights = {
     accountId: account.id,
     accountName: account.account_name,
@@ -286,15 +300,23 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
     ? ((await insightsRes.json()) as { data?: InstagramInsightMetric[] })
     : ((await insightsRes.json()) as GraphErrorPayload);
 
-  const insightsData = "data" in insightsPayload ? insightsPayload.data ?? [] : [];
+  const insightsData =
+    "data" in insightsPayload ? (insightsPayload.data ?? []) : [];
 
-  const reach7d = sumLatest7(insightsData.find((item) => item.name === "reach")?.values);
-  const impressions7d = sumLatest7(insightsData.find((item) => item.name === "impressions")?.values);
-  const profileViews7d = sumLatest7(insightsData.find((item) => item.name === "profile_views")?.values);
+  const reach7d = sumLatest7(
+    insightsData.find((item) => item.name === "reach")?.values
+  );
+  const impressions7d = sumLatest7(
+    insightsData.find((item) => item.name === "impressions")?.values
+  );
+  const profileViews7d = sumLatest7(
+    insightsData.find((item) => item.name === "profile_views")?.values
+  );
 
   const posts = (postsJson.data ?? []).map((post) => {
     const likes = typeof post.like_count === "number" ? post.like_count : 0;
-    const comments = typeof post.comments_count === "number" ? post.comments_count : 0;
+    const comments =
+      typeof post.comments_count === "number" ? post.comments_count : 0;
     return {
       id: post.id,
       caption: post.caption ?? "",
@@ -308,13 +330,19 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
     };
   });
 
-  const interactionsRecentPosts = posts.reduce((acc, post) => acc + post.interactions, 0);
+  const interactionsRecentPosts = posts.reduce(
+    (acc, post) => acc + post.interactions,
+    0
+  );
   const engagementRate =
     typeof profile.followers_count === "number" && profile.followers_count > 0
-      ? Number(((interactionsRecentPosts / profile.followers_count) * 100).toFixed(2))
+      ? Number(
+          ((interactionsRecentPosts / profile.followers_count) * 100).toFixed(2)
+        )
       : null;
 
-  const hasInsights = reach7d !== null || impressions7d !== null || profileViews7d !== null;
+  const hasInsights =
+    reach7d !== null || impressions7d !== null || profileViews7d !== null;
 
   return {
     ...base,
@@ -326,7 +354,11 @@ async function fetchInstagramInsights(account: SocialAccountRow): Promise<Accoun
     profileViews7d,
     interactionsRecentPosts,
     engagementRate,
-    insightsStatus: hasInsights ? "ok" : insightsRes.ok ? "limited" : "unavailable",
+    insightsStatus: hasInsights
+      ? "ok"
+      : insightsRes.ok
+        ? "limited"
+        : "unavailable",
     insightsMessage: hasInsights
       ? undefined
       : insightsRes.ok
@@ -348,12 +380,16 @@ export async function GET(request: Request) {
     .eq("platform", "instagram")
     .eq("status", "connected");
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
 
   const accounts = (data ?? []) as SocialAccountRow[];
-  if (accounts.length === 0) return NextResponse.json({ insights: [] as AccountInsights[] });
+  if (accounts.length === 0)
+    return NextResponse.json({ insights: [] as AccountInsights[] });
 
-  const insights = await Promise.all(accounts.map((account) => fetchInstagramInsights(account)));
+  const insights = await Promise.all(
+    accounts.map((account) => fetchInstagramInsights(account))
+  );
 
   const today = new Date().toISOString().slice(0, 10);
   const snapshotRows: SnapshotRow[] = insights
@@ -376,7 +412,10 @@ export async function GET(request: Request) {
       .upsert(snapshotRows, { onConflict: "social_account_id,snapshot_date" });
 
     if (snapshotUpsertError) {
-      return NextResponse.json({ error: snapshotUpsertError.message }, { status: 400 });
+      return NextResponse.json(
+        { error: snapshotUpsertError.message },
+        { status: 400 }
+      );
     }
   }
 
@@ -404,18 +443,30 @@ export async function GET(request: Request) {
 
   const historyByAccount = new Map<string, HistoryPoint[]>();
   for (const row of historyRows ?? []) {
-    const accountId = String((row as Record<string, unknown>).social_account_id ?? "");
+    const accountId = String(
+      (row as Record<string, unknown>).social_account_id ?? ""
+    );
     if (!accountId) continue;
     const list = historyByAccount.get(accountId) ?? [];
     list.push({
       date: String((row as Record<string, unknown>).snapshot_date ?? ""),
-      followers: ((row as Record<string, unknown>).followers as number | null) ?? null,
-      reach7d: ((row as Record<string, unknown>).reach_7d as number | null) ?? null,
-      impressions7d: ((row as Record<string, unknown>).impressions_7d as number | null) ?? null,
-      profileViews7d: ((row as Record<string, unknown>).profile_views_7d as number | null) ?? null,
+      followers:
+        ((row as Record<string, unknown>).followers as number | null) ?? null,
+      reach7d:
+        ((row as Record<string, unknown>).reach_7d as number | null) ?? null,
+      impressions7d:
+        ((row as Record<string, unknown>).impressions_7d as number | null) ??
+        null,
+      profileViews7d:
+        ((row as Record<string, unknown>).profile_views_7d as number | null) ??
+        null,
       interactionsRecentPosts:
-        ((row as Record<string, unknown>).interactions_recent_posts as number | null) ?? null,
-      engagementRate: ((row as Record<string, unknown>).engagement_rate as number | null) ?? null
+        ((row as Record<string, unknown>).interactions_recent_posts as
+          | number
+          | null) ?? null,
+      engagementRate:
+        ((row as Record<string, unknown>).engagement_rate as number | null) ??
+        null
     });
     historyByAccount.set(accountId, list);
   }

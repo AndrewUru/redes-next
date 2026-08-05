@@ -39,7 +39,7 @@ export function BrandbookList({
       </div>
 
       {brandbooks.length === 0 ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-lg border border-dashed border-border-strong bg-muted/30 p-6 text-sm text-muted-foreground">
           Todavia no hay guias de marca creadas.
         </div>
       ) : (
@@ -47,10 +47,10 @@ export function BrandbookList({
           {brandbooks.map((brandbook) => (
             <li
               key={brandbook.id}
-              className="flex flex-col gap-3 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex min-w-0 items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border-2 border-border bg-[#fde68a]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
                   <FileText className="h-5 w-5" aria-hidden />
                 </span>
                 <div className="min-w-0">
@@ -63,11 +63,11 @@ export function BrandbookList({
                       {dateFormatter.format(new Date(brandbook.created_at))}
                     </p>
                     {brandbook.approved_at ? (
-                      <Badge className="bg-emerald-50 text-emerald-950 dark:border-emerald-300/30 dark:bg-emerald-300/10 dark:text-emerald-100">
+                      <Badge className="border-success/25 bg-success/10 text-foreground">
                         Aprobada
                       </Badge>
                     ) : (
-                      <Badge className="bg-amber-50 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/10 dark:text-amber-100">
+                      <Badge className="border-warning/25 bg-warning/10 text-foreground">
                         Pendiente de aprobacion
                       </Badge>
                     )}

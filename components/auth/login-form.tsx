@@ -40,7 +40,7 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full space-y-6 p-5 sm:p-6">
+    <Card className="w-full space-y-6 p-5 shadow-md sm:p-6">
       <div className="space-y-2">
         <CardTitle>Entrar</CardTitle>
         <CardDescription>
@@ -84,7 +84,7 @@ export function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-1.5 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute right-0.5 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               aria-controls="password"
               aria-pressed={showPassword}
               aria-label={
@@ -106,7 +106,7 @@ export function LoginForm() {
         <div aria-live="polite">
           {error ? (
             <p
-              className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
+              className="rounded-lg border border-danger/25 bg-danger/10 px-4 py-3 text-sm font-medium text-foreground"
               role="alert"
             >
               {error}

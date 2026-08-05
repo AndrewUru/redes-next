@@ -94,8 +94,8 @@ export function AdminDecisionSnapshot({
             disponible antes de tomar decisiones.
           </CardDescription>
         </div>
-        <Badge className="w-fit bg-[#fde68a]">
-          {brandbooksCount} guias creadas
+        <Badge className="w-fit border-warning/25 bg-warning/10">
+          {brandbooksCount} guías creadas
         </Badge>
       </div>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -105,10 +105,10 @@ export function AdminDecisionSnapshot({
           return (
             <div
               key={signal.label}
-              className="rounded-[8px] border-2 border-border bg-surface/75 p-3 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              className="rounded-lg border border-border bg-surface p-3 shadow-xs"
             >
               <div className="mb-3 flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-[8px] border-2 border-border bg-[#a8e6df]">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary text-secondary-foreground">
                   <Icon className="h-4 w-4" aria-hidden />
                 </span>
                 <p className="text-xs font-bold uppercase text-muted-foreground">
@@ -163,12 +163,12 @@ export function AdminIntakeSummary({
       <div>
         <CardTitle>Brief del usuario</CardTitle>
         <CardDescription className="mt-1">
-          Lectura ordenada del formulario para orientar contenido, diseno y
+          Lectura ordenada del formulario para orientar contenido, diseño y
           conversion.
         </CardDescription>
       </div>
       {!intake ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-lg border border-dashed border-border-strong bg-muted/30 p-6 text-sm text-muted-foreground">
           El usuario todavia no ha enviado informacion suficiente.
         </div>
       ) : (
@@ -176,7 +176,7 @@ export function AdminIntakeSummary({
           {rows.map((row) => (
             <div
               key={row.label}
-              className="rounded-[8px] border-2 border-border bg-surface/75 p-3"
+              className="rounded-lg border border-border bg-surface p-3"
             >
               <p className="text-xs font-bold uppercase text-muted-foreground">
                 {row.label}
@@ -203,7 +203,7 @@ export function AdminAssetsGallery({ assets }: { assets: AdminAssetItem[] }) {
         </CardDescription>
       </div>
       {assets.length === 0 ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-lg border border-dashed border-border-strong bg-muted/30 p-6 text-sm text-muted-foreground">
           Todavia no hay materiales subidos por el usuario.
         </div>
       ) : (
@@ -211,7 +211,7 @@ export function AdminAssetsGallery({ assets }: { assets: AdminAssetItem[] }) {
           {assets.map((asset) => (
             <article
               key={asset.id}
-              className="overflow-hidden rounded-[8px] border-2 border-border bg-surface/75 shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+              className="overflow-hidden rounded-lg border border-border bg-surface shadow-xs"
             >
               {asset.previewUrl ? (
                 <Image
@@ -233,7 +233,7 @@ export function AdminAssetsGallery({ assets }: { assets: AdminAssetItem[] }) {
               )}
               <div className="space-y-2 p-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge className="bg-[#fde68a]">
+                  <Badge className="border-primary/20 bg-accent text-accent-foreground">
                     {assetTypeLabels[asset.type] ?? "Archivo"}
                   </Badge>
                   <p className="text-xs font-medium text-muted-foreground">
@@ -272,11 +272,11 @@ export function AdminSocialAccountsSummary({
       <div>
         <CardTitle>Cuentas sociales</CardTitle>
         <CardDescription className="mt-1">
-          Estado de conexiones disponibles para leer metricas y publicaciones.
+          Estado de conexiones disponibles para leer métricas y publicaciones.
         </CardDescription>
       </div>
       {accounts.length === 0 ? (
-        <div className="rounded-[8px] border-2 border-dashed border-border bg-surface/60 p-4 text-sm font-medium text-muted-foreground">
+        <div className="rounded-lg border border-dashed border-border-strong bg-muted/30 p-6 text-sm text-muted-foreground">
           No hay cuentas conectadas todavia.
         </div>
       ) : (
@@ -284,7 +284,7 @@ export function AdminSocialAccountsSummary({
           {accounts.map((account) => (
             <li
               key={account.id}
-              className="flex flex-col gap-2 rounded-[8px] border-2 border-border bg-surface/75 p-3 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
                 <p className="text-sm font-black">
@@ -295,7 +295,7 @@ export function AdminSocialAccountsSummary({
                   Actualizada {formatDate(account.updated_at)}
                 </p>
               </div>
-              <span className="inline-flex w-fit items-center gap-2 rounded-full border-2 border-border bg-background px-3 py-1 text-xs font-bold">
+              <span className="inline-flex w-fit items-center gap-2 rounded-md border border-border bg-background px-3 py-1 text-xs font-semibold">
                 <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
                 {account.status}
               </span>

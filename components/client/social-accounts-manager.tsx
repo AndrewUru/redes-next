@@ -83,16 +83,13 @@ export function SocialAccountsManager() {
 
   return (
     <div className="space-y-4">
-      <Card
-        id="conectar-redes"
-        className="space-y-5 overflow-hidden border-border/80 bg-surface/95 shadow-[0_20px_60px_hsl(222_47%_11%/0.06)]"
-      >
+      <Card id="conectar-redes" className="space-y-5 overflow-hidden">
         <div className="grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="space-y-3">
             <CardTitle>Conecta tu Instagram</CardTitle>
             <CardDescription>
               Inicia sesion con Instagram para que podamos leer datos basicos de
-              tu perfil y preparar una lectura clara de la evolucion.
+              tu perfil y preparar una lectura clara de la evolución.
             </CardDescription>
             <div className="grid gap-3 md:grid-cols-3">
               <div className="rounded-2xl border border-border bg-slate-50 p-4 shadow-sm">
@@ -118,9 +115,9 @@ export function SocialAccountsManager() {
                 <p className="text-xs font-bold uppercase text-muted-foreground">
                   Paso 3
                 </p>
-                <p className="mt-1 text-sm font-bold">Ves la evolucion</p>
+                <p className="mt-1 text-sm font-semibold">Ves la evolución</p>
                 <p className="mt-1 text-xs font-medium text-muted-foreground">
-                  El panel traduce los numeros en senales utiles.
+                  El panel traduce los números en señales útiles.
                 </p>
               </div>
             </div>
@@ -139,7 +136,7 @@ export function SocialAccountsManager() {
                   {[28, 34, 47, 53, 61, 74].map((bar, index) => (
                     <div
                       key={`preview-followers-${index}`}
-                      className="h-20 flex-1 rounded-t-md bg-[linear-gradient(180deg,#0ea5e9,#22c55e)]"
+                      className="h-20 flex-1 rounded-t-md bg-primary"
                       style={{ height: `${bar}%` }}
                     />
                   ))}
@@ -155,10 +152,10 @@ export function SocialAccountsManager() {
                 </div>
                 <div className="mt-2 grid gap-2">
                   <div className="h-2.5 rounded-full bg-slate-100">
-                    <div className="h-full w-[68%] rounded-full bg-[#f97316]" />
+                    <div className="h-full w-[68%] rounded-full bg-warning" />
                   </div>
                   <div className="h-2.5 rounded-full bg-slate-100">
-                    <div className="h-full w-[84%] rounded-full bg-[#8b5cf6]" />
+                    <div className="h-full w-[84%] rounded-full bg-primary" />
                   </div>
                 </div>
               </div>
@@ -168,7 +165,7 @@ export function SocialAccountsManager() {
               className="mt-4 inline-flex min-h-10 items-center gap-2 text-sm font-bold underline underline-offset-4"
             >
               <BarChart3 className="h-4 w-4" aria-hidden />
-              Ir al panel de evolucion
+              Ir al panel de evolución
             </Link>
           </div>
         </div>
@@ -196,26 +193,32 @@ export function SocialAccountsManager() {
         </div>
         <div aria-live="polite" className="space-y-2">
           {oauthState === "success" ? (
-            <p className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
+            <p className="flex items-center gap-2 rounded-lg border border-success/25 bg-success/10 px-3 py-2 text-sm font-medium text-foreground">
               <CheckCircle2 className="h-4 w-4" aria-hidden />
               Instagram conectado correctamente.
             </p>
           ) : null}
           {oauthState === "error" ? (
-            <p className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
+            <p
+              className="flex items-center gap-2 rounded-lg border border-danger/25 bg-danger/10 px-3 py-2 text-sm font-medium text-foreground"
+              role="alert"
+            >
               <AlertCircle className="h-4 w-4" aria-hidden />
               No se pudo conectar Instagram
               {oauthReason ? ` (${oauthReason})` : ""}.
             </p>
           ) : null}
           {statusMessage ? (
-            <p className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
+            <p className="flex items-center gap-2 rounded-lg border border-success/25 bg-success/10 px-3 py-2 text-sm font-medium text-foreground">
               <CheckCircle2 className="h-4 w-4" aria-hidden />
               {statusMessage}
             </p>
           ) : null}
           {error ? (
-            <p className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-800">
+            <p
+              className="flex items-center gap-2 rounded-lg border border-danger/25 bg-danger/10 px-3 py-2 text-sm font-medium text-foreground"
+              role="alert"
+            >
               <AlertCircle className="h-4 w-4" aria-hidden />
               {error}
             </p>
@@ -223,12 +226,12 @@ export function SocialAccountsManager() {
         </div>
       </Card>
 
-      <Card id="insights" className="border-border/80 bg-surface/95 shadow-sm">
+      <Card id="insights">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle>Cuentas conectadas</CardTitle>
             <CardDescription className="mt-1">
-              Aqui veras las cuentas que ya estan listas para medir.
+              Aquí verás las cuentas que ya están listas para medir.
             </CardDescription>
           </div>
           <Link
@@ -236,17 +239,17 @@ export function SocialAccountsManager() {
             className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-bold shadow-sm transition-[background-color,border-color,box-shadow] hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <ExternalLink className="h-4 w-4" aria-hidden />
-            Ver metricas
+            Ver métricas
           </Link>
         </div>
         {loading ? (
           <p className="rounded-xl border border-dashed border-border bg-surface/70 p-4 text-sm font-medium text-muted-foreground">
-            Cargando cuentas...
+            Cargando cuentas…
           </p>
         ) : accounts.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border bg-surface/70 p-4 text-sm font-medium text-muted-foreground">
-            Aun no hay cuentas conectadas. Conecta Instagram para activar las
-            metricas.
+            Aún no hay cuentas conectadas. Conecta Instagram para activar las
+            métricas.
           </div>
         ) : (
           <ul className="space-y-2">

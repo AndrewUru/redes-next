@@ -43,13 +43,16 @@ export function AccountInsightsCard({ account }: { account: AccountInsights }) {
       </div>
 
       {account.error ? (
-        <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-medium text-red-800">
+        <p
+          className="rounded-lg border border-danger/25 bg-danger/10 p-3 text-sm font-medium text-foreground"
+          role="alert"
+        >
           {account.error}
         </p>
       ) : null}
 
       {account.insightsStatus !== "ok" && !account.error ? (
-        <p className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm font-medium leading-6 text-amber-900">
+        <p className="rounded-lg border border-warning/25 bg-warning/10 p-3 text-sm font-medium leading-6 text-foreground">
           {account.insightsMessage ??
             "Meta no devolvio insights avanzados para esta cuenta. Revisa permisos y estado de revision de la app."}
         </p>
@@ -92,26 +95,26 @@ export function AccountInsightsCard({ account }: { account: AccountInsights }) {
             title="Seguidores"
             subtitle="Evolucion del tamano de la comunidad"
             points={getSeries(analysis.history, "followers")}
-            color="#0f766e"
+            color="hsl(var(--chart-3))"
           />
           <MiniLineChart
             title="Engagement"
             subtitle="Respuesta de la audiencia en el tiempo"
             points={getSeries(analysis.history, "engagementRate")}
-            color="#dc2626"
+            color="hsl(var(--chart-4))"
             formatter={formatPercent}
           />
           <MiniLineChart
             title="Alcance 7d"
             subtitle="Capacidad de distribucion de la cuenta"
             points={getSeries(analysis.history, "reach7d")}
-            color="#2563eb"
+            color="hsl(var(--chart-1))"
           />
           <MiniLineChart
             title="Visitas al perfil 7d"
             subtitle="Interes generado hacia la marca"
             points={getSeries(analysis.history, "profileViews7d")}
-            color="#7c3aed"
+            color="hsl(var(--chart-5))"
           />
         </div>
 
@@ -122,22 +125,22 @@ export function AccountInsightsCard({ account }: { account: AccountInsights }) {
               {
                 label: "Alcance 7d",
                 value: account.reach7d,
-                color: "#2563eb"
+                color: "hsl(var(--chart-1))"
               },
               {
                 label: "Impresiones 7d",
                 value: account.impressions7d,
-                color: "#f97316"
+                color: "hsl(var(--chart-4))"
               },
               {
                 label: "Visitas perfil 7d",
                 value: account.profileViews7d,
-                color: "#7c3aed"
+                color: "hsl(var(--chart-5))"
               },
               {
                 label: "Interacciones recientes",
                 value: account.interactionsRecentPosts,
-                color: "#16a34a"
+                color: "hsl(var(--chart-3))"
               }
             ]}
           />

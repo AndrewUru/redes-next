@@ -16,18 +16,26 @@ async function getClientContext() {
   const {
     data: { user }
   } = await supabase.auth.getUser();
-  if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  if (!user)
+    return {
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    };
 
   const { data: link } = await supabase
     .from("client_users")
     .select("client_id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!link?.client_id) return { error: NextResponse.json({ error: "No client" }, { status: 400 }) };
+  if (!link?.client_id)
+    return {
+      error: NextResponse.json({ error: "No client" }, { status: 400 })
+    };
   return { supabase, clientId: link.client_id };
 }
 
-function sanitizeMetadata(metadata: Record<string, unknown> | null | undefined) {
+function sanitizeMetadata(
+  metadata: Record<string, unknown> | null | undefined
+) {
   if (!metadata || typeof metadata !== "object") return {};
   const safe: Record<string, unknown> = { ...metadata };
   if ("oauth" in safe && safe.oauth && typeof safe.oauth === "object") {
@@ -54,7 +62,8 @@ export async function GET() {
     .select("*")
     .eq("client_id", ctx.clientId)
     .order("connected_at", { ascending: false });
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
 
   const safeAccounts = ((data ?? []) as SocialAccountRow[]).map((account) => ({
     ...account,
@@ -69,7 +78,8 @@ export async function POST(request: Request) {
   if ("error" in ctx) return ctx.error;
 
   const parsed = createSocialAccountSchema.safeParse(await request.json());
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json({ error: parsed.error.message }, { status: 400 });
 
   const payload = parsed.data;
   const { data, error } = await ctx.supabase
@@ -107,6 +117,7 @@ export async function DELETE(request: Request) {
     .eq("id", id)
     .eq("client_id", ctx.clientId);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 400 });
   return NextResponse.json({ ok: true });
 }
