@@ -78,10 +78,7 @@ export function SkyOrb() {
         <span className={styles.horizon} />
         <span className={styles.glass} />
       </div>
-      <div className={styles.hint}>
-        <span className={styles.hintDot} />
-        Mueve el cursor
-      </div>
+      
     </div>
   );
 }
