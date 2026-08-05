@@ -40,7 +40,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="hidden gap-3 sm:grid sm:grid-cols-3">
             {accessHighlights.map((item) => {
               const Icon = item.icon;
 
