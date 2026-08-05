@@ -115,7 +115,7 @@ export function AiSummaryPanel({
               {summary.contentIdeas.map((idea) => (
                 <div
                   key={`${idea.format}-${idea.hook}`}
-                  className="rounded-xl border border-border bg-slate-50 p-3"
+                  className="rounded-xl border border-border p-3"
                 >
                   <p className="text-xs font-bold uppercase text-muted-foreground">
                     {idea.format}
