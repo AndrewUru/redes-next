@@ -92,7 +92,7 @@ export function SocialAccountsManager() {
               tu perfil y preparar una lectura clara de la evolución.
             </CardDescription>
             <div className="grid gap-3 md:grid-cols-3">
-              <div className="rounded-2xl border border-border bg-slate-50 p-4 shadow-sm">
+              <div className="rounded-2xl border border-border p-4 shadow-sm">
                 <p className="text-xs font-bold uppercase text-muted-foreground">
                   Paso 1
                 </p>
@@ -101,7 +101,7 @@ export function SocialAccountsManager() {
                   Instagram te pedira permiso de forma segura.
                 </p>
               </div>
-              <div className="rounded-2xl border border-border bg-slate-50 p-4 shadow-sm">
+              <div className="rounded-2xl border border-border p-4 shadow-sm">
                 <p className="text-xs font-bold uppercase text-muted-foreground">
                   Paso 2
                 </p>
@@ -111,7 +111,7 @@ export function SocialAccountsManager() {
                   cambios.
                 </p>
               </div>
-              <div className="rounded-2xl border border-border bg-slate-50 p-4 shadow-sm">
+              <div className="rounded-2xl border border-border p-4 shadow-sm">
                 <p className="text-xs font-bold uppercase text-muted-foreground">
                   Paso 3
                 </p>
@@ -151,10 +151,10 @@ export function SocialAccountsManager() {
                   <span>Top posts</span>
                 </div>
                 <div className="mt-2 grid gap-2">
-                  <div className="h-2.5 rounded-full bg-slate-100">
+                  <div className="h-2.5 rounded-full">
                     <div className="h-full w-[68%] rounded-full bg-warning" />
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-100">
+                  <div className="h-2.5 rounded-full ">
                     <div className="h-full w-[84%] rounded-full bg-primary" />
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export function SocialAccountsManager() {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-slate-50/80 p-4">
+        <div className="rounded-2xl border border-border p-4">
           <p className="mb-2 flex items-center gap-2 text-sm font-bold">
             <Instagram className="h-4 w-4" aria-hidden />
             Conexion segura con Instagram

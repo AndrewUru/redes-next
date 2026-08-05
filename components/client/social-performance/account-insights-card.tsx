@@ -170,7 +170,7 @@ export function AccountInsightsCard({ account }: { account: AccountInsights }) {
               </div>
             </div>
             {analysis.topPost ? (
-              <p className="mt-3 rounded-xl bg-sky-50 p-3 text-xs font-medium leading-5 text-slate-700">
+              <p className="mt-3 rounded-xl p-3 text-xs font-medium leading-5 text-slate-700">
                 Mejor contenido reciente:{" "}
                 {formatMetric(analysis.topPost.interactions)} interacciones el{" "}
                 {formatDate(analysis.topPost.publishedAt)}.

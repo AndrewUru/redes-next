@@ -63,7 +63,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
   }
 
   return (
-    <Card className="space-y-4 border-violet-100 bg-violet-50/60">
+    <Card className="space-y-4 border-violet-100">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2">
@@ -131,7 +131,7 @@ export function AiMonthlyReportCard({ clientId }: { clientId: string }) {
               {report.nextActions.map((action) => (
                 <div
                   key={action.title}
-                  className="rounded-xl border border-border bg-slate-50 p-3"
+                  className="rounded-xl border border-border p-3"
                 >
                   <span className="rounded-full bg-surface px-2 py-1 text-[11px] font-bold uppercase text-muted-foreground">
                     {action.priority} · {action.owner}

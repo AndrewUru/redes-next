@@ -24,7 +24,7 @@ export function ComparisonBars({
               <span>{point.label}</span>
               <span className="tabular-nums">{formatter(point.value)}</span>
             </div>
-            <div className="h-2.5 rounded-full bg-slate-100">
+            <div className="h-2.5 rounded-full">
               <div
                 className="h-full rounded-full"
                 style={{

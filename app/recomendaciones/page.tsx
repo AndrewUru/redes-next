@@ -1,25 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  AlertTriangle,
-  ArrowRight,
-  CheckCircle2,
-  Code2,
-  Database,
-  Globe2,
-  MonitorSmartphone,
-  Server,
-  ShieldCheck,
-  ShoppingCart,
-  Wrench
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { ArrowRight, ExternalLink } from "lucide-react";
 
 const primaryActionClass =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-primary bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 const secondaryActionClass =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-center text-sm font-semibold text-foreground shadow-xs transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
+  "inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-transparent px-4 py-2 text-center text-sm font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
 export const metadata: Metadata = {
   title: "Recomendaciones web | ElSaltoWeb",
@@ -56,9 +42,7 @@ const technologyOptions = [
       "Necesita actualizaciones y cuidado de plugins.",
       "Puede volverse lento si se instala demasiado.",
       "La seguridad depende mucho del mantenimiento."
-    ],
-    icon: Wrench,
-    tone: "bg-amber-200 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/15 dark:text-amber-100"
+    ]
   },
   {
     title: "Astro",
@@ -73,9 +57,7 @@ const technologyOptions = [
       "Para editar contenido suele hacer falta desarrollo o conectar un CMS.",
       "No es la mejor opción si necesitas mucha lógica de aplicación.",
       "Menos familiar para clientes que esperan un panel tipo WordPress."
-    ],
-    icon: MonitorSmartphone,
-    tone: "bg-teal-200 text-teal-950 dark:border-teal-300/30 dark:bg-teal-300/15 dark:text-teal-100"
+    ]
   },
   {
     title: "Next.js",
@@ -90,9 +72,7 @@ const technologyOptions = [
       "Requiere hosting y mantenimiento más técnico.",
       "No es necesario para una web muy sencilla.",
       "Conviene planificar bien datos, despliegue y costes."
-    ],
-    icon: Code2,
-    tone: "bg-violet-200 text-violet-950 dark:border-violet-300/30 dark:bg-violet-300/15 dark:text-violet-100"
+    ]
   }
 ] as const;
 
@@ -111,7 +91,7 @@ const decisionRules = [
   },
   {
     label: "Necesito vender online con catálogo sencillo",
-    recommendation: "WordPress + WooCommerce o solución ecommerce dedicada"
+    recommendation: "WordPress + WooCommerce o ecommerce dedicado"
   }
 ] as const;
 
@@ -121,6 +101,24 @@ const avoidList = [
   "No instales plugins por impulso en WordPress.",
   "No registres el dominio en una cuenta que no controles.",
   "No elijas una tecnología solo porque está de moda."
+] as const;
+
+const operationalBasics = [
+  {
+    title: "Copias y mantenimiento",
+    description:
+      "Pide copias de seguridad, acceso al panel, renovación clara y una forma sencilla de restaurar si algo falla."
+  },
+  {
+    title: "Seguridad básica",
+    description:
+      "SSL activo, contraseñas seguras, roles separados, plugins mínimos y actualizaciones controladas si usas WordPress."
+  },
+  {
+    title: "Propiedad del proyecto",
+    description:
+      "El cliente debe tener dominio, hosting, repositorio o accesos principales. El desarrollador puede gestionar, pero no bloquear."
+  }
 ] as const;
 
 const sourceLinks = [
@@ -148,252 +146,239 @@ const sourceLinks = [
 
 export default function RecommendationsPage() {
   return (
-    <div className="min-h-screen">
-      <section className="mx-auto max-w-6xl space-y-12 px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
-        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div className="space-y-5">
-            <Badge className="w-fit bg-surface/90">
-              <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
-              Recomendaciones para clientes
-            </Badge>
-            <div className="space-y-4">
-              <h1 className="max-w-3xl text-4xl sm:text-5xl lg:text-6xl">
-                Cómo elegir hosting, dominio y tecnología para tu web
-              </h1>
-              <p className="max-w-2xl text-base font-medium leading-relaxed text-muted-foreground sm:text-lg">
-                Mi recomendación general es mantener las decisiones simples:
-                dominio claro, hosting fiable, correo profesional y una
-                tecnología que encaje con lo que realmente necesitas.
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/webs"
-                className={`${primaryActionClass} w-full sm:w-auto`}
-              >
-                Solicitar web
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
-              <a
-                href="#comparativa"
-                className={`${secondaryActionClass} w-full sm:w-auto`}
-              >
-                Ver comparativa
-              </a>
-            </div>
+    <main className="min-h-screen">
+      <div className="mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-20 lg:py-24">
+        <header className="max-w-3xl pb-16 sm:pb-20">
+          <p className="text-sm font-semibold text-primary">Guía práctica</p>
+          <h1 className="mt-4 text-4xl tracking-tight sm:text-5xl lg:text-6xl">
+            Cómo elegir hosting, dominio y tecnología para tu web
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+            Mi recomendación general es mantener las decisiones simples: dominio
+            claro, hosting fiable, correo profesional y una tecnología que
+            encaje con lo que realmente necesitas.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/webs"
+              className={`${primaryActionClass} w-full sm:w-auto`}
+            >
+              Solicitar web
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+            <a
+              href="#comparativa"
+              className={`${secondaryActionClass} w-full sm:w-auto`}
+            >
+              Comparar tecnologías
+            </a>
           </div>
+        </header>
 
-          <div className="neo-box bg-surface/90">
-            <div className="flex flex-col gap-4">
-              <div className="rounded-xl border border-border bg-foreground p-4 text-background">
-                <p className="text-xs font-bold uppercase text-white/60">
-                  Mi punto de partida
-                </p>
-                <h2 className="mt-1 text-3xl text-white">IONOS</h2>
-                <p className="mt-2 text-sm font-medium leading-relaxed text-white/70">
-                  Lo recomiendo especialmente cuando el cliente quiere una
-                  solución sencilla para dominio, hosting, SSL y correo
-                  profesional en un mismo lugar.
+        <section
+          aria-labelledby="hosting-title"
+          className="grid gap-8 border-t border-border py-14 sm:py-16 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16"
+        >
+          <div>
+            <p className="text-sm font-semibold text-muted-foreground">01</p>
+            <h2 id="hosting-title" className="mt-3 text-3xl">
+              Hosting sin complicaciones
+            </h2>
+          </div>
+          <div>
+            <h3 className="text-xl">Mi punto de partida: IONOS</h3>
+            <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
+              Lo recomiendo especialmente cuando el cliente quiere dominio,
+              hosting, SSL y correo profesional gestionados desde un mismo
+              lugar.
+            </p>
+            <ul className="mt-8 grid gap-x-10 gap-y-4 sm:grid-cols-2">
+              {hostingReasons.map((reason) => (
+                <li
+                  key={reason}
+                  className="border-t border-border pt-4 text-sm leading-6"
+                >
+                  {reason}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-10 grid gap-8 border-l-2 border-primary pl-5 sm:grid-cols-2 sm:pl-7">
+              <div>
+                <h3 className="text-base">Qué contratar normalmente</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Dominio, certificado SSL, correo profesional y un hosting
+                  adecuado al tipo de web. Para WordPress, un plan gestionado
+                  reduce tareas técnicas.
                 </p>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {hostingReasons.map((reason) => (
-                  <div
-                    key={reason}
-                    className="rounded-lg border border-border bg-background p-3 text-sm font-semibold"
-                  >
-                    {reason}
-                  </div>
-                ))}
+              <div>
+                <h3 className="text-base">Qué revisar antes de pagar</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Precio de renovación, correos incluidos, copias de seguridad,
+                  soporte, límites del plan y compatibilidad con la tecnología
+                  elegida.
+                </p>
               </div>
             </div>
           </div>
-        </div>
-
-        <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <Card className="space-y-4 bg-surface/90">
-            <Server className="h-7 w-7" aria-hidden />
-            <CardTitle>Qué contratar normalmente</CardTitle>
-            <CardDescription>
-              Para la mayoría de negocios pequeños, empezaría por dominio,
-              certificado SSL, correo profesional y hosting adecuado al tipo de
-              web. Si la web será WordPress, el hosting WordPress gestionado
-              tiene sentido porque reduce tareas técnicas.
-            </CardDescription>
-          </Card>
-
-          <Card className="space-y-4 bg-surface/90">
-            <AlertTriangle className="h-7 w-7" aria-hidden />
-            <CardTitle>Qué revisar antes de pagar</CardTitle>
-            <CardDescription>
-              Comprueba precio de renovación, número de correos incluidos,
-              copias de seguridad, soporte, límites del plan y si el hosting
-              encaja con WordPress o con una web hecha a código.
-            </CardDescription>
-          </Card>
         </section>
 
-        <section id="comparativa" className="scroll-mt-24 space-y-4">
-          <div>
-            <h2 className="text-3xl sm:text-4xl">WordPress, Astro o Next.js</h2>
-            <p className="mt-2 max-w-3xl text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
-              No hay una opción universal. La mejor tecnología depende de quién
-              editará la web, cuánta interacción necesita y cuánto mantenimiento
-              quieres asumir.
+        <section
+          id="comparativa"
+          aria-labelledby="technology-title"
+          className="scroll-mt-24 border-t border-border py-14 sm:py-16"
+        >
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold text-muted-foreground">02</p>
+            <h2 id="technology-title" className="mt-3 text-3xl">
+              WordPress, Astro o Next.js
+            </h2>
+            <p className="mt-4 leading-7 text-muted-foreground">
+              La mejor opción depende de quién editará la web, cuánta
+              interacción necesita y cuánto mantenimiento quieres asumir.
             </p>
           </div>
-          <div className="grid gap-4 lg:grid-cols-3">
-            {technologyOptions.map((option) => {
-              const Icon = option.icon;
 
-              return (
-                <Card key={option.title} className="space-y-4 bg-surface/90">
-                  <span
-                    className={`flex h-11 w-11 items-center justify-center rounded-lg border border-border ${option.tone}`}
-                  >
-                    <Icon className="h-5 w-5" aria-hidden />
-                  </span>
+          <div className="mt-10">
+            {technologyOptions.map((option) => (
+              <article
+                key={option.title}
+                className="grid gap-6 border-t border-border py-8 first:border-t-0 first:pt-0 lg:grid-cols-[0.65fr_1.35fr] lg:gap-12"
+              >
+                <div>
+                  <h3 className="text-2xl">{option.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {option.ideal}
+                  </p>
+                </div>
+                <div className="grid gap-6 sm:grid-cols-2 sm:gap-10">
                   <div>
-                    <CardTitle>{option.title}</CardTitle>
-                    <CardDescription className="mt-1">
-                      {option.ideal}
-                    </CardDescription>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold uppercase text-muted-foreground">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-foreground">
                       Ventajas
                     </p>
-                    <ul className="mt-2 space-y-2 text-sm font-medium">
+                    <ul className="mt-3 list-disc space-y-2 pl-4 text-sm leading-6 text-muted-foreground marker:text-primary">
                       {option.pros.map((item) => (
-                        <li key={item} className="flex gap-2">
-                          <CheckCircle2
-                            className="mt-0.5 h-4 w-4 shrink-0"
-                            aria-hidden
-                          />
-                          {item}
-                        </li>
+                        <li key={item}>{item}</li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase text-muted-foreground">
-                      Desventajas
+                    <p className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                      A tener en cuenta
                     </p>
-                    <ul className="mt-2 space-y-2 text-sm font-medium text-muted-foreground">
+                    <ul className="mt-3 list-disc space-y-2 pl-4 text-sm leading-6 text-muted-foreground marker:text-border-strong">
                       {option.cons.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
                     </ul>
                   </div>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl">Elección de dominio</h2>
-            <p className="max-w-xl text-sm font-medium leading-relaxed text-muted-foreground sm:text-base">
-              El dominio es un activo de marca. Debe ser fácil de recordar,
-              fácil de escribir y estar bajo el control del propietario del
-              negocio.
-            </p>
-          </div>
-          <Card className="bg-surface/90">
-            <div className="grid gap-2 sm:grid-cols-2">
-              {domainChecklist.map((item) => (
-                <div
-                  key={item}
-                  className="flex gap-3 rounded-lg border border-border bg-background px-3 py-2"
-                >
-                  <Globe2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                  <p className="text-sm font-bold">{item}</p>
                 </div>
-              ))}
-            </div>
-          </Card>
-        </section>
-
-        <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-          <Card className="space-y-4 bg-surface/90">
-            <CardTitle>Regla rápida de decisión</CardTitle>
-            <div className="grid gap-3">
-              {decisionRules.map((rule) => (
-                <div
-                  key={rule.label}
-                  className="grid gap-2 rounded-lg border border-border bg-surface p-3 sm:grid-cols-[1fr_0.8fr]"
-                >
-                  <p className="text-sm font-bold">{rule.label}</p>
-                  <Badge className="w-fit bg-amber-200 text-amber-950 dark:border-amber-300/30 dark:bg-amber-300/15 dark:text-amber-100">
-                    {rule.recommendation}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="space-y-4 bg-foreground text-background">
-            <ShoppingCart className="h-7 w-7" aria-hidden />
-            <CardTitle className="text-white">
-              Qué evitar al contratar
-            </CardTitle>
-            <ul className="space-y-2 text-sm font-medium text-white/75">
-              {avoidList.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </Card>
-        </section>
-
-        <section className="grid gap-4 lg:grid-cols-3">
-          <Card className="space-y-3 bg-surface/90">
-            <Database className="h-7 w-7" aria-hidden />
-            <CardTitle>Copias y mantenimiento</CardTitle>
-            <CardDescription>
-              Pide copias de seguridad, acceso al panel, renovación clara y una
-              forma sencilla de restaurar si algo falla.
-            </CardDescription>
-          </Card>
-          <Card className="space-y-3 bg-surface/90">
-            <ShieldCheck className="h-7 w-7" aria-hidden />
-            <CardTitle>Seguridad básica</CardTitle>
-            <CardDescription>
-              SSL activo, contraseñas seguras, roles separados, plugins mínimos
-              y actualizaciones controladas si usas WordPress.
-            </CardDescription>
-          </Card>
-          <Card className="space-y-3 bg-surface/90">
-            <Code2 className="h-7 w-7" aria-hidden />
-            <CardTitle>Propiedad del proyecto</CardTitle>
-            <CardDescription>
-              El cliente debe tener dominio, hosting, repositorio o accesos
-              principales. El desarrollador puede gestionar, pero no bloquear.
-            </CardDescription>
-          </Card>
-        </section>
-
-        <Card className="space-y-4 bg-surface/90">
-          <CardTitle>Fuentes revisadas</CardTitle>
-          <CardDescription>
-            Referencias oficiales usadas para mantener esta recomendación
-            alineada con requisitos y capacidades actuales.
-          </CardDescription>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {sourceLinks.map((source) => (
-              <a
-                key={source.href}
-                href={source.href}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-semibold underline"
-              >
-                {source.label}
-              </a>
+              </article>
             ))}
           </div>
-        </Card>
-      </section>
-    </div>
+        </section>
+
+        <section
+          aria-labelledby="domain-title"
+          className="grid gap-14 border-t border-border py-14 sm:py-16 lg:grid-cols-2 lg:gap-16"
+        >
+          <div>
+            <p className="text-sm font-semibold text-muted-foreground">03</p>
+            <h2 id="domain-title" className="mt-3 text-3xl">
+              El dominio es del cliente
+            </h2>
+            <p className="mt-4 leading-7 text-muted-foreground">
+              Debe ser fácil de recordar, fácil de escribir y estar siempre bajo
+              el control del propietario del negocio.
+            </p>
+            <ol className="mt-8 space-y-4">
+              {domainChecklist.map((item, index) => (
+                <li key={item} className="flex gap-4 text-sm leading-6">
+                  <span className="shrink-0 text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div>
+            <p className="text-sm font-semibold text-muted-foreground">
+              Regla rápida de decisión
+            </p>
+            <dl className="mt-5 divide-y divide-border border-y border-border">
+              {decisionRules.map((rule) => (
+                <div key={rule.label} className="py-5">
+                  <dt className="text-sm leading-6 text-muted-foreground">
+                    {rule.label}
+                  </dt>
+                  <dd className="mt-1 font-semibold">{rule.recommendation}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        <section
+          aria-labelledby="avoid-title"
+          className="rounded-xl bg-muted px-5 py-8 sm:px-8 sm:py-10"
+        >
+          <div className="grid gap-7 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16">
+            <h2 id="avoid-title" className="text-2xl">
+              Qué evitar al contratar
+            </h2>
+            <ul className="space-y-3">
+              {avoidList.map((item) => (
+                <li key={item} className="text-sm leading-6">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section
+          aria-labelledby="basics-title"
+          className="border-b border-border py-14 sm:py-16"
+        >
+          <h2 id="basics-title" className="sr-only">
+            Aspectos básicos del proyecto
+          </h2>
+          <div className="grid gap-8 sm:grid-cols-3 sm:gap-10">
+            {operationalBasics.map((item) => (
+              <div key={item.title}>
+                <h3 className="text-base">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <footer className="pt-10">
+          <h2 className="text-base">Fuentes revisadas</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+            Referencias oficiales sobre requisitos y capacidades de cada opción.
+          </p>
+          <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
+            {sourceLinks.map((source) => (
+              <li key={source.href}>
+                <a
+                  href={source.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center gap-1.5 py-2 text-sm font-semibold underline decoration-border-strong underline-offset-4 transition-colors hover:text-primary"
+                >
+                  {source.label}
+                  <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </footer>
+      </div>
+    </main>
   );
 }
