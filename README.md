@@ -140,3 +140,7 @@ npm run test
 Incluye:
 1. Validación de payload completo contra `intakeSchema`.
 2. Cálculo de `completion_pct` por steps completados.
+
+## Planes de contenido semanales
+
+Nueva sección `/client/content`: genera guiones y copies desde el onboarding, permite editar y aprobar el lote, y exporta JSON para producción. Aplica `supabase/migrations/202611120001_content_plans.sql` y configura la API de OpenAI existente. La generación es manual en esta entrega; no produce vídeos ni publica en Instagram. Integraciones pendientes y activación: [docs/content-automation.md](docs/content-automation.md).

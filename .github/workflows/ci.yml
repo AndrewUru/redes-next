@@ -31,4 +31,30 @@ jobs:
         run: npm test
 
       - name: Build
-        run: npm run build
+        # Use repository-level Actions variables/secrets. Prefer a CI Supabase project.
+        # Fork PRs do not receive secrets and will fail the explicit check below.
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          node <<'NODE'
+          const required = [
+            "NEXT_PUBLIC_SUPABASE_URL",
+            "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+            "SUPABASE_SERVICE_ROLE_KEY"
+          ];
+          const missing = required.filter((name) => !process.env[name]?.trim());
+          if (missing.length) {
+            console.error("::error::Missing Actions variables/secrets: " + missing.join(", "));
+            process.exit(1);
+          }
+          try {
+            const url = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL);
+            if (!["http:", "https:"].includes(url.protocol)) throw new Error();
+          } catch {
+            console.error("::error::NEXT_PUBLIC_SUPABASE_URL must be a valid HTTP(S) URL.");
+            process.exit(1);
+          }
+          NODE
+          npm run build

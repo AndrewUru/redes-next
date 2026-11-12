@@ -25,6 +25,12 @@ type ShellRole = "admin" | "client";
 
 const clientNavigation = [
   {
+    href: "/client/content",
+    label: "Contenido",
+    helper: "Planes semanales y revisión",
+    icon: ListChecks
+  },
+  {
     href: "/client",
     label: "Resumen",
     helper: "Estado del proyecto",
@@ -72,6 +78,8 @@ function isCurrentPath(pathname: string, href: string) {
 }
 
 function getPageContext(pathname: string, role: ShellRole) {
+  if (pathname.includes("/content"))
+    return { title: "Contenido", parent: "Área de cliente" };
   if (pathname.includes("/onboarding"))
     return { title: "Onboarding", parent: "Área de cliente" };
   if (pathname.includes("/accounts"))
